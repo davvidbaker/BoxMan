@@ -1,8 +1,8 @@
 module.exports = {
   entry: './client.js',
   output: {
-    // path: './public',
-    filename: 'bundle.js'
+    path: './public',
+    filename: 'bundle.js' // use npm run build to build production bundle
   },
   module: {
     loaders: [
