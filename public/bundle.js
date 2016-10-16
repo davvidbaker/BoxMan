@@ -22115,7 +22115,7 @@
 /* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -22149,23 +22149,20 @@
 	var start = document.getElementById('start');
 	// start.onclick = makeConnection;
 
+	// specify stun and turn servers for signalling
 	(function stunAndTurn() {
 	  console.log('connecting to XirSys...');
-	  var url = 'https://service.xirsys.com/ice?ident=brainsandspace&secret=' + process.env.STUN_TURN_SECRET + '&domain=www.brainsandspace.com&application=default&room=default&secure=1';
-	  console.log(url, url);
-	  // specify stun and turn servers for signalling
-	  // fetch('https://service.xirsys.com/ice?ident=brainsandspace&secret=09f8d0aa-7940-11e5-8514-a68d4d023276&domain=www.brainsandspace.com&application=default&room=default&secure=1')
+	  // I know including the secret here isn't super secure, but it's a free stun and turn server so whatevs
+	  fetch('https://service.xirsys.com/ice?ident=brainsandspace&secret=09f8d0aa-7940-11e5-8514-a68d4d023276&domain=www.brainsandspace.com&application=default&room=default&secure=1');
 	  fetch(url).then(function (response) {
 	    return response.json();
 	  }).then(function (data) {
 	    // data.d is where the iceServers object lives
-	    console.log(process.env.STUN_TURN_SECRET);
 	    console.log('...connected to XirSys', data.d);
 	  }).catch(function (err) {
 	    console.error(err);
 	  });
 	})();
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }
 /******/ ]);
