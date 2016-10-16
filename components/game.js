@@ -17,8 +17,8 @@ let start = document.getElementById('start');
 
 (function stunAndTurn() {
   console.log('connecting to XirSys...')
-  let STUN_TURN_SECRET = '09f8d0aa-7940-11e5-8514-a68d4d023276';
   const url = `https://service.xirsys.com/ice?ident=brainsandspace&secret=${process.env.STUN_TURN_SECRET}&domain=www.brainsandspace.com&application=default&room=default&secure=1`;
+  console.log(url, url);
   // specify stun and turn servers for signalling
   // fetch('https://service.xirsys.com/ice?ident=brainsandspace&secret=09f8d0aa-7940-11e5-8514-a68d4d023276&domain=www.brainsandspace.com&application=default&room=default&secure=1')
   fetch(url)
@@ -27,6 +27,7 @@ let start = document.getElementById('start');
   })
   .then((data) => {
     // data.d is where the iceServers object lives
+    console.log(process.env.STUN_TURN_SECRET);
     console.log('...connected to XirSys', data.d);
   })
   .catch((err) => {
