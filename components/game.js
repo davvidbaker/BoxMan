@@ -13,29 +13,23 @@ const Game = React.createClass({
 export default Game;
 
 let start = document.getElementById('start');
-start.onclick = stunAndTurn;
+// start.onclick = makeConnection;
 
-// specify stun and turn servers
-function stunAndTurn() {
+(function stunAndTurn() {
   console.log('connecting to XirSys...')
-  let customConfig;  // object consisting of array of XirSys STUN / TURN servers
-  fetch('https://service.xirsys.com/ice', {
-    method: "GET",
-    body: {
-      ident: "brainsandspace",
-      secret: process.env.STUN_TURN_SECRET, // this is defined in heroku config var
-      domain: "www.brainsandspace.com",
-      application: "default",
-      room: "default",
-      secure: 1
-    }
+  let STUN_TURN_SECRET = '09f8d0aa-7940-11e5-8514-a68d4d023276';
+  const url = `https://service.xirsys.com/ice?ident=brainsandspace&secret=${process.env.STUN_TURN_SECRET}&domain=www.brainsandspace.com&application=default&room=default&secure=1`;
+  // specify stun and turn servers for signalling
+  // fetch('https://service.xirsys.com/ice?ident=brainsandspace&secret=09f8d0aa-7940-11e5-8514-a68d4d023276&domain=www.brainsandspace.com&application=default&room=default&secure=1')
+  fetch(url)
+  .then(response => {
+    return response.json();
   })
-  .then((data, status) => {
+  .then((data) => {
+    // data.d is where the iceServers object lives
     console.log('...connected to XirSys', data.d);
-    const config = data.d; // data.d is where the iceServers object lives
-    setupSimpleWebRTC(config);
   })
   .catch((err) => {
     console.error(err)
   });
-}
+})()
