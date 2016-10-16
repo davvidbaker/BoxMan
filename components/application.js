@@ -27,7 +27,7 @@ function LiveStream(props) {
 }
 LiveStream.propTypes = {
   source: React.PropTypes.string.isRequired
-}
+};
 
 
 /* ========================================
@@ -73,7 +73,7 @@ const Application = React.createClass({
         <LiveStream source={this.state.videoSrc} />
         <Game />
         <video id="localVideo" autoPlay></video>
-        <video id="remoteVideo" autoPlay></video>
+        <video id="remoteVideos" autoPlay></video>
 
         <div>
           <button id="startButton">Start</button>
@@ -84,7 +84,7 @@ const Application = React.createClass({
       </div>
     );
   }
-})
+});
 
 export default Application;
 

@@ -22,17 +22,19 @@
 
 <body>
 	<div id="container"></div>
-  <button id="start"></button>
+  <button id="start">CLICK ME</button>
+  <video class="vid-box-right"  autoplay></video>
+  <video class="vid-box-left"  autoplay></video>
 
 	<!-- webrtc adapter shim -->
 	<script src="./lib/adapter.js"></script>
-
   <!-- simple webrtc -->
   <script src="https://simplewebrtc.com/latest-v2.js"></script> 
 
-	<!--<script src="./../bundle.js"></script>-->
-
-	<script src="./bundle.js"></script>
+  <!-- use this one when developing... -->
+	<script src="./../bundle.js"></script>
+  <!-- ... and this one in production -->
+	<!--<script src="./bundle.js"></script>-->
 </body>
 
 </html>

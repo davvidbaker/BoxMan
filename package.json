@@ -4,7 +4,7 @@
   "description": "Box Man out of Body",
   "main": "server.js",
   "scripts": {
-    "dev-start": "webpack-dev-server --progress --inline --hot",
+    "local": "webpack-dev-server --progress --inline --hot",
     "start": "node server.js",
     "build": "webpack"
   },
