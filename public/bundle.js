@@ -21469,7 +21469,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\n  background: black; }\n", ""]);
+	exports.push([module.id, "body {\n  background: black; }\n\n.vid-box-left {\n  width: 20px; }\n", ""]);
 
 	// exports
 
@@ -21875,7 +21875,7 @@
 	      _react2.default.createElement(LiveStream, { source: this.state.videoSrc }),
 	      _react2.default.createElement(_game2.default, null),
 	      _react2.default.createElement('video', { id: 'localVideo', autoPlay: true }),
-	      _react2.default.createElement('video', { id: 'remoteVideo', autoPlay: true }),
+	      _react2.default.createElement('video', { id: 'remoteVideos', autoPlay: true }),
 	      _react2.default.createElement(
 	        'div',
 	        null,
@@ -22127,6 +22127,9 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// change this
+	var roomName = "testing";
+
 	var Game = _react2.default.createClass({
 	  displayName: 'Game',
 
@@ -22147,21 +22150,59 @@
 
 
 	var start = document.getElementById('start');
-	// start.onclick = makeConnection;
+	start.onclick = stunAndTurn;
 
-	// specify stun and turn servers for signalling
-	(function stunAndTurn() {
+	// specify stun and turn servers for help establishing connection between clients
+	function stunAndTurn() {
 	  console.log('connecting to XirSys...');
 	  // I know including the secret here isn't super secure, but it's a free stun and turn server so whatevs
 	  fetch('https://service.xirsys.com/ice?ident=brainsandspace&secret=09f8d0aa-7940-11e5-8514-a68d4d023276&domain=www.brainsandspace.com&application=default&room=default&secure=1').then(function (response) {
 	    return response.json();
 	  }).then(function (data) {
-	    // data.d is where the iceServers object lives
+	    // data.d is where the ICE servers object lives
 	    console.log('...connected to XirSys', data.d);
+	    setUpRTC(data.d);
 	  }).catch(function (err) {
 	    console.error(err);
 	  });
-	})();
+	}
+
+	function setUpRTC(iceServers) {
+	  var webrtc = new SimpleWebRTC({
+	    localVideoEl: 'localVideo',
+	    remoteVideoEl: 'remoteVideos',
+	    autoRequestMedia: true,
+	    // TODO specify this based on character
+	    media: {
+	      audio: false,
+	      video: true
+	    },
+	    peerConnectionConfig: iceServers
+	  });
+
+	  webrtc.on('readyToCall', function () {
+	    webrtc.joinRoom(roomName, function (err, roomDescription) {
+	      if (err) console.error(err);
+	      console.log('roomDescription', roomDescription);
+	    });
+	  });
+
+	  webrtc.on('videoAdded', function (videoEl, peer) {
+	    console.log(peer);
+	    console.log(videoEl.srcObject);
+	    var leftVid = document.querySelector('.vid-box-left');
+	    var rightVid = document.querySelector('.vid-box-right');
+	    document.body.appendChild(videoEl);
+	    console.log(videoEl.attributes);
+	    console.log('videoAdded', videoEl, videoEl.src);
+	    console.log('video el src', videoEl.src);
+	    rightVid.attributes.src = videoEl.src;
+	    console.log(rightVid);
+
+	    // set the video srcObject to that of the incoming video
+	    leftVid.srcObject = videoEl.srcObject;
+	  });
+	}
 
 /***/ }
 /******/ ]);
