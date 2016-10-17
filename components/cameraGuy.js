@@ -77,7 +77,6 @@ const CameraGuy = React.createClass({
   _sendMessage: function(msg) {
     console.log('sending this message', msg);
     this.refs.myRTC.webrtc.sendDirectlyToAll('channelMessage', 'chat', {message: msg});
-
   },
 
   render: function () {

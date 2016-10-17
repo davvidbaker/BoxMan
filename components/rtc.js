@@ -57,11 +57,16 @@ const RTC = React.createClass({
       .then(function(devices) {
         console.log(`there are ${devices.length} devices`);
         console.log('devices: ', devices);
-
-        // assuming the back camera is the last one enumerated
-        config.constraints.video = {
-          sourceId: devices[devices.length-1].deviceId
-        };
+        for (let i = 0; i < devices.length; i++) {
+          if (devices[i].label.includes('back')) {
+            // assuming the back camera is labeled with back somehow, like on my samsung galaxy s6 edge+, 
+            // where the back camera has the label "camera2 0, facing back"
+            config.constraints.video = {
+              sourceId: devices[devices.length-1].deviceId
+            };
+            break;
+          }
+        }
         })
       .catch(function(err) {
         console.error(err.name + ": " + error.message);
