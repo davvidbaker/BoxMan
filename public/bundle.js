@@ -21469,7 +21469,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\n  background: black; }\n\n.vid-box-left {\n  width: 20px; }\n", ""]);
+	exports.push([module.id, "body {\n  background: #646464; }\n\n.vid-box-left {\n  width: 800px; }\n\n.chatbox {\n  transition: 0.5s; }\n", ""]);
 
 	// exports
 
@@ -21796,36 +21796,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _game = __webpack_require__(177);
+	var _characterSelect = __webpack_require__(177);
+
+	var _characterSelect2 = _interopRequireDefault(_characterSelect);
+
+	var _game = __webpack_require__(178);
 
 	var _game2 = _interopRequireDefault(_game);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var videoSrc = void 0;
-
-	/* ========================================
-	// set up gUM for video stream
-	======================================== */
-	navigator.mediaDevices.getUserMedia = navigator.mediaDevices.getUserMedia || navigator.mediaDevices.webkitGetUserMedia || navigator.mediaDevices.mozGetUserMedia;
-	var constraints = {
-	  audio: false,
-	  video: true
-	};
-
-	/* ========================================
-	// These are our subcomponents
-	======================================== */
-	function LiveStream(props) {
-	  return _react2.default.createElement(
-	    'div',
-	    { className: 'livestream' },
-	    _react2.default.createElement('video', { src: props.source, autoPlay: true })
-	  );
-	}
-	LiveStream.propTypes = {
-	  source: _react2.default.PropTypes.string.isRequired
-	};
 
 	/* ========================================
 	// This is our master component
@@ -21835,34 +21814,20 @@
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      videoSrc: ""
+	      phase: "chooseCharacter",
+	      character: ""
 	    };
 	  },
 
-	  // when the component mounts, we get the user media video stream
-	  componentDidMount: function componentDidMount() {
-	    navigator.mediaDevices.getUserMedia(constraints).then(this._successCallback).catch(this._errorCallback);
-	    // codeLabCode();
-	  },
-	  _successCallback: function _successCallback(stream) {
-	    window.stream = stream; // stream available to console
-	    if (window.URL) {
-	      videoSrc = window.URL.createObjectURL(stream);
-	    } else {
-	      videoSrc = stream;
-	    }
-	    console.log(this);
-	    this._updateStreamSource(videoSrc);
-	  },
-	  _errorCallback: function _errorCallback(error) {
-	    console.log('navigator.mediaDevices.getUserMedia error: ', error);
-	  },
-	  _updateStreamSource: function _updateStreamSource(strm) {
-	    this.state.videoSrc = strm;
+	  _selectCharacter: function _selectCharacter(yourChar) {
+	    this.state.character = yourChar;
+	    this.state.phase = 'game';
 	    this.setState(this.state);
 	  },
 
 	  render: function render() {
+	    var _this = this;
+
 	    return _react2.default.createElement(
 	      'div',
 	      { className: 'application' },
@@ -21871,245 +21836,254 @@
 	        null,
 	        'Application Ahoy'
 	      ),
-	      _react2.default.createElement(LiveStream, { source: this.state.videoSrc }),
-	      _react2.default.createElement(LiveStream, { source: this.state.videoSrc }),
-	      _react2.default.createElement(_game2.default, null),
-	      _react2.default.createElement('video', { id: 'localVideo', autoPlay: true }),
-	      _react2.default.createElement('video', { id: 'remoteVideos', autoPlay: true }),
-	      _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'button',
-	          { id: 'startButton' },
-	          'Start'
-	        ),
-	        _react2.default.createElement(
-	          'button',
-	          { id: 'callButton' },
-	          'Call'
-	        ),
-	        _react2.default.createElement(
-	          'button',
-	          { id: 'hangupButton' },
-	          'Hang Up'
-	        )
-	      )
+	      this.state.phase === 'chooseCharacter' ? _react2.default.createElement(_characterSelect2.default, { selectCharacter: function selectCharacter(yourChar) {
+	          return _this._selectCharacter(yourChar);
+	        } }) : _react2.default.createElement(_game2.default, { character: this.state.character })
 	    );
 	  }
 	});
 
 	exports.default = Application;
 
+	// function codeLabCode() {
+	// var startButton = document.getElementById('startButton');
+	// var callButton = document.getElementById('callButton');
+	// var hangupButton = document.getElementById('hangupButton');
+	// callButton.disabled = true;
+	// hangupButton.disabled = true;
+	// startButton.onclick = start;
+	// callButton.onclick = call;
+	// hangupButton.onclick = hangup;
 
-	function codeLabCode() {
-	  var startButton = document.getElementById('startButton');
-	  var callButton = document.getElementById('callButton');
-	  var hangupButton = document.getElementById('hangupButton');
-	  callButton.disabled = true;
-	  hangupButton.disabled = true;
-	  startButton.onclick = start;
-	  callButton.onclick = call;
-	  hangupButton.onclick = hangup;
+	// var startTime;
+	// var localVideo = document.getElementById('localVideo');
+	// var remoteVideo = document.getElementById('remoteVideo');
 
-	  var startTime;
-	  var localVideo = document.getElementById('localVideo');
-	  var remoteVideo = document.getElementById('remoteVideo');
+	// localVideo.addEventListener('loadedmetadata', function () {
+	//   trace('Local video videoWidth: ' + this.videoWidth +
+	//     'px,  videoHeight: ' + this.videoHeight + 'px');
+	// });
 
-	  localVideo.addEventListener('loadedmetadata', function () {
-	    trace('Local video videoWidth: ' + this.videoWidth + 'px,  videoHeight: ' + this.videoHeight + 'px');
-	  });
+	// remoteVideo.addEventListener('loadedmetadata', function () {
+	//   trace('Remote video videoWidth: ' + this.videoWidth +
+	//     'px,  videoHeight: ' + this.videoHeight + 'px');
+	// });
 
-	  remoteVideo.addEventListener('loadedmetadata', function () {
-	    trace('Remote video videoWidth: ' + this.videoWidth + 'px,  videoHeight: ' + this.videoHeight + 'px');
-	  });
+	// remoteVideo.onresize = function () {
+	//   trace('Remote video size changed to ' +
+	//     remoteVideo.videoWidth + 'x' + remoteVideo.videoHeight);
+	//   // We'll use the first onresize callback as an indication that video has started
+	//   // playing out.
+	//   if (startTime) {
+	//     var elapsedTime = window.performance.now() - startTime;
+	//     trace('Setup time: ' + elapsedTime.toFixed(3) + 'ms');
+	//     startTime = null;
+	//   }
+	// };
 
-	  remoteVideo.onresize = function () {
-	    trace('Remote video size changed to ' + remoteVideo.videoWidth + 'x' + remoteVideo.videoHeight);
-	    // We'll use the first onresize callback as an indication that video has started
-	    // playing out.
-	    if (startTime) {
-	      var elapsedTime = window.performance.now() - startTime;
-	      trace('Setup time: ' + elapsedTime.toFixed(3) + 'ms');
-	      startTime = null;
-	    }
-	  };
+	// var localStream;
+	// var pc1;
+	// var pc2;
+	// var offerOptions = {
+	//   offerToReceiveAudio: 1,
+	//   offerToReceiveVideo: 1
+	// };
 
-	  var localStream;
-	  var pc1;
-	  var pc2;
-	  var offerOptions = {
-	    offerToReceiveAudio: 1,
-	    offerToReceiveVideo: 1
-	  };
+	// function getName(pc) {
+	//   return (pc === pc1) ? 'pc1' : 'pc2';
+	// }
 
-	  function getName(pc) {
-	    return pc === pc1 ? 'pc1' : 'pc2';
-	  }
+	// function getOtherPc(pc) {
+	//   return (pc === pc1) ? pc2 : pc1;
+	// }
 
-	  function getOtherPc(pc) {
-	    return pc === pc1 ? pc2 : pc1;
-	  }
+	// function gotStream(stream) {
+	//   trace('Received local stream');
+	//   localVideo.srcObject = stream;
+	//   // Add localStream to global scope so it's accessible from the browser console
+	//   window.localStream = localStream = stream;
+	//   callButton.disabled = false;
+	// }
 
-	  function gotStream(stream) {
-	    trace('Received local stream');
-	    localVideo.srcObject = stream;
-	    // Add localStream to global scope so it's accessible from the browser console
-	    window.localStream = localStream = stream;
-	    callButton.disabled = false;
-	  }
+	// function start() {
+	//   trace('Requesting local stream');
+	//   startButton.disabled = true;
+	//   navigator.mediaDevices.getUserMedia({
+	//     audio: false,
+	//     video: true
+	//   })
+	//     .then(gotStream)
+	//     .catch(function (e) {
+	//       alert('getUserMedia() error: ' + e.name);
+	//     });
+	// }
 
-	  function start() {
-	    trace('Requesting local stream');
-	    startButton.disabled = true;
-	    navigator.mediaDevices.getUserMedia({
-	      audio: false,
-	      video: true
-	    }).then(gotStream).catch(function (e) {
-	      alert('getUserMedia() error: ' + e.name);
-	    });
-	  }
+	// function call() {
+	//   callButton.disabled = true;
+	//   hangupButton.disabled = false;
+	//   trace('Starting call');
+	//   startTime = window.performance.now();
+	//   var videoTracks = localStream.getVideoTracks();
+	//   var audioTracks = localStream.getAudioTracks();
+	//   if (videoTracks.length > 0) {
+	//     trace('Using video device: ' + videoTracks[0].label);
+	//   }
+	//   if (audioTracks.length > 0) {
+	//     trace('Using audio device: ' + audioTracks[0].label);
+	//   }
+	//   var servers = null;
+	//   // Add pc1 to global scope so it's accessible from the browser console
+	//   window.pc1 = pc1 = new RTCPeerConnection(servers);
+	//   trace('Created local peer connection object pc1');
+	//   pc1.onicecandidate = function (e) {
+	//     onIceCandidate(pc1, e);
+	//   };
+	//   // Add pc2 to global scope so it's accessible from the browser console
+	//   window.pc2 = pc2 = new RTCPeerConnection(servers);
+	//   trace('Created remote peer connection object pc2');
+	//   pc2.onicecandidate = function (e) {
+	//     onIceCandidate(pc2, e);
+	//   };
+	//   pc1.oniceconnectionstatechange = function (e) {
+	//     onIceStateChange(pc1, e);
+	//   };
+	//   pc2.oniceconnectionstatechange = function (e) {
+	//     onIceStateChange(pc2, e);
+	//   };
+	//   pc2.onaddstream = gotRemoteStream;
 
-	  function call() {
-	    callButton.disabled = true;
-	    hangupButton.disabled = false;
-	    trace('Starting call');
-	    startTime = window.performance.now();
-	    var videoTracks = localStream.getVideoTracks();
-	    var audioTracks = localStream.getAudioTracks();
-	    if (videoTracks.length > 0) {
-	      trace('Using video device: ' + videoTracks[0].label);
-	    }
-	    if (audioTracks.length > 0) {
-	      trace('Using audio device: ' + audioTracks[0].label);
-	    }
-	    var servers = null;
-	    // Add pc1 to global scope so it's accessible from the browser console
-	    window.pc1 = pc1 = new RTCPeerConnection(servers);
-	    trace('Created local peer connection object pc1');
-	    pc1.onicecandidate = function (e) {
-	      onIceCandidate(pc1, e);
-	    };
-	    // Add pc2 to global scope so it's accessible from the browser console
-	    window.pc2 = pc2 = new RTCPeerConnection(servers);
-	    trace('Created remote peer connection object pc2');
-	    pc2.onicecandidate = function (e) {
-	      onIceCandidate(pc2, e);
-	    };
-	    pc1.oniceconnectionstatechange = function (e) {
-	      onIceStateChange(pc1, e);
-	    };
-	    pc2.oniceconnectionstatechange = function (e) {
-	      onIceStateChange(pc2, e);
-	    };
-	    pc2.onaddstream = gotRemoteStream;
+	//   pc1.addStream(localStream);
+	//   trace('Added local stream to pc1');
 
-	    pc1.addStream(localStream);
-	    trace('Added local stream to pc1');
+	//   trace('pc1 createOffer start');
+	//   pc1.createOffer(
+	//     offerOptions
+	//   ).then(
+	//     onCreateOfferSuccess,
+	//     onCreateSessionDescriptionError
+	//     );
+	// }
 
-	    trace('pc1 createOffer start');
-	    pc1.createOffer(offerOptions).then(onCreateOfferSuccess, onCreateSessionDescriptionError);
-	  }
+	// function onCreateSessionDescriptionError(error) {
+	//   trace('Failed to create session description: ' + error.toString());
+	// }
 
-	  function onCreateSessionDescriptionError(error) {
-	    trace('Failed to create session description: ' + error.toString());
-	  }
+	// function onCreateOfferSuccess(desc) {
+	//   trace('Offer from pc1\n' + desc.sdp);
+	//   trace('pc1 setLocalDescription start');
+	//   pc1.setLocalDescription(desc).then(
+	//     function () {
+	//       onSetLocalSuccess(pc1);
+	//     },
+	//     onSetSessionDescriptionError
+	//   );
+	//   trace('pc2 setRemoteDescription start');
+	//   pc2.setRemoteDescription(desc).then(
+	//     function () {
+	//       onSetRemoteSuccess(pc2);
+	//     },
+	//     onSetSessionDescriptionError
+	//   );
+	//   trace('pc2 createAnswer start');
+	//   // Since the 'remote' side has no media stream we need
+	//   // to pass in the right constraints in order for it to
+	//   // accept the incoming offer of audio and video.
+	//   pc2.createAnswer().then(
+	//     onCreateAnswerSuccess,
+	//     onCreateSessionDescriptionError
+	//   );
+	// }
 
-	  function onCreateOfferSuccess(desc) {
-	    trace('Offer from pc1\n' + desc.sdp);
-	    trace('pc1 setLocalDescription start');
-	    pc1.setLocalDescription(desc).then(function () {
-	      onSetLocalSuccess(pc1);
-	    }, onSetSessionDescriptionError);
-	    trace('pc2 setRemoteDescription start');
-	    pc2.setRemoteDescription(desc).then(function () {
-	      onSetRemoteSuccess(pc2);
-	    }, onSetSessionDescriptionError);
-	    trace('pc2 createAnswer start');
-	    // Since the 'remote' side has no media stream we need
-	    // to pass in the right constraints in order for it to
-	    // accept the incoming offer of audio and video.
-	    pc2.createAnswer().then(onCreateAnswerSuccess, onCreateSessionDescriptionError);
-	  }
+	// function onSetLocalSuccess(pc) {
+	//   trace(getName(pc) + ' setLocalDescription complete');
+	// }
 
-	  function onSetLocalSuccess(pc) {
-	    trace(getName(pc) + ' setLocalDescription complete');
-	  }
+	// function onSetRemoteSuccess(pc) {
+	//   trace(getName(pc) + ' setRemoteDescription complete');
+	// }
 
-	  function onSetRemoteSuccess(pc) {
-	    trace(getName(pc) + ' setRemoteDescription complete');
-	  }
+	// function onSetSessionDescriptionError(error) {
+	//   trace('Failed to set session description: ' + error.toString());
+	// }
 
-	  function onSetSessionDescriptionError(error) {
-	    trace('Failed to set session description: ' + error.toString());
-	  }
+	// function gotRemoteStream(e) {
+	//   // Add remoteStream to global scope so it's accessible from the browser console
+	//   window.remoteStream = remoteVideo.srcObject = e.stream;
+	//   trace('pc2 received remote stream');
+	// }
 
-	  function gotRemoteStream(e) {
-	    // Add remoteStream to global scope so it's accessible from the browser console
-	    window.remoteStream = remoteVideo.srcObject = e.stream;
-	    trace('pc2 received remote stream');
-	  }
+	// function onCreateAnswerSuccess(desc) {
+	//   trace('Answer from pc2:\n' + desc.sdp);
+	//   trace('pc2 setLocalDescription start');
+	//   pc2.setLocalDescription(desc).then(
+	//     function () {
+	//       onSetLocalSuccess(pc2);
+	//     },
+	//     onSetSessionDescriptionError
+	//   );
+	//   trace('pc1 setRemoteDescription start');
+	//   pc1.setRemoteDescription(desc).then(
+	//     function () {
+	//       onSetRemoteSuccess(pc1);
+	//     },
+	//     onSetSessionDescriptionError
+	//   );
+	// }
 
-	  function onCreateAnswerSuccess(desc) {
-	    trace('Answer from pc2:\n' + desc.sdp);
-	    trace('pc2 setLocalDescription start');
-	    pc2.setLocalDescription(desc).then(function () {
-	      onSetLocalSuccess(pc2);
-	    }, onSetSessionDescriptionError);
-	    trace('pc1 setRemoteDescription start');
-	    pc1.setRemoteDescription(desc).then(function () {
-	      onSetRemoteSuccess(pc1);
-	    }, onSetSessionDescriptionError);
-	  }
+	// function onIceCandidate(pc, event) {
+	//   if (event.candidate) {
+	//     getOtherPc(pc).addIceCandidate(
+	//       new RTCIceCandidate(event.candidate)
+	//     ).then(
+	//       function () {
+	//         onAddIceCandidateSuccess(pc);
+	//       },
+	//       function (err) {
+	//         onAddIceCandidateError(pc, err);
+	//       }
+	//       );
+	//     trace(getName(pc) + ' ICE candidate: \n' + event.candidate.candidate);
+	//   }
+	// }
 
-	  function onIceCandidate(pc, event) {
-	    if (event.candidate) {
-	      getOtherPc(pc).addIceCandidate(new RTCIceCandidate(event.candidate)).then(function () {
-	        onAddIceCandidateSuccess(pc);
-	      }, function (err) {
-	        onAddIceCandidateError(pc, err);
-	      });
-	      trace(getName(pc) + ' ICE candidate: \n' + event.candidate.candidate);
-	    }
-	  }
+	// function onAddIceCandidateSuccess(pc) {
+	//   trace(getName(pc) + ' addIceCandidate success');
+	// }
 
-	  function onAddIceCandidateSuccess(pc) {
-	    trace(getName(pc) + ' addIceCandidate success');
-	  }
+	// function onAddIceCandidateError(pc, error) {
+	//   trace(getName(pc) + ' failed to add ICE Candidate: ' + error.toString());
+	// }
 
-	  function onAddIceCandidateError(pc, error) {
-	    trace(getName(pc) + ' failed to add ICE Candidate: ' + error.toString());
-	  }
+	// function onIceStateChange(pc, event) {
+	//   if (pc) {
+	//     trace(getName(pc) + ' ICE state: ' + pc.iceConnectionState);
+	//     console.log('ICE state change event: ', event);
+	//   }
+	// }
 
-	  function onIceStateChange(pc, event) {
-	    if (pc) {
-	      trace(getName(pc) + ' ICE state: ' + pc.iceConnectionState);
-	      console.log('ICE state change event: ', event);
-	    }
-	  }
+	// function hangup() {
+	//   trace('Ending call');
+	//   pc1.close();
+	//   pc2.close();
+	//   pc1 = null;
+	//   pc2 = null;
+	//   hangupButton.disabled = true;
+	//   callButton.disabled = false;
+	// }
 
-	  function hangup() {
-	    trace('Ending call');
-	    pc1.close();
-	    pc2.close();
-	    pc1 = null;
-	    pc2 = null;
-	    hangupButton.disabled = true;
-	    callButton.disabled = false;
-	  }
 
-	  function trace(text) {
-	    if (text[text.length - 1] === '\n') {
-	      text = text.substring(0, text.length - 1);
-	    }
-	    if (window.performance) {
-	      var now = (window.performance.now() / 1000).toFixed(3);
-	      console.log(now + ': ' + text);
-	    } else {
-	      console.log(text);
-	    }
-	  }
-	}
+	// function trace(text) {
+	//   if (text[text.length - 1] === '\n') {
+	//     text = text.substring(0, text.length - 1);
+	//   }
+	//   if (window.performance) {
+	//     var now = (window.performance.now() / 1000).toFixed(3);
+	//     console.log(now + ': ' + text);
+	//   } else {
+	//     console.log(text);
+	//   }
+	// }
+	// }
 
 /***/ },
 /* 177 */
@@ -22127,82 +22101,532 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// change this
-	var roomName = "testing";
+	var CharacterSelect = _react2.default.createClass({
+	  displayName: 'CharacterSelect',
 
-	var Game = _react2.default.createClass({
-	  displayName: 'Game',
+	  propTypes: {
+	    selectCharacter: _react2.default.PropTypes.func.isRequired
+	  },
+
+	  _selCharacter: function _selCharacter(event) {
+	    console.log('_selcharacter', event.target.id);
+	    switch (event.target.id) {
+	      case 'bm':
+	        this.props.selectCharacter('boxMan');
+	        break;
+	      case 'cg':
+	        this.props.selectCharacter('cameraGuy');
+	        break;
+	      default:
+	        break;
+	    }
+	    // this.props.selectCharacter(char);
+	  },
 
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
 	      null,
 	      _react2.default.createElement(
-	        'h2',
+	        'p',
 	        null,
-	        'Boxman the game'
+	        'Choose your character'
+	      ),
+	      _react2.default.createElement(
+	        'p',
+	        { id: 'bm', onClick: this._selCharacter },
+	        ' BoxMan '
+	      ),
+	      _react2.default.createElement(
+	        'p',
+	        { id: 'cg', onClick: this._selCharacter },
+	        ' CameraGuy '
 	      )
 	    );
 	  }
 	});
 
+	exports.default = CharacterSelect;
+
+/***/ },
+/* 178 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _boxMan = __webpack_require__(179);
+
+	var _boxMan2 = _interopRequireDefault(_boxMan);
+
+	var _cameraGuy = __webpack_require__(181);
+
+	var _cameraGuy2 = _interopRequireDefault(_cameraGuy);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// TODO change this
+	var roomName = "testing";
+
+	var Game = function Game(props) {
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    props.character === 'boxMan' ? _react2.default.createElement(_boxMan2.default, null) : _react2.default.createElement(_cameraGuy2.default, null)
+	  );
+	};
+	Game.propTypes = {
+	  character: _react2.default.PropTypes.string.isRequired
+	};
+
 	exports.default = Game;
 
+/***/ },
+/* 179 */
+/***/ function(module, exports, __webpack_require__) {
 
-	var start = document.getElementById('start');
-	start.onclick = stunAndTurn;
+	'use strict';
 
-	// specify stun and turn servers for help establishing connection between clients
-	function stunAndTurn() {
-	  console.log('connecting to XirSys...');
-	  // I know including the secret here isn't super secure, but it's a free stun and turn server so whatevs
-	  fetch('https://service.xirsys.com/ice?ident=brainsandspace&secret=09f8d0aa-7940-11e5-8514-a68d4d023276&domain=www.brainsandspace.com&application=default&room=default&secure=1').then(function (response) {
-	    return response.json();
-	  }).then(function (data) {
-	    // data.d is where the ICE servers object lives
-	    console.log('...connected to XirSys', data.d);
-	    setUpRTC(data.d);
-	  }).catch(function (err) {
-	    console.error(err);
-	  });
-	}
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
-	function setUpRTC(iceServers) {
-	  var webrtc = new SimpleWebRTC({
-	    localVideoEl: 'localVideo',
-	    remoteVideoEl: 'remoteVideos',
-	    autoRequestMedia: true,
-	    // TODO specify this based on character
-	    media: {
-	      audio: false,
-	      video: true
-	    },
-	    peerConnectionConfig: iceServers
-	  });
+	var _react = __webpack_require__(1);
 
-	  webrtc.on('readyToCall', function () {
-	    webrtc.joinRoom(roomName, function (err, roomDescription) {
-	      if (err) console.error(err);
-	      console.log('roomDescription', roomDescription);
+	var _react2 = _interopRequireDefault(_react);
+
+	var _rtc = __webpack_require__(180);
+
+	var _rtc2 = _interopRequireDefault(_rtc);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Viewport = function Viewport(props) {
+	  return _react2.default.createElement(
+	    'div',
+	    { className: 'viewport' },
+	    _react2.default.createElement('video', { className: 'currentVideo', autoPlay: true }),
+	    _react2.default.createElement(Chatbox, { msg: props.displayMsg })
+	  );
+	};
+	Viewport.propTypes = {
+	  displayMsg: _react2.default.PropTypes.object.isRequired
+	};
+
+	var Chatbox = function Chatbox(props) {
+	  return _react2.default.createElement(
+	    'div',
+	    { className: 'chatbox' },
+	    _react2.default.createElement(
+	      'p',
+	      null,
+	      props.msg.message
+	    )
+	  );
+	};
+	Chatbox.propTypes = {
+	  msg: _react2.default.PropTypes.object.isRequired
+	};
+
+	var BoxMan = _react2.default.createClass({
+	  displayName: 'BoxMan',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      incomingStreams: [],
+	      currentStream: null,
+	      displayMsg: {}
+	    };
+	  },
+
+	  _addedVideo: function _addedVideo(newStream) {
+	    // make sure the stream isn't already there
+	    var duplicate = false;
+	    for (var i = 0; i < this.state.incomingStreams.length; i++) {
+	      if (this.state.incomingStreams[i].id === newStream.id) {
+	        duplicate = true;
+	        break;
+	      }
+	    }
+	    if (!duplicate) {
+	      this.state.incomingStreams.push(newStream);
+	      this.state.currentStream = newStream;
+	      this.setState(this.state);
+	      console.log('new boxman state after adding video', this.state);
+	      this._changeVideo();
+	    }
+	  },
+
+	  _removedVideo: function _removedVideo(oldStream) {
+	    console.log('oldStream', oldStream);
+	    for (var i = 0; i < this.state.incomingStreams.length; i++) {
+	      if (this.state.incomingStreams[i].id === oldStream.id) {
+	        this.state.incomingStreams.splice(i, 1);
+	        break;
+	      }
+	    }
+	    // if we removed the currentStream, set it to another if any are available
+	    if (oldStream.id === this.state.currentStream.id) {
+	      console.log('removed the current stream');
+	      if (this.state.incomingStreams.length > 0) {
+	        this.state.currentStream = this.state.incomingStreams[0];
+	        this._changeVideo();
+	      }
+	    }
+	    this.setState(this.state);
+	    console.log('new boxman state after removing video', this.state);
+	  },
+
+	  _changeVideo: function _changeVideo() {
+	    var _this = this;
+
+	    // setting the video source to the media stream by passing it as a prop didn't seem to be working (React was telling me srcObject is not a valid prop for video elements), so I did this workaround, which is less Reacty
+	    var currentVideos = document.querySelectorAll('.currentVideo');
+	    currentVideos.forEach(function (videoEl) {
+	      videoEl.srcObject = _this.state.currentStream;
 	    });
-	  });
+	  },
 
-	  webrtc.on('videoAdded', function (videoEl, peer) {
-	    console.log(peer);
-	    console.log(videoEl.srcObject);
-	    var leftVid = document.querySelector('.vid-box-left');
-	    var rightVid = document.querySelector('.vid-box-right');
-	    document.body.appendChild(videoEl);
-	    console.log(videoEl.attributes);
-	    console.log('videoAdded', videoEl, videoEl.src);
-	    console.log('video el src', videoEl.src);
-	    rightVid.attributes.src = videoEl.src;
-	    console.log(rightVid);
+	  _cycleCameras: function _cycleCameras() {
+	    console.log('BoxMan trying to cycle cameras');
+	    if (this.state.incomingStreams.length > 1) {
+	      for (var i = 0; i < this.state.incomingStreams.length; i++) {
+	        if (this.state.incomingStreams[i].id === this.state.currentStream.id) {
+	          this.state.currentStream = this.state.incomingStreams[(i + 1) % this.state.incomingStreams.length];
+	          this.setState(this.state);
+	          this._changeVideo();
+	          break;
+	        }
+	      }
+	    }
+	  },
 
-	    // set the video srcObject to that of the incoming video
-	    leftVid.srcObject = videoEl.srcObject;
-	  });
-	}
+	  _newMessage: function _newMessage(msg) {
+	    this.state.displayMsg = msg;
+	    this.setState(this.state);
+	    var chat = document.querySelectorAll('.chatbox');
+	    chat.forEach(function (div) {
+	      div.style.opacity = 1;
+	    });
+
+	    // after 2 seconds, hide the message
+	    setTimeout(function () {
+	      chat.forEach(function (div) {
+	        div.style.opacity = 0;
+	      });
+	    }, 2000);
+	  },
+
+	  render: function render() {
+	    var _this2 = this;
+
+	    return _react2.default.createElement(
+	      'div',
+	      { onClick: this._cycleCameras },
+	      _react2.default.createElement(_rtc2.default, {
+	        config: { character: 'boxMan', roomName: 'testing', constraints: { audio: false, video: false } },
+	        addedVideo: function addedVideo(newStream) {
+	          return _this2._addedVideo(newStream);
+	        },
+	        removedVideo: function removedVideo(oldStream) {
+	          return _this2._removedVideo(oldStream);
+	        },
+	        newMessage: function newMessage(newMsg) {
+	          return _this2._newMessage(newMsg);
+	        }
+	      }),
+	      _react2.default.createElement(
+	        'h1',
+	        null,
+	        ' you are boxman '
+	      ),
+	      _react2.default.createElement(Viewport, { id: 'left', displayMsg: this.state.displayMsg }),
+	      _react2.default.createElement(Viewport, { id: 'right', displayMsg: this.state.displayMsg })
+	    );
+	  }
+	});
+
+	exports.default = BoxMan;
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/* ====================================================
+	  Component that handles all the webrtc connection stuff.
+	  I made this a component so it could tell its parent component when videos are added and deleted. I think that makes sense...
+	==================================================== */
+	var RTC = _react2.default.createClass({
+	  displayName: 'RTC',
+
+	  propTypes: {
+	    config: _react2.default.PropTypes.shape({
+	      character: _react2.default.PropTypes.string.isRequired,
+	      roomName: _react2.default.PropTypes.string.isRequired,
+	      constraints: _react2.default.PropTypes.shape({
+	        audio: _react2.default.PropTypes.bool.isRequired,
+	        video: _react2.default.PropTypes.bool.isRequired
+	      }).isRequired,
+	      iceServers: _react2.default.PropTypes.object
+	    }),
+	    addedVideo: _react2.default.PropTypes.func,
+	    removedVideo: _react2.default.PropTypes.func,
+	    newMessage: _react2.default.PropTypes.func.isRequired
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    this._connect(this.props.config);
+	  },
+
+	  _connect: function _connect(config) {
+	    console.log('clicked connect');
+	    this._stunAndTurn(config);
+	  },
+
+	  // specify stun and turn servers for help establishing connection between clients
+	  _stunAndTurn: function _stunAndTurn(config) {
+	    var _this = this;
+
+	    var conf = void 0;
+	    console.log('connecting to XirSys...');
+	    // I know including the secret here isn't super secure, but it's a free stun and turn server so whatevs
+	    fetch('https://service.xirsys.com/ice?ident=brainsandspace&secret=09f8d0aa-7940-11e5-8514-a68d4d023276&domain=www.brainsandspace.com&application=default&room=default&secure=1').then(function (response) {
+	      return response.json();
+	    }).then(function (data) {
+	      // data.d is where the ICE servers object lives
+	      console.log('...connected to XirSys', data.d);
+	      config['iceServers'] = data.d;
+	      _this._setUpRTC(config);
+	    }).catch(function (err) {
+	      console.error(err);
+	    });
+	  },
+
+	  _setUpRTC: function _setUpRTC(config) {
+	    var _this2 = this;
+
+	    // force the camera guy to use back camera
+	    if (config.character === 'cameraGuy') {
+	      navigator.mediaDevices.enumerateDevices().then(function (devices) {
+	        console.log('there are ' + devices.length + ' devices');
+	        console.log('devices: ', devices);
+
+	        // assuming the back camera is the last one enumerated
+	        config.constraints.video = {
+	          sourceId: devices[devices.length - 1].deviceId
+	        };
+	      }).catch(function (err) {
+	        console.error(err.name + ": " + error.message);
+	      });
+	    }
+
+	    this.webrtc = new SimpleWebRTC({
+	      localVideoEl: config.character === 'cameraGuy' ? document.getElementById('viewfinder') : null,
+	      autoRequestMedia: config.character === 'cameraGuy' ? true : false,
+	      // TODO specify this based on character
+	      media: config.constraints,
+	      peerConnectionConfig: config.iceServers
+	    });
+	    console.log('media', config.constraints);
+
+	    this.webrtc.on('readyToCall', function () {
+	      _this2.webrtc.joinRoom(config.roomName, function (err, roomDescription) {
+	        if (err) console.error(err);
+	        console.log('roomDescription: ', roomDescription);
+	      });
+	    });
+
+	    if (config.character === 'boxMan') {
+	      this.webrtc.on('videoAdded', function (videoEl, peer) {
+	        _this2.props.addedVideo(videoEl.srcObject);
+	      });
+	      this.webrtc.on('videoRemoved', function (videoEl, peer) {
+	        _this2.props.removedVideo(videoEl.srcObject);
+	      });
+	    }
+
+	    // for some reason, I couldn't figure out how to get this.webrtc.sendToAll to work (via sockets), so I ended up using the P2P data channel
+	    this.webrtc.on('channelMessage', function (peer, channel, data) {
+	      console.log('channelMessage', peer, channel, data);
+	      // console.log('message received with data: ', data, other)
+	      // if (data.type !== 'candidate' && data.type !== 'offer')      console.log(data)
+	      if (data.type === 'chat') {
+	        console.log('incoming message:', data.payload);
+	        _this2.props.newMessage(data.payload);
+	        // this.webrtc.sendDirectlyToAll('channelMessage', 'chat', `love from data channel ${config.character}`)
+	      }
+	    });
+
+	    var sendTest = document.getElementById('test');
+	    test.onclick = function () {
+	      _this2.webrtc.sendDirectlyToAll('channel1', 'chat', { message: 'love from the button of ' + config.character });
+	    };
+	  },
+	  render: function render() {
+	    return null;
+	  }
+	});
+
+	exports.default = RTC;
+
+/***/ },
+/* 181 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _rtc = __webpack_require__(180);
+
+	var _rtc2 = _interopRequireDefault(_rtc);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Messenger = _react2.default.createClass({
+	  displayName: 'Messenger',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      message: ''
+	    };
+	  },
+
+	  propTypes: {
+	    send: _react2.default.PropTypes.func.isRequired
+	  },
+
+	  _sendMessage: function _sendMessage(e) {
+	    e.preventDefault();
+	    console.log('resetting form');
+	    this.props.send(this.refs.text.value);
+	    this.refs.messageForm.reset();
+	  },
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'form',
+	        { onSubmit: this._sendMessage, ref: "messageForm" },
+	        _react2.default.createElement('input', { type: 'text', ref: "text", placeholder: 'send a message to Box Man' }),
+	        _react2.default.createElement('input', { type: 'submit', value: 'send' })
+	      )
+	    );
+	  }
+	});
+
+	var Viewfinder = function Viewfinder(props) {
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement('video', { id: 'viewfinder', autoPlay: true }),
+	    _react2.default.createElement(Chatbox, { msg: props.displayMsg })
+	  );
+	};
+	Viewfinder.propTypes = {
+	  displayMsg: _react2.default.PropTypes.object.isRequired
+	};
+
+	var Chatbox = function Chatbox(props) {
+	  return _react2.default.createElement(
+	    'div',
+	    { className: 'chatbox' },
+	    _react2.default.createElement(
+	      'p',
+	      null,
+	      props.msg.message
+	    )
+	  );
+	};
+	Chatbox.propTypes = {
+	  msg: _react2.default.PropTypes.object.isRequired
+	};
+
+	var CameraGuy = _react2.default.createClass({
+	  displayName: 'CameraGuy',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      incomingStreams: [],
+	      currentStream: null,
+	      displayMsg: {}
+	    };
+	  },
+
+	  _newMessage: function _newMessage(msg) {
+	    this.state.displayMsg = msg;
+	    this.setState(this.state);
+	    var chat = document.querySelectorAll('.chatbox');
+	    chat.forEach(function (div) {
+	      div.style.opacity = 1;
+	    });
+	    // after 2 seconds, hide the message
+	    setTimeout(function () {
+	      chat.forEach(function (div) {
+	        div.style.opacity = 0;
+	      });
+	    }, 2000);
+	  },
+
+	  _sendMessage: function _sendMessage(msg) {
+	    console.log('sending this message', msg);
+	    this.refs.myRTC.webrtc.sendDirectlyToAll('channelMessage', 'chat', { message: msg });
+	  },
+
+	  render: function render() {
+	    var _this = this;
+
+	    return _react2.default.createElement(
+	      'div',
+	      { onClick: this._cycleCameras },
+	      _react2.default.createElement(_rtc2.default, {
+	        config: { character: 'cameraGuy', roomName: 'testing', constraints: { audio: false, video: true } },
+	        newMessage: function newMessage(newMsg) {
+	          return _this._newMessage(newMsg);
+	        },
+	        ref: "myRTC"
+	      }),
+	      _react2.default.createElement(
+	        'h1',
+	        null,
+	        ' you are cameraguy '
+	      ),
+	      _react2.default.createElement(Viewfinder, { displayMsg: this.state.displayMsg }),
+	      _react2.default.createElement(Messenger, { send: function send(msg) {
+	          return _this._sendMessage(msg);
+	        } })
+	    );
+	  }
+	});
+
+	exports.default = CameraGuy;
 
 /***/ }
 /******/ ]);
