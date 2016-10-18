@@ -21469,7 +21469,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\n  background: #646464; }\n\n.vid-box-left {\n  width: 800px; }\n\n.chatbox {\n  transition: 0.5s; }\n", ""]);
+	exports.push([module.id, "body {\n  background: #646464; }\n\nvideo {\n  width: 100%; }\n\n#left, #right {\n  position: fixed;\n  bottom: 0;\n  width: 50vw; }\n\n#left {\n  left: 0; }\n\n#right {\n  right: 0; }\n\n.chatbox {\n  transition: 0.5s; }\n", ""]);
 
 	// exports
 
@@ -21805,6 +21805,8 @@
 	var _game2 = _interopRequireDefault(_game);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	console.clear();
 
 	/* ========================================
 	// This is our master component
@@ -22211,12 +22213,13 @@
 	var Viewport = function Viewport(props) {
 	  return _react2.default.createElement(
 	    'div',
-	    { className: 'viewport' },
+	    { id: props.id, className: 'viewport' },
 	    _react2.default.createElement('video', { className: 'currentVideo', autoPlay: true }),
 	    _react2.default.createElement(Chatbox, { msg: props.displayMsg })
 	  );
 	};
 	Viewport.propTypes = {
+	  id: _react2.default.PropTypes.string.isRequired,
 	  displayMsg: _react2.default.PropTypes.object.isRequired
 	};
 
@@ -22285,13 +22288,14 @@
 	  },
 
 	  _changeVideo: function _changeVideo() {
-	    var _this = this;
-
 	    // setting the video source to the media stream by passing it as a prop didn't seem to be working (React was telling me srcObject is not a valid prop for video elements), so I did this workaround, which is less Reacty
 	    var currentVideos = document.querySelectorAll('.currentVideo');
-	    currentVideos.forEach(function (videoEl) {
-	      videoEl.srcObject = _this.state.currentStream;
-	    });
+	    if (currentVideos.length > 0) {
+	      console.log(currentVideos);
+	      for (var i = 0; i < currentVideos.length; i++) {
+	        currentVideos[i].srcObject = this.state.currentStream;
+	      }
+	    }
 	  },
 
 	  _cycleCameras: function _cycleCameras() {
@@ -22325,7 +22329,7 @@
 	  },
 
 	  render: function render() {
-	    var _this2 = this;
+	    var _this = this;
 
 	    return _react2.default.createElement(
 	      'div',
@@ -22333,13 +22337,13 @@
 	      _react2.default.createElement(_rtc2.default, {
 	        config: { character: 'boxMan', roomName: 'testing', constraints: { audio: false, video: false } },
 	        addedVideo: function addedVideo(newStream) {
-	          return _this2._addedVideo(newStream);
+	          return _this._addedVideo(newStream);
 	        },
 	        removedVideo: function removedVideo(oldStream) {
-	          return _this2._removedVideo(oldStream);
+	          return _this._removedVideo(oldStream);
 	        },
 	        newMessage: function newMessage(newMsg) {
-	          return _this2._newMessage(newMsg);
+	          return _this._newMessage(newMsg);
 	        }
 	      }),
 	      _react2.default.createElement(
@@ -22384,7 +22388,7 @@
 	      roomName: _react2.default.PropTypes.string.isRequired,
 	      constraints: _react2.default.PropTypes.shape({
 	        audio: _react2.default.PropTypes.bool.isRequired,
-	        video: _react2.default.PropTypes.bool.isRequired
+	        video: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.bool, _react2.default.PropTypes.object]).isRequired
 	      }).isRequired,
 	      iceServers: _react2.default.PropTypes.object
 	    }),
@@ -22424,26 +22428,6 @@
 	  _setUpRTC: function _setUpRTC(config) {
 	    var _this2 = this;
 
-	    // force the camera guy to use back camera
-	    if (config.character === 'cameraGuy') {
-	      navigator.mediaDevices.enumerateDevices().then(function (devices) {
-	        console.log('there are ' + devices.length + ' devices');
-	        console.log('devices: ', devices);
-	        for (var i = 0; i < devices.length; i++) {
-	          if (devices[i].label.includes('back')) {
-	            // assuming the back camera is labeled with back somehow, like on my samsung galaxy s6 edge+, 
-	            // where the back camera has the label "camera2 0, facing back"
-	            config.constraints.video = {
-	              sourceId: devices[devices.length - 1].deviceId
-	            };
-	            break;
-	          }
-	        }
-	      }).catch(function (err) {
-	        console.error(err.name + ": " + error.message);
-	      });
-	    }
-
 	    this.webrtc = new SimpleWebRTC({
 	      localVideoEl: config.character === 'cameraGuy' ? document.getElementById('viewfinder') : null,
 	      autoRequestMedia: config.character === 'cameraGuy' ? true : false,
@@ -22482,8 +22466,8 @@
 	    });
 
 	    var sendTest = document.getElementById('test');
-	    test.onclick = function () {
-	      _this2.webrtc.sendDirectlyToAll('channel1', 'chat', { message: 'love from the button of ' + config.character });
+	    sendTest.onclick = function () {
+	      console.log(_this2.webrtc);
 	    };
 	  },
 	  render: function render() {
@@ -22510,6 +22494,10 @@
 	var _rtc = __webpack_require__(180);
 
 	var _rtc2 = _interopRequireDefault(_rtc);
+
+	var _cameraSelect = __webpack_require__(182);
+
+	var _cameraSelect2 = _interopRequireDefault(_cameraSelect);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22574,15 +22562,75 @@
 	  msg: _react2.default.PropTypes.object.isRequired
 	};
 
+	/* =======================================================
+	  Camera Guy Component
+	======================================================= */
 	var CameraGuy = _react2.default.createClass({
 	  displayName: 'CameraGuy',
 
+
 	  getInitialState: function getInitialState() {
 	    return {
+	      cameraSelected: false,
+	      availableCams: [],
 	      incomingStreams: [],
 	      currentStream: null,
-	      displayMsg: {}
+	      displayMsg: {},
+	      constraints: {
+	        audio: false,
+	        video: true
+	      }
 	    };
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    navigator.mediaDevices.enumerateDevices().then(this._gotDevices).catch(function (err) {
+	      console.error(err);
+	    });
+	  },
+
+	  _gotDevices: function _gotDevices(deviceInfos) {
+	    console.log('got devices', deviceInfos);
+	    for (var i = 0; i < deviceInfos.length; i++) {
+	      // option.value = deviceInfos[i].deviceId;
+	      // console.log(i);
+	      if (deviceInfos[i].kind === 'videoinput') {
+	        // option.text = deviceInfos[i].label || `camera ${videoSelect.length}`;
+	        // console.log(option);
+	        this.state.availableCams.push(deviceInfos[i]);
+	        console.log(deviceInfos[i]);
+	      }
+	    }
+	    this.setState(this.state);
+	  },
+
+	  _selectCamera: function _selectCamera(cam) {
+	    var _this = this;
+
+	    console.log('in _switch camera with ', cam);
+	    if (window.stream) {
+	      console.log('already was a window stream: ', window.stream);
+	      window.stream.getTracks().forEach(function (track) {
+	        track.stop();
+	      });
+	    }
+	    var videoSource = cam;
+	    this.state.constraints = {
+	      audio: false,
+	      video: { deviceId: videoSource ? { exact: videoSource } : undefined }
+	    };
+	    navigator.mediaDevices.getUserMedia(this.state.constraints).then(function (stream) {
+	      window.stream = stream;
+	      var videoEl = document.getElementById('viewfinder');
+	      videoEl.srcObject = stream;
+	      videoEl.style.display = "block";
+
+	      // changing cameraSelected triggers Camera Guy to do RTC with Box Man
+	      _this.state.cameraSelected = true;
+	      _this.setState(_this.state);
+	    }).catch(function (err) {
+	      console.error(err);
+	    });
 	  },
 
 	  _newMessage: function _newMessage(msg) {
@@ -22606,32 +22654,113 @@
 	  },
 
 	  render: function render() {
-	    var _this = this;
+	    var _this2 = this;
 
 	    return _react2.default.createElement(
 	      'div',
-	      { onClick: this._cycleCameras },
-	      _react2.default.createElement(_rtc2.default, {
-	        config: { character: 'cameraGuy', roomName: 'testing', constraints: { audio: false, video: true } },
-	        newMessage: function newMessage(newMsg) {
-	          return _this._newMessage(newMsg);
-	        },
-	        ref: "myRTC"
-	      }),
-	      _react2.default.createElement(
-	        'h1',
-	        null,
-	        ' you are cameraguy '
-	      ),
+	      null,
 	      _react2.default.createElement(Viewfinder, { displayMsg: this.state.displayMsg }),
-	      _react2.default.createElement(Messenger, { send: function send(msg) {
-	          return _this._sendMessage(msg);
-	        } })
+	      !this.state.cameraSelected ? _react2.default.createElement(_cameraSelect2.default, {
+	        availableCams: this.state.availableCams,
+	        selectCamera: function selectCamera(cam) {
+	          return _this2._selectCamera(cam);
+	        }
+	      }) : _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_rtc2.default, {
+	          config: {
+	            character: 'cameraGuy',
+	            roomName: 'testing',
+	            constraints: this.state.constraints
+	          },
+	          newMessage: function newMessage(newMsg) {
+	            return _this2._newMessage(newMsg);
+	          },
+	          ref: "myRTC"
+	        }),
+	        _react2.default.createElement(Messenger, { send: function send(msg) {
+	            return _this2._sendMessage(msg);
+	          } })
+	      )
 	    );
 	  }
 	});
 
 	exports.default = CameraGuy;
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var CameraSelect = _react2.default.createClass({
+	  displayName: 'CameraSelect',
+
+	  propTypes: {
+	    selectCamera: _react2.default.PropTypes.func.isRequired,
+	    availableCams: _react2.default.PropTypes.array.isRequired
+	  },
+
+	  _submit: function _submit(evt) {
+	    evt.preventDefault();
+	    // console.log(evt.target);
+	    var checkedButton = document.querySelectorAll('.radioBtn:checked');
+	    if (checkedButton.length === 1) {
+	      console.log(checkedButton);
+	      console.log('this.refs.videoSelect.value', checkedButton[0].value);
+	      this.props.selectCamera(checkedButton[0].value);
+	    }
+	  },
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { id: 'cameraSelect' },
+	      _react2.default.createElement(
+	        'form',
+	        { onSubmit: this._submit },
+	        this.props.availableCams.map(function (deviceInfo, i) {
+	          console.log(deviceInfo);
+	          console.log(deviceInfo.label);
+	          return _react2.default.createElement(
+	            'div',
+	            { key: Math.random() },
+	            _react2.default.createElement('input', {
+	              className: 'radioBtn',
+	              type: 'radio',
+	              name: 'camera',
+	              value: deviceInfo.deviceId,
+	              label: deviceInfo.label || 'camera ' + i
+	            }),
+	            deviceInfo.label || 'camera ' + i,
+	            ' ',
+	            _react2.default.createElement('br', null)
+	          );
+	        }),
+	        ';',
+	        this.props.availableCams.length === 0 ? _react2.default.createElement(
+	          'p',
+	          null,
+	          'Make sure the app can access your camera!'
+	        ) : _react2.default.createElement('input', { type: 'submit', value: 'Go' })
+	      )
+	    );
+	  }
+	});
+
+	exports.default = CameraSelect;
 
 /***/ }
 /******/ ]);

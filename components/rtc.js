@@ -11,7 +11,10 @@ const RTC = React.createClass({
       roomName: React.PropTypes.string.isRequired,
       constraints: React.PropTypes.shape({
         audio: React.PropTypes.bool.isRequired,
-        video: React.PropTypes.bool.isRequired
+        video: React.PropTypes.oneOfType([
+          React.PropTypes.bool,
+          React.PropTypes.object
+        ]).isRequired
       }).isRequired,
       iceServers: React.PropTypes.object
     }),
@@ -51,28 +54,6 @@ const RTC = React.createClass({
 
   _setUpRTC: function(config) {
 
-    // force the camera guy to use back camera
-    if (config.character === 'cameraGuy') {
-      navigator.mediaDevices.enumerateDevices()
-      .then(function(devices) {
-        console.log(`there are ${devices.length} devices`);
-        console.log('devices: ', devices);
-        for (let i = 0; i < devices.length; i++) {
-          if (devices[i].label.includes('back')) {
-            // assuming the back camera is labeled with back somehow, like on my samsung galaxy s6 edge+, 
-            // where the back camera has the label "camera2 0, facing back"
-            config.constraints.video = {
-              sourceId: devices[devices.length-1].deviceId
-            };
-            break;
-          }
-        }
-        })
-      .catch(function(err) {
-        console.error(err.name + ": " + error.message);
-      });
-    }
-
     this.webrtc = new SimpleWebRTC({
       localVideoEl: config.character === 'cameraGuy' ? document.getElementById('viewfinder') : null,
       autoRequestMedia: config.character === 'cameraGuy' ? true : false,
@@ -80,7 +61,7 @@ const RTC = React.createClass({
       media: config.constraints,
       peerConnectionConfig: config.iceServers
     });
-    console.log('media', config.constraints);
+    console.log('media',config.constraints);
 
     this.webrtc.on('readyToCall', () => {
       this.webrtc.joinRoom(config.roomName, (err, roomDescription) => {
@@ -107,8 +88,8 @@ const RTC = React.createClass({
     });
     
     let sendTest = document.getElementById('test');
-    test.onclick = () => {
-      this.webrtc.sendDirectlyToAll('channel1','chat', {message:`love from the button of ${config.character}`});
+    sendTest.onclick = () => {
+      console.log(this.webrtc);
     };
   },
   render: function() {

@@ -2,8 +2,21 @@ body {
   background: #646464;
 }
 
-.vid-box-left{ width: 800px; }
+video {
+  width: 100%;
+}
 
+#left, #right {
+  position: fixed;
+  bottom: 0;
+  width: 50vw;
+}
+#left {
+  left: 0;
+}
+#right {
+  right: 0;
+}
 .chatbox {
   transition: 0.5s;
 }

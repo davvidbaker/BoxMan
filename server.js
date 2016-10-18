@@ -11,3 +11,5 @@ app.get('/', function(req, res) {
   console.log(req);
   res.render('index');
 });
+
+app.get('/cameras.html', (req, res) => {res.render('cameras');});

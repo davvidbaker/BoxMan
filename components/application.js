@@ -3,6 +3,7 @@ import React from 'react';
 import CharacterSelect from './characterSelect.js';
 import Game from './game.js';
 
+console.clear();
 
 /* ========================================
 // This is our master component

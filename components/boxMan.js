@@ -3,13 +3,14 @@ import RTC from './rtc.js';
 
 const Viewport = (props) => {
   return (
-    <div className="viewport">
+    <div id={props.id} className="viewport">
       <video className="currentVideo" autoPlay></video>
       <Chatbox msg={props.displayMsg}/>
     </div>
   );
 };
 Viewport.propTypes = {
+  id: React.PropTypes.string.isRequired,
   displayMsg: React.PropTypes.object.isRequired
 };
 
@@ -74,7 +75,12 @@ const BoxMan = React.createClass({
   _changeVideo: function() {
     // setting the video source to the media stream by passing it as a prop didn't seem to be working (React was telling me srcObject is not a valid prop for video elements), so I did this workaround, which is less Reacty
     const currentVideos = document.querySelectorAll('.currentVideo');
-    currentVideos.forEach(videoEl => { videoEl.srcObject = this.state.currentStream; });
+    if (currentVideos.length > 0) {
+      console.log(currentVideos);
+      for (let i = 0; i < currentVideos.length; i++) {
+        currentVideos[i].srcObject = this.state.currentStream;
+      }
+    } 
   },
 
   _cycleCameras: function() {
