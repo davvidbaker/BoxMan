@@ -21469,7 +21469,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\n  background: #646464; }\n\nvideo {\n  width: 100%; }\n\n#left, #right {\n  position: fixed;\n  bottom: 0;\n  width: 50vw; }\n\n#left {\n  left: 0; }\n\n#right {\n  right: 0; }\n\n.chatbox {\n  transition: 0.5s; }\n", ""]);
+	exports.push([module.id, "body {\n  background: #646464; }\n\n#left, #right {\n  position: fixed;\n  bottom: 0;\n  width: 50vw;\n  overflow: hidden;\n  height: 100vh; }\n\n#left {\n  left: 0; }\n\n#right {\n  right: 0; }\n\n.chatbox {\n  transition: 0.5s; }\n\n.currentVideo {\n  height: 100vh; }\n", ""]);
 
 	// exports
 
@@ -22351,8 +22351,12 @@
 	        null,
 	        ' you are boxman '
 	      ),
-	      _react2.default.createElement(Viewport, { id: 'left', displayMsg: this.state.displayMsg }),
-	      _react2.default.createElement(Viewport, { id: 'right', displayMsg: this.state.displayMsg })
+	      _react2.default.createElement(
+	        'div',
+	        { id: 'viewports-container' },
+	        _react2.default.createElement(Viewport, { id: 'left', displayMsg: this.state.displayMsg }),
+	        _react2.default.createElement(Viewport, { id: 'right', displayMsg: this.state.displayMsg })
+	      )
 	    );
 	  }
 	});

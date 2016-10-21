@@ -2,14 +2,12 @@ body {
   background: #646464;
 }
 
-video {
-  width: 100%;
-}
-
 #left, #right {
   position: fixed;
   bottom: 0;
   width: 50vw;
+  overflow: hidden;
+  height: 100vh;
 }
 #left {
   left: 0;
@@ -19,4 +17,7 @@ video {
 }
 .chatbox {
   transition: 0.5s;
+}
+.currentVideo {
+  height: 100vh;
 }

@@ -119,8 +119,10 @@ const BoxMan = React.createClass({
           newMessage = {(newMsg) => this._newMessage(newMsg)}
         />
         <h1> you are boxman </h1>
-        <Viewport id="left"  displayMsg={this.state.displayMsg} />
-        <Viewport id="right" displayMsg={this.state.displayMsg} /> 
+        <div id="viewports-container">
+          <Viewport id="left"  displayMsg={this.state.displayMsg} />
+          <Viewport id="right" displayMsg={this.state.displayMsg} /> 
+        </div>
       </div>
     );
   }
