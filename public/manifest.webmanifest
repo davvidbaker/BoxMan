@@ -1,0 +1,12 @@
+{
+  "name": "Box Man",
+  "short_name": "Box Man",
+  "icons": [{
+    "src": "./images/favicon-192x192.png",
+    "sizes": "192x192",
+    "type":"image/png"
+  }],
+  "start_url": "./index.html",
+  "background_color": "#f5f5f5",
+  "display": "fullscreen"
+}
