@@ -11,7 +11,7 @@ const Game = (props) => {
     <div>
       {props.character === 'boxMan' ? 
         <BoxMan localStream={props.localStream} gameroom={props.gameroom} /> :
-        <CameraGuy localStream={props.localStream} gameroom={props.gameroom} />
+        <CameraGuy constraints={props.constraints} localStream={props.localStream} gameroom={props.gameroom} />
       }
 
     </div>
@@ -21,6 +21,7 @@ Game.propTypes = {
   character: React.PropTypes.string.isRequired,
   gameroom: React.PropTypes.string.isRequired,
   localStream:React.PropTypes.object.isRequired,
+  constraints:React.PropTypes.object
 };
 
 

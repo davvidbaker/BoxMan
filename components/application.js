@@ -72,8 +72,8 @@ const Application = React.createClass({
         {this.state.phase === 'chooseCharacter' ? 
           <CharacterSelect selectCharacter={this._selectCharacter} /> :
           (this.state.phase === 'cameraSelect') ? 
-            <CameraSelect selectCamera={this._selectCamera} /> :
-            <Game localStream={this.state.localStream} character={this.state.character} gameroom={this.state.gameroom}/>
+            <CameraSelect character={this.state.character} selectCamera={this._selectCamera} /> :
+            <Game constraints={this.state.constraints} localStream={this.state.localStream} character={this.state.character} gameroom={this.state.gameroom}/>
         }
       </div>
     );

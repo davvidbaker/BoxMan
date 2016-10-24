@@ -2,22 +2,7 @@ import React from 'react';
 
 import RTC from './rtc.js';
 import Chatbox from './chatbox.js';
-import CameraSelect from './cameraSelect.js';
-
-
-// box man has two viewports (left and right), one for each eye
-const Viewport = (props) => {
-  return (
-    <div id={props.id} className="viewport">
-      <video className="currentVideo" autoPlay></video>
-      <Chatbox msg={props.displayMsg}/>
-    </div>
-  );
-};
-Viewport.propTypes = {
-  id: React.PropTypes.string.isRequired,
-  displayMsg: React.PropTypes.object.isRequired
-};
+import Viewport from './viewport.js'
 
 
 const BoxMan = React.createClass({
@@ -30,8 +15,7 @@ const BoxMan = React.createClass({
     return ({
       streams: [],
       currentStream: null,
-      displayMsg: {},
-      cameraSelected: false
+      displayMsg: {}
     });
   },
 
@@ -50,6 +34,14 @@ const BoxMan = React.createClass({
   },
 
   _handleTouch: function(evt) {
+    
+    // try to go full screen for box man
+    if (!document.fullScreenElement) {
+      this.refs.bmContainer.webkitRequestFullscreen();
+    }
+    this.refs.bmContainer.webkitRequestFullscreen();
+    
+
     console.log(document.querySelector('.currentVideo').style.height);
     let curHeight = document.querySelector('.currentVideo').style.height.match(/[-\.\d]*/)[0]
     console.log('curHeight', curHeight)
@@ -143,16 +135,18 @@ const BoxMan = React.createClass({
 
   render: function()  {
     return (   
-      <div onClick={this._cycleCameras}>
+      <div ref={"bmContainer"} onClick={this._cycleCameras}>
         <RTC 
           config={ { character: 'boxMan', roomName: this.props.gameroom, constraints: {audio:false, video: false}} }
           addedVideo={this._addedVideo} 
           removedVideo={this._removedVideo}
           newMessage={this._newMessage}
         />
-        <div id="viewports-container">
-          <Viewport id="left"  displayMsg={this.state.displayMsg} />
-          <Viewport id="right" displayMsg={this.state.displayMsg} /> 
+        <div id="vertical-flexbox">
+          <div id="viewports-container">
+            <Viewport id="left"  displayMsg={this.state.displayMsg} />
+            <Viewport id="right" displayMsg={this.state.displayMsg} /> 
+          </div>
         </div>
       </div>
     );

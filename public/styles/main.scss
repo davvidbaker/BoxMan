@@ -7,18 +7,16 @@ body {
 }
 
 #left, #right {
-  position: fixed;
-  bottom: 0;
   width: 50vw;
   overflow: hidden;
-  height: 100vh;
+  text-align:center;
 }
-#left {
-  left: 0;
-}
-#right {
-  right: 0;
-}
+// #left {
+//   left: 0;
+// }
+// #right {
+//   right: 0;
+// }
 .chatbox {
   position: fixed;
   line-height:100vh;
@@ -127,11 +125,27 @@ h1 {
 .message-form {
   font-size: 28px;
   text-align: center;
-  // width:100%;
 }
 .message-form::-webkit-input-placeholder {
   font-size: 20px;
-  // line-height: 
+}
+
+#vertical-flexbox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  left: 0;
+  top: 0;
+  background:black;
+  height:100vh;
+  width:100vw;
+  position:fixed;
+}
+
+#viewports-container {
+  display: flex;
+  width:100vw;
+
 }
 
 input {

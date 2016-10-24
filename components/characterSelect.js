@@ -33,7 +33,7 @@ const CharacterSelect= React.createClass({
     return (
       <div id="character-select">
         <h1>enter a unique name for your game</h1>
-        <input id="gamename" type="text" placeholder="your game name" ref="gamename" autoCapitalize="off"/>
+        <input id="gamename" type="text" placeholder="your game name" ref={"gamename"} autoCapitalize="off"/>
         <h1>Choose your character</h1>
         <div id="character-container" >
           <div className="character"><img src="images/boxManHead.png" id="bm" onClick={this._selCharacter} width="135%" /></div>

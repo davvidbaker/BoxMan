@@ -60,7 +60,7 @@ const RTC = React.createClass({
       media: config.constraints,
       peerConnectionConfig: config.iceServers
     });
-    console.log('media',config.constraints);
+    console.log('config contraints',config.constraints);
 
     this.webrtc.on('readyToCall', () => {
       this.webrtc.joinRoom(config.roomName, (err, roomDescription) => {
