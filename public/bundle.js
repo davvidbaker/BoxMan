@@ -34,7 +34,7 @@
 /******/ 	__webpack_require__.c = installedModules;
 
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "/";
 
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -62,8 +62,9 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// import { Router, Route, hashHistory } from 'react-router';
+
 	console.clear();
-	console.log('loadeddd');
 
 	_reactDom2.default.render(_react2.default.createElement(_application2.default, null), document.getElementById('container'));
 
@@ -21469,7 +21470,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\n  background: #646464; }\n\n#left, #right {\n  position: fixed;\n  bottom: 0;\n  width: 50vw;\n  overflow: hidden;\n  height: 100vh; }\n\n#left {\n  left: 0; }\n\n#right {\n  right: 0; }\n\n.chatbox {\n  transition: 0.5s; }\n\n.currentVideo {\n  height: 100vh; }\n", ""]);
+	exports.push([module.id, "body {\n  background: #646464;\n  font-family: 'Ropa Sans'; }\n\n#left, #right {\n  position: fixed;\n  bottom: 0;\n  width: 50vw;\n  overflow: hidden;\n  height: 100vh; }\n\n#left {\n  left: 0; }\n\n#right {\n  right: 0; }\n\n.chatbox {\n  position: fixed;\n  line-height: 100vh;\n  width: 50vw;\n  text-align: center;\n  top: 0;\n  transition: 0.5s;\n  z-index: 4;\n  color: #FCBE1F;\n  font-family: 'Ropa Sans';\n  font-size: 28px;\n  text-shadow: 1px 1px 1px #000; }\n\n.currentVideo {\n  height: 100vh; }\n\n#viewfinder {\n  display: flex;\n  justify-content: space-around; }\n\n#gamename {\n  font-family: 'Ropa Sans';\n  text-align: center;\n  font-size: 3vw;\n  margin-top: -20px; }\n\n#character-select {\n  text-align: center; }\n\nh1 {\n  font-family: Bangers;\n  font-weight: 400;\n  color: #FCBE1F;\n  font-size: 5vw; }\n\n#background-title {\n  position: fixed;\n  bottom: 0;\n  text-align: center;\n  width: 98vw;\n  font-family: Bangers;\n  color: #606060;\n  z-index: -10;\n  display: flex;\n  flex-direction: column;\n  align-items: center; }\n\n#title {\n  font-size: 30vw;\n  margin: 0; }\n\n#subtitle {\n  margin: 20px;\n  font-size: 21vw; }\n\n#character-container {\n  display: flex;\n  justify-content: space-around; }\n\n.character {\n  padding: 20px;\n  width: 30%;\n  max-width: 200px;\n  transition: 0.3s; }\n\n.character:hover {\n  transform: scale(1.1); }\n\n@media (min-width: 1300px) {\n  #character-container {\n    position: fixed;\n    width: 100vw;\n    bottom: 0;\n    justify-content: space-between; }\n  .character {\n    max-width: 250px;\n    padding: 50px; } }\n\n.angry::-webkit-input-placeholder {\n  color: #DE4536; }\n\n#messenger {\n  text-align: center;\n  margin-top: 20px; }\n\n.message-form {\n  font-size: 28px;\n  text-align: center; }\n\n.message-form::-webkit-input-placeholder {\n  font-size: 20px; }\n\ninput {\n  font-family: 'Ropa Sans'; }\n", ""]);
 
 	// exports
 
@@ -21800,7 +21801,11 @@
 
 	var _characterSelect2 = _interopRequireDefault(_characterSelect);
 
-	var _game = __webpack_require__(178);
+	var _cameraSelect = __webpack_require__(178);
+
+	var _cameraSelect2 = _interopRequireDefault(_cameraSelect);
+
+	var _game = __webpack_require__(179);
 
 	var _game2 = _interopRequireDefault(_game);
 
@@ -21817,275 +21822,79 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      phase: "chooseCharacter",
-	      character: ""
+	      character: "",
+	      gameroom: "",
+	      camera: null,
+	      constraints: {
+	        audio: false,
+	        video: true
+	      },
+	      localStream: null
 	    };
 	  },
 
-	  _selectCharacter: function _selectCharacter(yourChar) {
+	  _selectCharacter: function _selectCharacter(yourChar, gameroom) {
 	    this.state.character = yourChar;
-	    this.state.phase = 'game';
+	    this.state.phase = 'cameraSelect';
+	    // add suffix box-man to quasi-ensure unique game room name
+	    this.state.gameroom = gameroom + 'box-man';
 	    this.setState(this.state);
 	  },
 
-	  render: function render() {
+	  _selectCamera: function _selectCamera(cam) {
 	    var _this = this;
 
+	    console.log('in _switch camera with ', cam);
+	    if (window.stream) {
+	      console.log('already was a window stream: ', window.stream);
+	      window.stream.getTracks().forEach(function (track) {
+	        track.stop();
+	      });
+	    }
+	    var videoSource = cam;
+	    this.state.constraints = {
+	      audio: false,
+	      video: { deviceId: videoSource ? { exact: videoSource } : undefined }
+	    };
+	    navigator.mediaDevices.getUserMedia(this.state.constraints).then(function (stream) {
+	      window.stream = stream;
+	      var videoEl = document.getElementById('viewfinder-video') || document.createElement('new-video');
+	      _this.state.localStream = stream;
+	      videoEl.srcObject = stream;
+	      // document.getElementById('viewfinder').style.display = "flex";
+
+	      // changing cameraSelected triggers the next phase, which is the game
+	      _this.state.phase = 'game';
+	      _this.setState(_this.state);
+	    }).catch(function (err) {
+	      console.error(err);
+	    });
+	  },
+
+	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
 	      { className: 'application' },
 	      _react2.default.createElement(
-	        'h1',
-	        null,
-	        'Application Ahoy'
+	        'div',
+	        { id: 'background-title' },
+	        _react2.default.createElement(
+	          'p',
+	          { id: 'title' },
+	          'BOX MAN'
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          { id: 'subtitle' },
+	          'OUT OF BODY'
+	        )
 	      ),
-	      this.state.phase === 'chooseCharacter' ? _react2.default.createElement(_characterSelect2.default, { selectCharacter: function selectCharacter(yourChar) {
-	          return _this._selectCharacter(yourChar);
-	        } }) : _react2.default.createElement(_game2.default, { character: this.state.character })
+	      this.state.phase === 'chooseCharacter' ? _react2.default.createElement(_characterSelect2.default, { selectCharacter: this._selectCharacter }) : this.state.phase === 'cameraSelect' ? _react2.default.createElement(_cameraSelect2.default, { selectCamera: this._selectCamera }) : _react2.default.createElement(_game2.default, { localStream: this.state.localStream, character: this.state.character, gameroom: this.state.gameroom })
 	    );
 	  }
 	});
 
 	exports.default = Application;
-
-	// function codeLabCode() {
-	// var startButton = document.getElementById('startButton');
-	// var callButton = document.getElementById('callButton');
-	// var hangupButton = document.getElementById('hangupButton');
-	// callButton.disabled = true;
-	// hangupButton.disabled = true;
-	// startButton.onclick = start;
-	// callButton.onclick = call;
-	// hangupButton.onclick = hangup;
-
-	// var startTime;
-	// var localVideo = document.getElementById('localVideo');
-	// var remoteVideo = document.getElementById('remoteVideo');
-
-	// localVideo.addEventListener('loadedmetadata', function () {
-	//   trace('Local video videoWidth: ' + this.videoWidth +
-	//     'px,  videoHeight: ' + this.videoHeight + 'px');
-	// });
-
-	// remoteVideo.addEventListener('loadedmetadata', function () {
-	//   trace('Remote video videoWidth: ' + this.videoWidth +
-	//     'px,  videoHeight: ' + this.videoHeight + 'px');
-	// });
-
-	// remoteVideo.onresize = function () {
-	//   trace('Remote video size changed to ' +
-	//     remoteVideo.videoWidth + 'x' + remoteVideo.videoHeight);
-	//   // We'll use the first onresize callback as an indication that video has started
-	//   // playing out.
-	//   if (startTime) {
-	//     var elapsedTime = window.performance.now() - startTime;
-	//     trace('Setup time: ' + elapsedTime.toFixed(3) + 'ms');
-	//     startTime = null;
-	//   }
-	// };
-
-	// var localStream;
-	// var pc1;
-	// var pc2;
-	// var offerOptions = {
-	//   offerToReceiveAudio: 1,
-	//   offerToReceiveVideo: 1
-	// };
-
-	// function getName(pc) {
-	//   return (pc === pc1) ? 'pc1' : 'pc2';
-	// }
-
-	// function getOtherPc(pc) {
-	//   return (pc === pc1) ? pc2 : pc1;
-	// }
-
-	// function gotStream(stream) {
-	//   trace('Received local stream');
-	//   localVideo.srcObject = stream;
-	//   // Add localStream to global scope so it's accessible from the browser console
-	//   window.localStream = localStream = stream;
-	//   callButton.disabled = false;
-	// }
-
-	// function start() {
-	//   trace('Requesting local stream');
-	//   startButton.disabled = true;
-	//   navigator.mediaDevices.getUserMedia({
-	//     audio: false,
-	//     video: true
-	//   })
-	//     .then(gotStream)
-	//     .catch(function (e) {
-	//       alert('getUserMedia() error: ' + e.name);
-	//     });
-	// }
-
-	// function call() {
-	//   callButton.disabled = true;
-	//   hangupButton.disabled = false;
-	//   trace('Starting call');
-	//   startTime = window.performance.now();
-	//   var videoTracks = localStream.getVideoTracks();
-	//   var audioTracks = localStream.getAudioTracks();
-	//   if (videoTracks.length > 0) {
-	//     trace('Using video device: ' + videoTracks[0].label);
-	//   }
-	//   if (audioTracks.length > 0) {
-	//     trace('Using audio device: ' + audioTracks[0].label);
-	//   }
-	//   var servers = null;
-	//   // Add pc1 to global scope so it's accessible from the browser console
-	//   window.pc1 = pc1 = new RTCPeerConnection(servers);
-	//   trace('Created local peer connection object pc1');
-	//   pc1.onicecandidate = function (e) {
-	//     onIceCandidate(pc1, e);
-	//   };
-	//   // Add pc2 to global scope so it's accessible from the browser console
-	//   window.pc2 = pc2 = new RTCPeerConnection(servers);
-	//   trace('Created remote peer connection object pc2');
-	//   pc2.onicecandidate = function (e) {
-	//     onIceCandidate(pc2, e);
-	//   };
-	//   pc1.oniceconnectionstatechange = function (e) {
-	//     onIceStateChange(pc1, e);
-	//   };
-	//   pc2.oniceconnectionstatechange = function (e) {
-	//     onIceStateChange(pc2, e);
-	//   };
-	//   pc2.onaddstream = gotRemoteStream;
-
-	//   pc1.addStream(localStream);
-	//   trace('Added local stream to pc1');
-
-	//   trace('pc1 createOffer start');
-	//   pc1.createOffer(
-	//     offerOptions
-	//   ).then(
-	//     onCreateOfferSuccess,
-	//     onCreateSessionDescriptionError
-	//     );
-	// }
-
-	// function onCreateSessionDescriptionError(error) {
-	//   trace('Failed to create session description: ' + error.toString());
-	// }
-
-	// function onCreateOfferSuccess(desc) {
-	//   trace('Offer from pc1\n' + desc.sdp);
-	//   trace('pc1 setLocalDescription start');
-	//   pc1.setLocalDescription(desc).then(
-	//     function () {
-	//       onSetLocalSuccess(pc1);
-	//     },
-	//     onSetSessionDescriptionError
-	//   );
-	//   trace('pc2 setRemoteDescription start');
-	//   pc2.setRemoteDescription(desc).then(
-	//     function () {
-	//       onSetRemoteSuccess(pc2);
-	//     },
-	//     onSetSessionDescriptionError
-	//   );
-	//   trace('pc2 createAnswer start');
-	//   // Since the 'remote' side has no media stream we need
-	//   // to pass in the right constraints in order for it to
-	//   // accept the incoming offer of audio and video.
-	//   pc2.createAnswer().then(
-	//     onCreateAnswerSuccess,
-	//     onCreateSessionDescriptionError
-	//   );
-	// }
-
-	// function onSetLocalSuccess(pc) {
-	//   trace(getName(pc) + ' setLocalDescription complete');
-	// }
-
-	// function onSetRemoteSuccess(pc) {
-	//   trace(getName(pc) + ' setRemoteDescription complete');
-	// }
-
-	// function onSetSessionDescriptionError(error) {
-	//   trace('Failed to set session description: ' + error.toString());
-	// }
-
-	// function gotRemoteStream(e) {
-	//   // Add remoteStream to global scope so it's accessible from the browser console
-	//   window.remoteStream = remoteVideo.srcObject = e.stream;
-	//   trace('pc2 received remote stream');
-	// }
-
-	// function onCreateAnswerSuccess(desc) {
-	//   trace('Answer from pc2:\n' + desc.sdp);
-	//   trace('pc2 setLocalDescription start');
-	//   pc2.setLocalDescription(desc).then(
-	//     function () {
-	//       onSetLocalSuccess(pc2);
-	//     },
-	//     onSetSessionDescriptionError
-	//   );
-	//   trace('pc1 setRemoteDescription start');
-	//   pc1.setRemoteDescription(desc).then(
-	//     function () {
-	//       onSetRemoteSuccess(pc1);
-	//     },
-	//     onSetSessionDescriptionError
-	//   );
-	// }
-
-	// function onIceCandidate(pc, event) {
-	//   if (event.candidate) {
-	//     getOtherPc(pc).addIceCandidate(
-	//       new RTCIceCandidate(event.candidate)
-	//     ).then(
-	//       function () {
-	//         onAddIceCandidateSuccess(pc);
-	//       },
-	//       function (err) {
-	//         onAddIceCandidateError(pc, err);
-	//       }
-	//       );
-	//     trace(getName(pc) + ' ICE candidate: \n' + event.candidate.candidate);
-	//   }
-	// }
-
-	// function onAddIceCandidateSuccess(pc) {
-	//   trace(getName(pc) + ' addIceCandidate success');
-	// }
-
-	// function onAddIceCandidateError(pc, error) {
-	//   trace(getName(pc) + ' failed to add ICE Candidate: ' + error.toString());
-	// }
-
-	// function onIceStateChange(pc, event) {
-	//   if (pc) {
-	//     trace(getName(pc) + ' ICE state: ' + pc.iceConnectionState);
-	//     console.log('ICE state change event: ', event);
-	//   }
-	// }
-
-	// function hangup() {
-	//   trace('Ending call');
-	//   pc1.close();
-	//   pc2.close();
-	//   pc1 = null;
-	//   pc2 = null;
-	//   hangupButton.disabled = true;
-	//   callButton.disabled = false;
-	// }
-
-
-	// function trace(text) {
-	//   if (text[text.length - 1] === '\n') {
-	//     text = text.substring(0, text.length - 1);
-	//   }
-	//   if (window.performance) {
-	//     var now = (window.performance.now() / 1000).toFixed(3);
-	//     console.log(now + ': ' + text);
-	//   } else {
-	//     console.log(text);
-	//   }
-	// }
-	// }
 
 /***/ },
 /* 177 */
@@ -22110,39 +21919,57 @@
 	    selectCharacter: _react2.default.PropTypes.func.isRequired
 	  },
 
+	  componentDidMount: function componentDidMount() {
+	    this.refs.gamename.focus();
+	  },
+
 	  _selCharacter: function _selCharacter(event) {
-	    console.log('_selcharacter', event.target.id);
-	    switch (event.target.id) {
-	      case 'bm':
-	        this.props.selectCharacter('boxMan');
-	        break;
-	      case 'cg':
-	        this.props.selectCharacter('cameraGuy');
-	        break;
-	      default:
-	        break;
+	    if (this.refs.gamename.value.length <= 0) {
+	      this.refs.gamename.placeholder = "enter a game name";
+	      document.getElementById('gamename').className += 'angry';
+	      this.refs.gamename.focus();
+	    } else {
+	      switch (event.target.id) {
+	        case 'bm':
+	          this.props.selectCharacter('boxMan', this.refs.gamename.value);
+	          break;
+	        case 'cg':
+	          this.props.selectCharacter('cameraGuy', this.refs.gamename.value);
+	          break;
+	        default:
+	          break;
+	      }
 	    }
-	    // this.props.selectCharacter(char);
 	  },
 
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
-	      null,
+	      { id: 'character-select' },
 	      _react2.default.createElement(
-	        'p',
+	        'h1',
+	        null,
+	        'enter a unique name for your game'
+	      ),
+	      _react2.default.createElement('input', { id: 'gamename', type: 'text', placeholder: 'your game name', ref: 'gamename' }),
+	      _react2.default.createElement(
+	        'h1',
 	        null,
 	        'Choose your character'
 	      ),
 	      _react2.default.createElement(
-	        'p',
-	        { id: 'bm', onClick: this._selCharacter },
-	        ' BoxMan '
-	      ),
-	      _react2.default.createElement(
-	        'p',
-	        { id: 'cg', onClick: this._selCharacter },
-	        ' CameraGuy '
+	        'div',
+	        { id: 'character-container' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'character' },
+	          _react2.default.createElement('img', { src: 'images/boxManHead.png', id: 'bm', onClick: this._selCharacter, width: '135%' })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'character' },
+	          _react2.default.createElement('img', { src: 'images/camera_guy.png', id: 'cg', onClick: this._selCharacter, width: '100%' })
+	        )
 	      )
 	    );
 	  }
@@ -22164,31 +21991,87 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _boxMan = __webpack_require__(179);
-
-	var _boxMan2 = _interopRequireDefault(_boxMan);
-
-	var _cameraGuy = __webpack_require__(181);
-
-	var _cameraGuy2 = _interopRequireDefault(_cameraGuy);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// TODO change this
-	var roomName = "testing";
+	var CameraSelect = _react2.default.createClass({
+	  displayName: 'CameraSelect',
 
-	var Game = function Game(props) {
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    props.character === 'boxMan' ? _react2.default.createElement(_boxMan2.default, null) : _react2.default.createElement(_cameraGuy2.default, null)
-	  );
-	};
-	Game.propTypes = {
-	  character: _react2.default.PropTypes.string.isRequired
-	};
+	  getInitialState: function getInitialState() {
+	    return {
+	      cameraSelected: false,
+	      availableCams: []
+	    };
+	  },
 
-	exports.default = Game;
+	  propTypes: {
+	    selectCamera: _react2.default.PropTypes.func.isRequired
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    navigator.mediaDevices.enumerateDevices().then(this._gotDevices).catch(function (err) {
+	      console.error(err);
+	    });
+	  },
+
+	  _gotDevices: function _gotDevices(deviceInfos) {
+	    console.log('got devices', deviceInfos);
+	    for (var i = 0; i < deviceInfos.length; i++) {
+	      if (deviceInfos[i].kind === 'videoinput') {
+	        this.state.availableCams.push(deviceInfos[i]);
+	        console.log(deviceInfos[i]);
+	      }
+	    }
+	    this.setState(this.state);
+	  },
+
+	  _submit: function _submit(evt) {
+	    evt.preventDefault();
+	    var checkedButton = document.querySelectorAll('.radioBtn:checked');
+	    if (checkedButton.length === 1) {
+	      this.props.selectCamera(checkedButton[0].value);
+	    }
+	  },
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { id: 'cameraSelect' },
+	      this.state.cameraSelected ? _react2.default.createElement(
+	        'p',
+	        null,
+	        'Choose your camera in a second'
+	      ) : _react2.default.createElement(
+	        'form',
+	        { onSubmit: this._submit },
+	        this.state.availableCams.map(function (deviceInfo, i) {
+	          console.log(deviceInfo);
+	          console.log(deviceInfo.label);
+	          return _react2.default.createElement(
+	            'div',
+	            { key: Math.random() },
+	            _react2.default.createElement('input', {
+	              className: 'radioBtn',
+	              type: 'radio',
+	              name: 'camera',
+	              value: deviceInfo.deviceId,
+	              label: deviceInfo.label || 'camera ' + i
+	            }),
+	            deviceInfo.label || 'camera ' + i,
+	            ' ',
+	            _react2.default.createElement('br', null)
+	          );
+	        }),
+	        this.state.availableCams.length === 0 ? _react2.default.createElement(
+	          'p',
+	          null,
+	          'Make sure the app can access your camera!'
+	        ) : _react2.default.createElement('input', { type: 'submit', value: 'Go' })
+	      )
+	    );
+	  }
+	});
+
+	exports.default = CameraSelect;
 
 /***/ },
 /* 179 */
@@ -22204,18 +22087,70 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _rtc = __webpack_require__(180);
+	var _boxMan = __webpack_require__(180);
 
-	var _rtc2 = _interopRequireDefault(_rtc);
+	var _boxMan2 = _interopRequireDefault(_boxMan);
+
+	var _cameraGuy = __webpack_require__(183);
+
+	var _cameraGuy2 = _interopRequireDefault(_cameraGuy);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// TODO change this
+	var roomName = "testing";
+
+	var Game = function Game(props) {
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    props.character === 'boxMan' ? _react2.default.createElement(_boxMan2.default, { localStream: props.localStream, gameroom: props.gameroom }) : _react2.default.createElement(_cameraGuy2.default, { localStream: props.localStream, gameroom: props.gameroom })
+	  );
+	};
+	Game.propTypes = {
+	  character: _react2.default.PropTypes.string.isRequired,
+	  gameroom: _react2.default.PropTypes.string.isRequired,
+	  localStream: _react2.default.PropTypes.object.isRequired
+	};
+
+	exports.default = Game;
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _rtc = __webpack_require__(181);
+
+	var _rtc2 = _interopRequireDefault(_rtc);
+
+	var _chatbox = __webpack_require__(182);
+
+	var _chatbox2 = _interopRequireDefault(_chatbox);
+
+	var _cameraSelect = __webpack_require__(178);
+
+	var _cameraSelect2 = _interopRequireDefault(_cameraSelect);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// box man has two viewports (left and right), one for each eye
 	var Viewport = function Viewport(props) {
 	  return _react2.default.createElement(
 	    'div',
 	    { id: props.id, className: 'viewport' },
 	    _react2.default.createElement('video', { className: 'currentVideo', autoPlay: true }),
-	    _react2.default.createElement(Chatbox, { msg: props.displayMsg })
+	    _react2.default.createElement('video', { id: 'hiddenVideo', display: 'none' }),
+	    _react2.default.createElement(_chatbox2.default, { msg: props.displayMsg })
 	  );
 	};
 	Viewport.propTypes = {
@@ -22223,43 +22158,43 @@
 	  displayMsg: _react2.default.PropTypes.object.isRequired
 	};
 
-	var Chatbox = function Chatbox(props) {
-	  return _react2.default.createElement(
-	    'div',
-	    { className: 'chatbox' },
-	    _react2.default.createElement(
-	      'p',
-	      null,
-	      props.msg.message
-	    )
-	  );
-	};
-	Chatbox.propTypes = {
-	  msg: _react2.default.PropTypes.object.isRequired
-	};
-
 	var BoxMan = _react2.default.createClass({
 	  displayName: 'BoxMan',
 
+	  propTypes: {
+	    gameroom: _react2.default.PropTypes.string.isRequired,
+	    localStream: _react2.default.PropTypes.object
+	  },
+
 	  getInitialState: function getInitialState() {
 	    return {
-	      incomingStreams: [],
+	      streams: [],
 	      currentStream: null,
-	      displayMsg: {}
+	      displayMsg: {},
+	      cameraSelected: false
 	    };
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    this.state.streams.push(this.props.localStream);
+	    this.state.currentStream = this.props.localStream;
+	    this.setState(this.state);
+	    console.log('component mounted and about to change video');
+	    this._changeVideo();
 	  },
 
 	  _addedVideo: function _addedVideo(newStream) {
 	    // make sure the stream isn't already there
 	    var duplicate = false;
-	    for (var i = 0; i < this.state.incomingStreams.length; i++) {
-	      if (this.state.incomingStreams[i].id === newStream.id) {
+	    for (var i = 0; i < this.state.streams.length; i++) {
+	      if (this.state.streams[i].id === newStream.id) {
+	        console.log('there was a dupe!');
 	        duplicate = true;
 	        break;
 	      }
 	    }
 	    if (!duplicate) {
-	      this.state.incomingStreams.push(newStream);
+	      this.state.streams.push(newStream);
 	      this.state.currentStream = newStream;
 	      this.setState(this.state);
 	      console.log('new boxman state after adding video', this.state);
@@ -22269,17 +22204,17 @@
 
 	  _removedVideo: function _removedVideo(oldStream) {
 	    console.log('oldStream', oldStream);
-	    for (var i = 0; i < this.state.incomingStreams.length; i++) {
-	      if (this.state.incomingStreams[i].id === oldStream.id) {
-	        this.state.incomingStreams.splice(i, 1);
+	    for (var i = 0; i < this.state.streams.length; i++) {
+	      if (this.state.streams[i].id === oldStream.id) {
+	        this.state.streams.splice(i, 1);
 	        break;
 	      }
 	    }
 	    // if we removed the currentStream, set it to another if any are available
 	    if (oldStream.id === this.state.currentStream.id) {
 	      console.log('removed the current stream');
-	      if (this.state.incomingStreams.length > 0) {
-	        this.state.currentStream = this.state.incomingStreams[0];
+	      if (this.state.streams.length > 0) {
+	        this.state.currentStream = this.state.streams[0];
 	        this._changeVideo();
 	      }
 	    }
@@ -22300,10 +22235,10 @@
 
 	  _cycleCameras: function _cycleCameras() {
 	    console.log('BoxMan trying to cycle cameras');
-	    if (this.state.incomingStreams.length > 1) {
-	      for (var i = 0; i < this.state.incomingStreams.length; i++) {
-	        if (this.state.incomingStreams[i].id === this.state.currentStream.id) {
-	          this.state.currentStream = this.state.incomingStreams[(i + 1) % this.state.incomingStreams.length];
+	    if (this.state.streams.length > 1) {
+	      for (var i = 0; i < this.state.streams.length; i++) {
+	        if (this.state.streams[i].id === this.state.currentStream.id) {
+	          this.state.currentStream = this.state.streams[(i + 1) % this.state.streams.length];
 	          this.setState(this.state);
 	          this._changeVideo();
 	          break;
@@ -22329,28 +22264,15 @@
 	  },
 
 	  render: function render() {
-	    var _this = this;
-
 	    return _react2.default.createElement(
 	      'div',
 	      { onClick: this._cycleCameras },
 	      _react2.default.createElement(_rtc2.default, {
-	        config: { character: 'boxMan', roomName: 'testing', constraints: { audio: false, video: false } },
-	        addedVideo: function addedVideo(newStream) {
-	          return _this._addedVideo(newStream);
-	        },
-	        removedVideo: function removedVideo(oldStream) {
-	          return _this._removedVideo(oldStream);
-	        },
-	        newMessage: function newMessage(newMsg) {
-	          return _this._newMessage(newMsg);
-	        }
+	        config: { character: 'boxMan', roomName: this.props.gameroom, constraints: { audio: false, video: false } },
+	        addedVideo: this._addedVideo,
+	        removedVideo: this._removedVideo,
+	        newMessage: this._newMessage
 	      }),
-	      _react2.default.createElement(
-	        'h1',
-	        null,
-	        ' you are boxman '
-	      ),
 	      _react2.default.createElement(
 	        'div',
 	        { id: 'viewports-container' },
@@ -22364,7 +22286,7 @@
 	exports.default = BoxMan;
 
 /***/ },
-/* 180 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22433,9 +22355,8 @@
 	    var _this2 = this;
 
 	    this.webrtc = new SimpleWebRTC({
-	      localVideoEl: config.character === 'cameraGuy' ? document.getElementById('viewfinder') : null,
-	      autoRequestMedia: config.character === 'cameraGuy' ? true : false,
-	      // TODO specify this based on character
+	      localVideoEl: config.character === 'cameraGuy' ? document.getElementById('video-viewfinder') : null, //document.getElementById('hidden-video'),
+	      autoRequestMedia: true, //config.character === 'cameraGuy' ? true : false,
 	      media: config.constraints,
 	      peerConnectionConfig: config.iceServers
 	    });
@@ -22468,11 +22389,6 @@
 	        // this.webrtc.sendDirectlyToAll('channelMessage', 'chat', `love from data channel ${config.character}`)
 	      }
 	    });
-
-	    var sendTest = document.getElementById('test');
-	    sendTest.onclick = function () {
-	      console.log(_this2.webrtc);
-	    };
 	  },
 	  render: function render() {
 	    return null;
@@ -22482,7 +22398,40 @@
 	exports.default = RTC;
 
 /***/ },
-/* 181 */
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Chatbox = function Chatbox(props) {
+	  return _react2.default.createElement(
+	    "div",
+	    { className: "chatbox" },
+	    _react2.default.createElement(
+	      "p",
+	      null,
+	      props.msg.message
+	    )
+	  );
+	};
+	Chatbox.propTypes = {
+	  msg: _react2.default.PropTypes.object.isRequired
+	};
+
+	exports.default = Chatbox;
+
+/***/ },
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22495,13 +22444,160 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _rtc = __webpack_require__(180);
+	var _rtc = __webpack_require__(181);
 
 	var _rtc2 = _interopRequireDefault(_rtc);
 
-	var _cameraSelect = __webpack_require__(182);
+	var _cameraSelect = __webpack_require__(178);
 
 	var _cameraSelect2 = _interopRequireDefault(_cameraSelect);
+
+	var _chatbox = __webpack_require__(182);
+
+	var _chatbox2 = _interopRequireDefault(_chatbox);
+
+	var _messenger = __webpack_require__(184);
+
+	var _messenger2 = _interopRequireDefault(_messenger);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// what the camera guy sees from his camera
+	var Viewfinder = function Viewfinder(props) {
+	  return _react2.default.createElement(
+	    'div',
+	    { id: 'viewfinder' },
+	    _react2.default.createElement('video', { id: 'viewfinder-video', autoPlay: true }),
+	    _react2.default.createElement(_chatbox2.default, { msg: props.displayMsg })
+	  );
+	};
+	Viewfinder.propTypes = {
+	  displayMsg: _react2.default.PropTypes.object.isRequired
+	};
+
+	/* =======================================================
+	  Camera Guy Component
+	======================================================= */
+	var CameraGuy = _react2.default.createClass({
+	  displayName: 'CameraGuy',
+
+	  propTypes: {
+	    gameroom: _react2.default.PropTypes.string.isRequired,
+	    localStream: _react2.default.PropTypes.object.isRequired
+	  },
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      cameraSelected: false,
+	      availableCams: [],
+	      currentStream: null,
+	      displayMsg: {},
+	      constraints: {
+	        audio: false,
+	        video: true
+	      }
+	    };
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    var videoEl = document.getElementById('viewfinder-video') || document.createElement('new-video');
+	    videoEl.srcObject = this.props.localStream;
+	    // navigator.mediaDevices.enumerateDevices().then(this._gotDevices).catch(err => { console.error(err); });
+	  },
+
+	  // _gotDevices: function (deviceInfos) {
+	  //   console.log('got devices', deviceInfos);
+	  //   for (let i = 0; i < deviceInfos.length; i++) {
+	  //     if (deviceInfos[i].kind === 'videoinput') {
+	  //       this.state.availableCams.push(deviceInfos[i]);
+	  //       console.log(deviceInfos[i]);
+	  //     }
+	  //   }
+	  //   this.setState(this.state);
+	  // },
+
+	  // _selectCamera: function(cam) {
+
+	  //   console.log('in _switch camera with ', cam)
+	  //   if (window.stream) {
+	  //     console.log('already was a window stream: ', window.stream);
+	  //     window.stream.getTracks().forEach(function (track) {
+	  //       track.stop();
+	  //     });
+	  //   }
+	  //   var videoSource = cam;
+	  //   this.state.constraints = {
+	  //     audio: false,
+	  //     video: { deviceId: videoSource ? { exact: videoSource } : undefined }
+	  //   };
+	  //   navigator.mediaDevices.getUserMedia(this.state.constraints)
+	  //     .then(stream => {
+	  //       window.stream = stream;
+	  //       const videoEl = document.getElementById('viewfinder-video');
+	  //       videoEl.srcObject = stream;
+	  //       document.getElementById('viewfinder').style.display = "flex";
+
+	  //       // changing cameraSelected triggers Camera Guy to do RTC with Box Man
+	  //       this.state.cameraSelected = true;
+	  //       this.setState(this.state);
+	  //     })
+	  //     .catch(err => { console.error(err); });
+	  // },
+
+	  _newMessage: function _newMessage(msg) {
+	    this.state.displayMsg = msg;
+	    this.setState(this.state);
+	    var chat = document.querySelectorAll('.chatbox');
+	    chat.forEach(function (div) {
+	      div.style.opacity = 1;
+	    });
+	    // after 2 seconds, hide the message
+	    setTimeout(function () {
+	      chat.forEach(function (div) {
+	        div.style.opacity = 0;
+	      });
+	    }, 2000);
+	  },
+
+	  _sendMessage: function _sendMessage(msg) {
+	    console.log('sending this message', msg);
+	    this.refs.myRTC.webrtc.sendDirectlyToAll('channelMessage', 'chat', { message: msg });
+	  },
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(Viewfinder, { displayMsg: this.state.displayMsg }),
+	      _react2.default.createElement(_rtc2.default, {
+	        config: {
+	          character: 'cameraGuy',
+	          roomName: this.props.gameroom,
+	          constraints: this.state.constraints
+	        },
+	        newMessage: this._newMessage,
+	        ref: "myRTC"
+	      }),
+	      _react2.default.createElement(_messenger2.default, { send: this._sendMessage })
+	    );
+	  }
+	});
+
+	exports.default = CameraGuy;
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22528,243 +22624,18 @@
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
-	      null,
+	      { id: 'messenger' },
 	      _react2.default.createElement(
 	        'form',
 	        { onSubmit: this._sendMessage, ref: "messageForm" },
-	        _react2.default.createElement('input', { type: 'text', ref: "text", placeholder: 'send a message to Box Man' }),
-	        _react2.default.createElement('input', { type: 'submit', value: 'send' })
+	        _react2.default.createElement('input', { className: 'message-form', type: 'text', maxLength: 25, ref: "text", placeholder: 'send a message to Box Man' }),
+	        _react2.default.createElement('input', { className: 'message-form', type: 'submit', value: 'send' })
 	      )
 	    );
 	  }
 	});
 
-	var Viewfinder = function Viewfinder(props) {
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement('video', { id: 'viewfinder', autoPlay: true }),
-	    _react2.default.createElement(Chatbox, { msg: props.displayMsg })
-	  );
-	};
-	Viewfinder.propTypes = {
-	  displayMsg: _react2.default.PropTypes.object.isRequired
-	};
-
-	var Chatbox = function Chatbox(props) {
-	  return _react2.default.createElement(
-	    'div',
-	    { className: 'chatbox' },
-	    _react2.default.createElement(
-	      'p',
-	      null,
-	      props.msg.message
-	    )
-	  );
-	};
-	Chatbox.propTypes = {
-	  msg: _react2.default.PropTypes.object.isRequired
-	};
-
-	/* =======================================================
-	  Camera Guy Component
-	======================================================= */
-	var CameraGuy = _react2.default.createClass({
-	  displayName: 'CameraGuy',
-
-
-	  getInitialState: function getInitialState() {
-	    return {
-	      cameraSelected: false,
-	      availableCams: [],
-	      incomingStreams: [],
-	      currentStream: null,
-	      displayMsg: {},
-	      constraints: {
-	        audio: false,
-	        video: true
-	      }
-	    };
-	  },
-
-	  componentDidMount: function componentDidMount() {
-	    navigator.mediaDevices.enumerateDevices().then(this._gotDevices).catch(function (err) {
-	      console.error(err);
-	    });
-	  },
-
-	  _gotDevices: function _gotDevices(deviceInfos) {
-	    console.log('got devices', deviceInfos);
-	    for (var i = 0; i < deviceInfos.length; i++) {
-	      // option.value = deviceInfos[i].deviceId;
-	      // console.log(i);
-	      if (deviceInfos[i].kind === 'videoinput') {
-	        // option.text = deviceInfos[i].label || `camera ${videoSelect.length}`;
-	        // console.log(option);
-	        this.state.availableCams.push(deviceInfos[i]);
-	        console.log(deviceInfos[i]);
-	      }
-	    }
-	    this.setState(this.state);
-	  },
-
-	  _selectCamera: function _selectCamera(cam) {
-	    var _this = this;
-
-	    console.log('in _switch camera with ', cam);
-	    if (window.stream) {
-	      console.log('already was a window stream: ', window.stream);
-	      window.stream.getTracks().forEach(function (track) {
-	        track.stop();
-	      });
-	    }
-	    var videoSource = cam;
-	    this.state.constraints = {
-	      audio: false,
-	      video: { deviceId: videoSource ? { exact: videoSource } : undefined }
-	    };
-	    navigator.mediaDevices.getUserMedia(this.state.constraints).then(function (stream) {
-	      window.stream = stream;
-	      var videoEl = document.getElementById('viewfinder');
-	      videoEl.srcObject = stream;
-	      videoEl.style.display = "block";
-
-	      // changing cameraSelected triggers Camera Guy to do RTC with Box Man
-	      _this.state.cameraSelected = true;
-	      _this.setState(_this.state);
-	    }).catch(function (err) {
-	      console.error(err);
-	    });
-	  },
-
-	  _newMessage: function _newMessage(msg) {
-	    this.state.displayMsg = msg;
-	    this.setState(this.state);
-	    var chat = document.querySelectorAll('.chatbox');
-	    chat.forEach(function (div) {
-	      div.style.opacity = 1;
-	    });
-	    // after 2 seconds, hide the message
-	    setTimeout(function () {
-	      chat.forEach(function (div) {
-	        div.style.opacity = 0;
-	      });
-	    }, 2000);
-	  },
-
-	  _sendMessage: function _sendMessage(msg) {
-	    console.log('sending this message', msg);
-	    this.refs.myRTC.webrtc.sendDirectlyToAll('channelMessage', 'chat', { message: msg });
-	  },
-
-	  render: function render() {
-	    var _this2 = this;
-
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(Viewfinder, { displayMsg: this.state.displayMsg }),
-	      !this.state.cameraSelected ? _react2.default.createElement(_cameraSelect2.default, {
-	        availableCams: this.state.availableCams,
-	        selectCamera: function selectCamera(cam) {
-	          return _this2._selectCamera(cam);
-	        }
-	      }) : _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(_rtc2.default, {
-	          config: {
-	            character: 'cameraGuy',
-	            roomName: 'testing',
-	            constraints: this.state.constraints
-	          },
-	          newMessage: function newMessage(newMsg) {
-	            return _this2._newMessage(newMsg);
-	          },
-	          ref: "myRTC"
-	        }),
-	        _react2.default.createElement(Messenger, { send: function send(msg) {
-	            return _this2._sendMessage(msg);
-	          } })
-	      )
-	    );
-	  }
-	});
-
-	exports.default = CameraGuy;
-
-/***/ },
-/* 182 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var CameraSelect = _react2.default.createClass({
-	  displayName: 'CameraSelect',
-
-	  propTypes: {
-	    selectCamera: _react2.default.PropTypes.func.isRequired,
-	    availableCams: _react2.default.PropTypes.array.isRequired
-	  },
-
-	  _submit: function _submit(evt) {
-	    evt.preventDefault();
-	    // console.log(evt.target);
-	    var checkedButton = document.querySelectorAll('.radioBtn:checked');
-	    if (checkedButton.length === 1) {
-	      console.log(checkedButton);
-	      console.log('this.refs.videoSelect.value', checkedButton[0].value);
-	      this.props.selectCamera(checkedButton[0].value);
-	    }
-	  },
-
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      { id: 'cameraSelect' },
-	      _react2.default.createElement(
-	        'form',
-	        { onSubmit: this._submit },
-	        this.props.availableCams.map(function (deviceInfo, i) {
-	          console.log(deviceInfo);
-	          console.log(deviceInfo.label);
-	          return _react2.default.createElement(
-	            'div',
-	            { key: Math.random() },
-	            _react2.default.createElement('input', {
-	              className: 'radioBtn',
-	              type: 'radio',
-	              name: 'camera',
-	              value: deviceInfo.deviceId,
-	              label: deviceInfo.label || 'camera ' + i
-	            }),
-	            deviceInfo.label || 'camera ' + i,
-	            ' ',
-	            _react2.default.createElement('br', null)
-	          );
-	        }),
-	        ';',
-	        this.props.availableCams.length === 0 ? _react2.default.createElement(
-	          'p',
-	          null,
-	          'Make sure the app can access your camera!'
-	        ) : _react2.default.createElement('input', { type: 'submit', value: 'Go' })
-	      )
-	    );
-	  }
-	});
-
-	exports.default = CameraSelect;
+	exports.default = Messenger;
 
 /***/ }
 /******/ ]);

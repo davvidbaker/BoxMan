@@ -5,26 +5,40 @@ const CharacterSelect= React.createClass({
     selectCharacter: React.PropTypes.func.isRequired
   },
 
+  componentDidMount: function() {
+    this.refs.gamename.focus();
+  },
+
   _selCharacter: function(event) {
-    console.log('_selcharacter', event.target.id)
-    switch (event.target.id) {
+    if (this.refs.gamename.value.length <= 0){
+      this.refs.gamename.placeholder = "enter a game name";
+      document.getElementById('gamename').className += 'angry';
+      this.refs.gamename.focus();
+    } 
+    else {
+      switch (event.target.id) {
       case 'bm': 
-        this.props.selectCharacter('boxMan');
+        this.props.selectCharacter('boxMan', this.refs.gamename.value);
         break;
       case 'cg':
-        this.props.selectCharacter('cameraGuy');
+        this.props.selectCharacter('cameraGuy', this.refs.gamename.value);
         break;
       default: break;
+    }  
     }
-    // this.props.selectCharacter(char);
+    
   },
 
   render: function() {
     return (
-      <div>
-        <p>Choose your character</p>
-        <p id="bm" onClick={this._selCharacter}> BoxMan </p>
-        <p id="cg" onClick={this._selCharacter}> CameraGuy </p>
+      <div id="character-select">
+        <h1>enter a unique name for your game</h1>
+        <input id="gamename" type="text" placeholder="your game name" ref="gamename"/>
+        <h1>Choose your character</h1>
+        <div id="character-container" >
+          <div className="character"><img src="images/boxManHead.png" id="bm" onClick={this._selCharacter} width="135%" /></div>
+          <div className="character"><img src="images/camera_guy.png" id="cg" onClick={this._selCharacter} width="100%"/></div>
+        </div>
       </div>
     );
   }

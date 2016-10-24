@@ -1,5 +1,9 @@
+$y: #FCBE1F;
+$r: #DE4536;
+
 body {
   background: #646464;
+  font-family: 'Ropa Sans';
 }
 
 #left, #right {
@@ -16,8 +20,120 @@ body {
   right: 0;
 }
 .chatbox {
+  position: fixed;
+  line-height:100vh;
+  width: 50vw;
+  text-align: center;
+  top: 0;
   transition: 0.5s;
+  z-index: 4;
+  color: $y;
+  font-family: 'Ropa Sans';
+  font-size: 28px;
+  text-shadow: 1px 1px 1px #000;
 }
 .currentVideo {
   height: 100vh;
+}
+
+#viewfinder {
+  // this changes once a camera has been selected
+  display: flex;
+  // align-items: center;
+  justify-content: space-around;
+}
+
+#gamename {
+  font-family: 'Ropa Sans';
+  text-align: center;
+  font-size: 3vw;
+  margin-top: -20px;
+}
+
+#character-select {
+  text-align: center;
+}
+
+h1 {
+  font-family: Bangers;
+  font-weight: 400;
+  color: $y;
+  font-size:5vw;
+}
+
+#background-title {
+  position: fixed;
+  bottom: 0;
+  text-align: center;
+  width:98vw;
+  font-family: Bangers;
+  color: #606060;
+  z-index: -10;
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  align-items:center;
+  // height: 100vh;
+}
+
+#title {
+  font-size: 30vw;
+  margin: 0;
+}
+
+#subtitle {
+  margin:20px;
+  font-size: 21vw;
+}
+
+#character-container {
+  display: flex;
+  justify-content: space-around;
+  // width:100vw;
+}
+
+
+.character {
+  padding:20px;
+  width:30%;
+  max-width: 200px;
+  transition: 0.3s;
+}
+.character:hover {
+  transform: scale(1.1);
+}
+
+@media (min-width: 1300px) {
+  #character-container { 
+    position:fixed;
+    width:100vw;
+    bottom: 0;
+    justify-content: space-between;
+  }
+  .character {
+    max-width: 250px;
+    padding:50px;
+  }
+}
+
+.angry::-webkit-input-placeholder {
+  color: $r;
+}
+
+#messenger {
+  text-align: center;
+  margin-top: 20px;
+}
+.message-form {
+  font-size: 28px;
+  text-align: center;
+  // width:100%;
+}
+.message-form::-webkit-input-placeholder {
+  font-size: 20px;
+  // line-height: 
+}
+
+input {
+  font-family: 'Ropa Sans'
 }

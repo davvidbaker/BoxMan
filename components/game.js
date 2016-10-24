@@ -10,15 +10,17 @@ const Game = (props) => {
   return (
     <div>
       {props.character === 'boxMan' ? 
-        <BoxMan /> :
-        <CameraGuy />
+        <BoxMan localStream={props.localStream} gameroom={props.gameroom} /> :
+        <CameraGuy localStream={props.localStream} gameroom={props.gameroom} />
       }
 
     </div>
   );
 };
 Game.propTypes = {
-  character: React.PropTypes.string.isRequired
+  character: React.PropTypes.string.isRequired,
+  gameroom: React.PropTypes.string.isRequired,
+  localStream:React.PropTypes.object.isRequired,
 };
 
 

@@ -55,9 +55,8 @@ const RTC = React.createClass({
   _setUpRTC: function(config) {
 
     this.webrtc = new SimpleWebRTC({
-      localVideoEl: config.character === 'cameraGuy' ? document.getElementById('viewfinder') : null,
-      autoRequestMedia: config.character === 'cameraGuy' ? true : false,
-      // TODO specify this based on character
+      localVideoEl: config.character === 'cameraGuy' ? document.getElementById('video-viewfinder') : null,//document.getElementById('hidden-video'),
+      autoRequestMedia: true,//config.character === 'cameraGuy' ? true : false,
       media: config.constraints,
       peerConnectionConfig: config.iceServers
     });
@@ -86,11 +85,7 @@ const RTC = React.createClass({
         // this.webrtc.sendDirectlyToAll('channelMessage', 'chat', `love from data channel ${config.character}`)
       }
     });
-    
-    let sendTest = document.getElementById('test');
-    sendTest.onclick = () => {
-      console.log(this.webrtc);
-    };
+  
   },
   render: function() {
     return null;

@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+// import { Router, Route, hashHistory } from 'react-router';
 
 import "./public/styles/main.scss";
 
-import Application from "./components/application";
-
+import Application from './components/application.js';
 
 console.clear();
-console.log('loadeddd');
 
-ReactDOM.render(<Application />, document.getElementById('container'));
+ReactDOM.render(
+  <Application />,
+  document.getElementById('container')
+);
+
