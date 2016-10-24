@@ -10,7 +10,6 @@ const Viewport = (props) => {
   return (
     <div id={props.id} className="viewport">
       <video className="currentVideo" autoPlay></video>
-      <video id="hiddenVideo" display="none"></video>
       <Chatbox msg={props.displayMsg}/>
     </div>
   );
@@ -37,11 +36,33 @@ const BoxMan = React.createClass({
   },
 
   componentDidMount: function() {
+    this._addTouchEvents();
     this.state.streams.push(this.props.localStream);
     this.state.currentStream = this.props.localStream;
     this.setState(this.state);
     console.log('component mounted and about to change video');
     this._changeVideo();
+  },
+
+  _addTouchEvents: function() {
+    document.addEventListener('touchstart', (evt) => {this.lastTouch = evt.touches[0]});
+    document.addEventListener('touchmove', this._handleTouch);
+  },
+
+  _handleTouch: function(evt) {
+    console.log(document.querySelector('.currentVideo').style.height);
+    let curHeight = document.querySelector('.currentVideo').style.height.match(/[-\.\d]*/)[0]
+    console.log('curHeight', curHeight)
+    let newHeight = curHeight * (1 + (Math.sign(evt.touches[0].clientX - this.lastTouch.clientX)/10));
+    if (newHeight > 100) newHeight = 100;
+    else if (newHeight === 0) newHeight = 50;
+    const views = document.querySelectorAll('.currentVideo')
+    views.forEach(view => {
+      view.style.height = `${newHeight}vh`;
+    });
+    // console.log('multiplied by ', newHeight)
+
+    this.lastTouch = evt.touches[0];
   },
 
   _addedVideo: function(newStream) {
