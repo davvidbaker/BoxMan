@@ -21468,7 +21468,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\n  background: #646464;\n  font-family: 'Ropa Sans'; }\n\n#left, #right {\n  width: 50vw;\n  overflow: hidden;\n  text-align: center; }\n\n.chatbox {\n  position: fixed;\n  line-height: 100vh;\n  width: 50vw;\n  text-align: center;\n  top: 0;\n  transition: 0.5s;\n  z-index: 4;\n  color: #FCBE1F;\n  font-family: 'Ropa Sans';\n  font-size: 28px;\n  text-shadow: 1px 1px 1px #000; }\n\n.currentVideo {\n  height: 100vh; }\n\n#viewfinder {\n  display: flex;\n  justify-content: space-around; }\n\n#viewfinder-video {\n  width: 100%; }\n\n#gamename {\n  font-family: 'Ropa Sans';\n  text-align: center;\n  font-size: 3vw; }\n\n#character-select {\n  text-align: center;\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  height: 100vh;\n  align-items: center; }\n\nh1, h2 {\n  font-family: Bangers;\n  font-weight: 400;\n  color: #FCBE1F;\n  font-size: 1.8em; }\n\nh2 {\n  font-size: 1.4em; }\n\n#background-title {\n  position: fixed;\n  bottom: 0;\n  text-align: center;\n  width: 96vw;\n  font-family: Bangers;\n  color: #606060;\n  z-index: -10;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  transition: 0.3s; }\n\n#title {\n  font-size: 27vw;\n  margin: 0; }\n\n#subtitle {\n  margin: 20px;\n  font-size: 21vw; }\n\n#center-flex {\n  display: flex;\n  flex-direction: column;\n  justify-content: space-around; }\n\n.character {\n  padding: 20px;\n  max-width: 200px;\n  min-width: 50px;\n  transition: 0.3s; }\n\n.character:hover {\n  transform: scale(1.1); }\n\n@media (max-width: 450px) {\n  #character-select {\n    flex-direction: column; }\n  .character {\n    position: fixed;\n    bottom: 0;\n    width: 100px; }\n  #guy {\n    right: 20px; }\n  #box {\n    left: 20px; }\n  #background-title {\n    top: 5px; }\n  #subtitle {\n    font-size: 15vw; }\n  #center-flex {\n    position: fixed;\n    top: 20vh; } }\n\n@media (max-width: 450px) and (max-height: 450px) {\n  .character {\n    min-width: 30px;\n    width: 50px; } }\n\n.angry::-webkit-input-placeholder {\n  color: #DE4536; }\n\n#messenger {\n  position: fixed;\n  bottom: 10px;\n  text-align: center;\n  display: flex;\n  justify-content: center;\n  width: 100vw; }\n\n.message-form {\n  font-size: 28px;\n  text-align: center; }\n\n.message-form::-webkit-input-placeholder {\n  font-size: 20px; }\n\n#vertical-flexbox {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  left: 0;\n  top: 0;\n  background: black;\n  height: 100vh;\n  width: 100vw;\n  position: fixed; }\n\n#viewports-container {\n  display: flex;\n  width: 100vw; }\n\ninput, button {\n  font-family: 'Ropa Sans'; }\n\n#gamename {\n  font-size: 2em; }\n\n#camera-container {\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  height: 66vh; }\n\n.button-container {\n  flex-grow: 1;\n  padding: 5px; }\n\n.camera-button {\n  font-size: 3em;\n  width: 100%;\n  height: 100%;\n  transition: 0.4s;\n  background: #ddd; }\n\n.camera-button:hover {\n  background: white; }\n\n#cameraSelect {\n  text-align: center; }\n", ""]);
+	exports.push([module.id, "body {\n  background: #646464;\n  font-family: 'Ropa Sans'; }\n\n#left, #right {\n  width: 50vw;\n  overflow: hidden;\n  text-align: center; }\n\n.chatbox {\n  position: fixed;\n  line-height: 100vh;\n  width: 50vw;\n  text-align: center;\n  top: 0;\n  transition: 0.5s;\n  z-index: 4;\n  color: #FCBE1F;\n  font-family: 'Ropa Sans';\n  font-size: 28px;\n  text-shadow: 1px 1px 1px #000; }\n\n.currentVideo {\n  height: 100vh; }\n\n#viewfinder {\n  display: flex;\n  justify-content: space-around; }\n\n#viewfinder-video {\n  width: 100%; }\n\n#gamename {\n  font-family: 'Ropa Sans';\n  text-align: center;\n  font-size: 3vw; }\n\n#character-select {\n  text-align: center;\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  height: 100vh;\n  align-items: center; }\n\nh1, h2 {\n  font-family: Bangers;\n  font-weight: 400;\n  color: #FCBE1F;\n  font-size: 1.8em; }\n\nh2 {\n  font-size: 1.4em; }\n\n#background-title {\n  position: fixed;\n  bottom: 0;\n  text-align: center;\n  width: 96vw;\n  font-family: Bangers;\n  color: #606060;\n  z-index: -10;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  transition: 0.3s; }\n\n#title {\n  font-size: 27vw;\n  margin: 0; }\n\n#subtitle {\n  margin: 20px;\n  font-size: 21vw; }\n\n#center-flex {\n  display: flex;\n  flex-direction: column;\n  justify-content: space-around; }\n\n.character {\n  padding: 20px;\n  max-width: 200px;\n  min-width: 50px;\n  transition: 0.3s; }\n\n.character:hover {\n  transform: scale(1.1); }\n\n@media (max-width: 450px) {\n  #character-select {\n    flex-direction: column; }\n  .character {\n    position: fixed;\n    bottom: 0;\n    width: 100px; }\n  #guy {\n    right: 20px; }\n  #box {\n    left: 20px; }\n  #background-title {\n    top: 5px; }\n  #subtitle {\n    font-size: 15vw; }\n  #center-flex {\n    position: fixed;\n    top: 20vh; } }\n\n@media (max-width: 450px) and (max-height: 450px) {\n  .character {\n    min-width: 30px;\n    width: 50px; } }\n\n.angry::-webkit-input-placeholder {\n  color: #DE4536; }\n\n#messenger {\n  position: fixed;\n  bottom: 10px;\n  text-align: center;\n  display: flex;\n  justify-content: center;\n  width: 100vw; }\n\n.message-form {\n  font-size: 28px;\n  text-align: center; }\n\n.message-form::-webkit-input-placeholder {\n  font-size: 20px; }\n\n#vertical-flexbox {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  left: 0;\n  top: 0;\n  background: black;\n  height: 100vh;\n  width: 100vw;\n  position: fixed; }\n\n#viewports-container {\n  display: flex;\n  width: 100vw; }\n\ninput, button {\n  font-family: 'Ropa Sans'; }\n\n#gamename {\n  font-size: 2em; }\n\n#camera-container {\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  height: 66vh; }\n\n.button-container {\n  flex-grow: 1;\n  padding: 5px; }\n\n.camera-button {\n  font-size: 3em;\n  width: 100%;\n  height: 100%;\n  transition: 0.4s;\n  background: #ddd; }\n\n.camera-button:hover {\n  background: white; }\n\n#cameraSelect {\n  text-align: center; }\n\n#hide-me {\n  display: none; }\n\ncanvas {\n  height: 100vh; }\n", ""]);
 
 	// exports
 
@@ -22013,6 +22013,8 @@
 	  },
 
 	  _gotDevices: function _gotDevices(deviceInfos) {
+	    var _this = this;
+
 	    console.log('got devices', deviceInfos);
 	    for (var i = 0; i < deviceInfos.length; i++) {
 	      if (deviceInfos[i].kind === 'videoinput') {
@@ -22022,9 +22024,11 @@
 	      }
 	    }
 	    // if boxman, choose the back camera automatically (if it is available)
-	    // I am assuming the back camera is listed second...this should be done with a regex
+	    // I am assuming the back camera is listed second...this should be done with a regex TODO still need to ensure the right camera is chosen
 	    if (this.props.character === 'boxMan' && this.state.availableCams.length > 0) {
-	      this.props.selectCamera(this.state.availableCams[this.state.availableCams.length - 1].deviceId);
+	      this.state.availableCams.forEach(function (cam) {
+	        if (cam.label.includes('Logitech') || cam.label.includes('back')) _this.props.selectCamera(cam.deviceId);
+	      });
 	    }
 	  },
 
@@ -22040,7 +22044,7 @@
 	  },
 
 	  render: function render() {
-	    var _this = this;
+	    var _this2 = this;
 
 	    return _react2.default.createElement(
 	      'div',
@@ -22066,7 +22070,7 @@
 	            _react2.default.createElement(
 	              'button',
 	              {
-	                onClick: _this._submit,
+	                onClick: _this2._submit,
 	                className: 'camera-button',
 	                name: 'camera',
 	                value: deviceInfo.deviceId,
@@ -22108,7 +22112,7 @@
 
 	var _boxMan2 = _interopRequireDefault(_boxMan);
 
-	var _cameraGuy = __webpack_require__(184);
+	var _cameraGuy = __webpack_require__(185);
 
 	var _cameraGuy2 = _interopRequireDefault(_cameraGuy);
 
@@ -22159,6 +22163,10 @@
 
 	var _viewport2 = _interopRequireDefault(_viewport);
 
+	var _viewportFX = __webpack_require__(184);
+
+	var _viewportFX2 = _interopRequireDefault(_viewportFX);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var BoxMan = _react2.default.createClass({
@@ -22178,6 +22186,7 @@
 	  },
 
 	  componentDidMount: function componentDidMount() {
+	    this._initCanvas();
 	    this._addTouchEvents();
 	    this.state.streams.push(this.props.localStream);
 	    this.state.currentStream = this.props.localStream;
@@ -22203,16 +22212,27 @@
 	    }
 	    this.refs.bmContainer.webkitRequestFullscreen();
 
-	    console.log(document.querySelector('.currentVideo').style.height);
-	    var curHeight = document.querySelector('.currentVideo').style.height.match(/[-\.\d]*/)[0];
-	    console.log('curHeight', curHeight);
-	    var newHeight = curHeight * (1 + Math.sign(evt.touches[0].clientX - this.lastTouch.clientX) / 10);
+	    console.log(document.querySelector('canvas').style.height);
+	    var canvas = document.querySelector('canvas').style.height.match(/[-\.\d]*/)[0];
+	    console.log('canvas', canvas);
+	    var newHeight = canvas * (1 + Math.sign(evt.touches[0].clientX - this.lastTouch.clientX) / 10);
 	    if (newHeight > 100) newHeight = 100;else if (newHeight === 0) newHeight = 50;
-	    var views = document.querySelectorAll('.currentVideo');
+	    var views = document.querySelectorAll('canvas');
 	    views.forEach(function (view) {
 	      view.style.height = newHeight + 'vh';
 	    });
-	    // console.log('multiplied by ', newHeight)
+
+	    // console.log(document.querySelector('.currentVideo').style.height);
+	    // let curHeight = document.querySelector('.currentVideo').style.height.match(/[-\.\d]*/)[0]
+	    // console.log('curHeight', curHeight)
+	    // let newHeight = curHeight * (1 + (Math.sign(evt.touches[0].clientX - this.lastTouch.clientX)/10));
+	    // if (newHeight > 100) newHeight = 100;
+	    // else if (newHeight === 0) newHeight = 50;
+	    // const views = document.querySelectorAll('.currentVideo')
+	    // views.forEach(view => {
+	    //   view.style.height = `${newHeight}vh`;
+	    // });
+	    // // console.log('multiplied by ', newHeight)
 
 	    this.lastTouch = evt.touches[0];
 	  },
@@ -22297,6 +22317,23 @@
 	    }, 2000);
 	  },
 
+	  _initCanvas: function _initCanvas() {
+	    this.videoEl = document.querySelector('.currentVideo');
+	    this.canvas1 = document.getElementById('canvas-left');
+	    this.ctx1 = this.canvas1.getContext('2d');
+	    this.ctx1.globalAlpha = 0.25;
+	    this.canvas2 = document.getElementById('canvas-right');
+	    this.ctx2 = this.canvas2.getContext('2d');
+	    this.ctx2.globalAlpha = 0.25;
+	    this._draw();
+	  },
+
+	  _draw: function _draw() {
+	    this.ctx1.drawImage(this.videoEl, 0, 0, this.canvas1.width, this.canvas1.height); //;, 400, 0, 0,this.canvas1.width,this.canvas1.height)
+	    this.ctx2.drawImage(this.videoEl, 0, 0, this.canvas1.width, this.canvas1.height); //;, 400, 0, 0,canvas1.width,canvas1.height)
+	    window.requestAnimationFrame(this._draw);
+	  },
+
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
@@ -22313,8 +22350,8 @@
 	        _react2.default.createElement(
 	          'div',
 	          { id: 'viewports-container' },
-	          _react2.default.createElement(_viewport2.default, { id: 'left', displayMsg: this.state.displayMsg }),
-	          _react2.default.createElement(_viewport2.default, { id: 'right', displayMsg: this.state.displayMsg })
+	          _react2.default.createElement(_viewportFX2.default, { id: 'left', displayMsg: this.state.displayMsg }),
+	          _react2.default.createElement(_viewportFX2.default, { id: 'right', displayMsg: this.state.displayMsg })
 	        )
 	      )
 	    );
@@ -22518,15 +22555,52 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _chatbox = __webpack_require__(182);
+
+	var _chatbox2 = _interopRequireDefault(_chatbox);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// box man has two viewports (left and right), one for each eye
+	var ViewportFX = function ViewportFX(props) {
+	  return _react2.default.createElement(
+	    'div',
+	    { id: props.id, className: 'viewport' },
+	    _react2.default.createElement('video', { id: 'hide-me', className: 'currentVideo', autoPlay: true }),
+	    _react2.default.createElement('canvas', { id: 'canvas-' + props.id }),
+	    _react2.default.createElement(_chatbox2.default, { msg: props.displayMsg })
+	  );
+	};
+	ViewportFX.propTypes = {
+	  id: _react2.default.PropTypes.string.isRequired,
+	  displayMsg: _react2.default.PropTypes.object.isRequired
+	};
+
+	exports.default = ViewportFX;
+
+/***/ },
+/* 185 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
 	var _rtc = __webpack_require__(181);
 
 	var _rtc2 = _interopRequireDefault(_rtc);
 
-	var _messenger = __webpack_require__(185);
+	var _messenger = __webpack_require__(186);
 
 	var _messenger2 = _interopRequireDefault(_messenger);
 
-	var _viewfinder = __webpack_require__(186);
+	var _viewfinder = __webpack_require__(187);
 
 	var _viewfinder2 = _interopRequireDefault(_viewfinder);
 
@@ -22599,7 +22673,7 @@
 	exports.default = CameraGuy;
 
 /***/ },
-/* 185 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22651,7 +22725,7 @@
 	exports.default = Messenger;
 
 /***/ },
-/* 186 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

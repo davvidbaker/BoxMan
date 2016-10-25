@@ -27,9 +27,13 @@ const CameraSelect = React.createClass({
       }
     }
     // if boxman, choose the back camera automatically (if it is available)
-    // I am assuming the back camera is listed second...this should be done with a regex
+    // I am assuming the back camera is listed second...this should be done with a regex TODO still need to ensure the right camera is chosen
     if (this.props.character === 'boxMan' && this.state.availableCams.length > 0) {
-      this.props.selectCamera(this.state.availableCams[this.state.availableCams.length-1].deviceId);
+      this.state.availableCams.forEach(cam => {
+        if (cam.label.includes('Logitech') || cam.label.includes('back'))
+        this.props.selectCamera(cam.deviceId);
+
+      })
     }
     
   },

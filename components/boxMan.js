@@ -2,7 +2,8 @@ import React from 'react';
 
 import RTC from './rtc.js';
 import Chatbox from './chatbox.js';
-import Viewport from './viewport.js'
+import Viewport from './viewport.js';
+import ViewportFX from './viewportFX.js';
 
 
 const BoxMan = React.createClass({
@@ -20,6 +21,7 @@ const BoxMan = React.createClass({
   },
 
   componentDidMount: function() {
+    this._initCanvas();
     this._addTouchEvents();
     this.state.streams.push(this.props.localStream);
     this.state.currentStream = this.props.localStream;
@@ -42,17 +44,29 @@ const BoxMan = React.createClass({
     this.refs.bmContainer.webkitRequestFullscreen();
     
 
-    console.log(document.querySelector('.currentVideo').style.height);
-    let curHeight = document.querySelector('.currentVideo').style.height.match(/[-\.\d]*/)[0]
-    console.log('curHeight', curHeight)
-    let newHeight = curHeight * (1 + (Math.sign(evt.touches[0].clientX - this.lastTouch.clientX)/10));
+    console.log(document.querySelector('canvas').style.height);
+    let canvas = document.querySelector('canvas').style.height.match(/[-\.\d]*/)[0]
+    console.log('canvas', canvas)
+    let newHeight = canvas * (1 + (Math.sign(evt.touches[0].clientX - this.lastTouch.clientX)/10));
     if (newHeight > 100) newHeight = 100;
     else if (newHeight === 0) newHeight = 50;
-    const views = document.querySelectorAll('.currentVideo')
+    const views = document.querySelectorAll('canvas')
     views.forEach(view => {
       view.style.height = `${newHeight}vh`;
     });
-    // console.log('multiplied by ', newHeight)
+
+
+    // console.log(document.querySelector('.currentVideo').style.height);
+    // let curHeight = document.querySelector('.currentVideo').style.height.match(/[-\.\d]*/)[0]
+    // console.log('curHeight', curHeight)
+    // let newHeight = curHeight * (1 + (Math.sign(evt.touches[0].clientX - this.lastTouch.clientX)/10));
+    // if (newHeight > 100) newHeight = 100;
+    // else if (newHeight === 0) newHeight = 50;
+    // const views = document.querySelectorAll('.currentVideo')
+    // views.forEach(view => {
+    //   view.style.height = `${newHeight}vh`;
+    // });
+    // // console.log('multiplied by ', newHeight)
 
     this.lastTouch = evt.touches[0];
   },
@@ -133,6 +147,23 @@ const BoxMan = React.createClass({
     }, 2000);
   },
 
+  _initCanvas: function() {
+    this.videoEl = document.querySelector('.currentVideo');
+    this.canvas1 = document.getElementById('canvas-left');
+    this.ctx1 = this.canvas1.getContext('2d');
+    this.ctx1.globalAlpha = 0.25;
+    this.canvas2 = document.getElementById('canvas-right');
+    this.ctx2 = this.canvas2.getContext('2d');
+    this.ctx2.globalAlpha = 0.25;
+    this._draw();
+  },
+
+  _draw: function() {
+    this.ctx1.drawImage(this.videoEl,0,0, this.canvas1.width, this.canvas1.height);//;, 400, 0, 0,this.canvas1.width,this.canvas1.height)
+    this.ctx2.drawImage(this.videoEl,0,0, this.canvas1.width, this.canvas1.height);//;, 400, 0, 0,canvas1.width,canvas1.height)
+    window.requestAnimationFrame(this._draw);
+  },
+
   render: function()  {
     return (   
       <div ref={"bmContainer"} onClick={this._cycleCameras}>
@@ -144,8 +175,8 @@ const BoxMan = React.createClass({
         />
         <div id="vertical-flexbox">
           <div id="viewports-container">
-            <Viewport id="left"  displayMsg={this.state.displayMsg} />
-            <Viewport id="right" displayMsg={this.state.displayMsg} /> 
+            <ViewportFX id="left"  displayMsg={this.state.displayMsg} />
+            <ViewportFX id="right" displayMsg={this.state.displayMsg} /> 
           </div>
         </div>
       </div>
