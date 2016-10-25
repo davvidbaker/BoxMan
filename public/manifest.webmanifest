@@ -8,5 +8,6 @@
   }],
   "start_url": "./index.html",
   "background_color": "#f5f5f5",
-  "display": "fullscreen"
+  "display": "fullscreen",
+  "theme_color": "#dddddd"
 }

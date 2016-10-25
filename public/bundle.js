@@ -62,8 +62,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// import { Router, Route, hashHistory } from 'react-router';
-
 	console.clear();
 
 	_reactDom2.default.render(_react2.default.createElement(_application2.default, null), document.getElementById('container'));
@@ -21470,7 +21468,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\n  background: #646464;\n  font-family: 'Ropa Sans'; }\n\n#left, #right {\n  position: fixed;\n  bottom: 0;\n  width: 50vw;\n  overflow: hidden;\n  height: 100vh; }\n\n#left {\n  left: 0; }\n\n#right {\n  right: 0; }\n\n.chatbox {\n  position: fixed;\n  line-height: 100vh;\n  width: 50vw;\n  text-align: center;\n  top: 0;\n  transition: 0.5s;\n  z-index: 4;\n  color: #FCBE1F;\n  font-family: 'Ropa Sans';\n  font-size: 28px;\n  text-shadow: 1px 1px 1px #000; }\n\n.currentVideo {\n  height: 100vh; }\n\n#viewfinder {\n  display: flex;\n  justify-content: space-around; }\n\n#gamename {\n  font-family: 'Ropa Sans';\n  text-align: center;\n  font-size: 3vw;\n  margin-top: -20px; }\n\n#character-select {\n  text-align: center; }\n\nh1 {\n  font-family: Bangers;\n  font-weight: 400;\n  color: #FCBE1F;\n  font-size: 5vw; }\n\n#background-title {\n  position: fixed;\n  bottom: 0;\n  text-align: center;\n  width: 98vw;\n  font-family: Bangers;\n  color: #606060;\n  z-index: -10;\n  display: flex;\n  flex-direction: column;\n  align-items: center; }\n\n#title {\n  font-size: 30vw;\n  margin: 0; }\n\n#subtitle {\n  margin: 20px;\n  font-size: 21vw; }\n\n#character-container {\n  display: flex;\n  justify-content: space-around; }\n\n.character {\n  padding: 20px;\n  width: 30%;\n  max-width: 200px;\n  transition: 0.3s; }\n\n.character:hover {\n  transform: scale(1.1); }\n\n@media (min-width: 1300px) {\n  #character-container {\n    position: fixed;\n    width: 100vw;\n    bottom: 0;\n    justify-content: space-between; }\n  .character {\n    max-width: 250px;\n    padding: 50px; } }\n\n.angry::-webkit-input-placeholder {\n  color: #DE4536; }\n\n#messenger {\n  text-align: center;\n  margin-top: 20px; }\n\n.message-form {\n  font-size: 28px;\n  text-align: center; }\n\n.message-form::-webkit-input-placeholder {\n  font-size: 20px; }\n\ninput {\n  font-family: 'Ropa Sans'; }\n", ""]);
+	exports.push([module.id, "body {\n  background: #646464;\n  font-family: 'Ropa Sans'; }\n\n#left, #right {\n  width: 50vw;\n  overflow: hidden;\n  text-align: center; }\n\n.chatbox {\n  position: fixed;\n  line-height: 100vh;\n  width: 50vw;\n  text-align: center;\n  top: 0;\n  transition: 0.5s;\n  z-index: 4;\n  color: #FCBE1F;\n  font-family: 'Ropa Sans';\n  font-size: 28px;\n  text-shadow: 1px 1px 1px #000; }\n\n.currentVideo {\n  height: 100vh; }\n\n#viewfinder {\n  display: flex;\n  justify-content: space-around; }\n\n#viewfinder-video {\n  width: 100%; }\n\n#gamename {\n  font-family: 'Ropa Sans';\n  text-align: center;\n  font-size: 3vw; }\n\n#character-select {\n  text-align: center;\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  height: 100vh;\n  align-items: center; }\n\nh1, h2 {\n  font-family: Bangers;\n  font-weight: 400;\n  color: #FCBE1F;\n  font-size: 1.8em; }\n\nh2 {\n  font-size: 1.4em; }\n\n#background-title {\n  position: fixed;\n  bottom: 0;\n  text-align: center;\n  width: 96vw;\n  font-family: Bangers;\n  color: #606060;\n  z-index: -10;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  transition: 0.3s; }\n\n#title {\n  font-size: 27vw;\n  margin: 0; }\n\n#subtitle {\n  margin: 20px;\n  font-size: 21vw; }\n\n#center-flex {\n  display: flex;\n  flex-direction: column;\n  justify-content: space-around; }\n\n.character {\n  padding: 20px;\n  max-width: 200px;\n  min-width: 50px;\n  transition: 0.3s; }\n\n.character:hover {\n  transform: scale(1.1); }\n\n@media (max-width: 450px) {\n  #character-select {\n    flex-direction: column; }\n  .character {\n    position: fixed;\n    bottom: 0;\n    width: 100px; }\n  #guy {\n    right: 20px; }\n  #box {\n    left: 20px; }\n  #background-title {\n    top: 5px; }\n  #subtitle {\n    font-size: 15vw; }\n  #center-flex {\n    position: fixed;\n    top: 20vh; } }\n\n@media (max-width: 450px) and (max-height: 450px) {\n  .character {\n    min-width: 30px;\n    width: 50px; } }\n\n.angry::-webkit-input-placeholder {\n  color: #DE4536; }\n\n#messenger {\n  position: fixed;\n  bottom: 10px;\n  text-align: center;\n  display: flex;\n  justify-content: center;\n  width: 100vw; }\n\n.message-form {\n  font-size: 28px;\n  text-align: center; }\n\n.message-form::-webkit-input-placeholder {\n  font-size: 20px; }\n\n#vertical-flexbox {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  left: 0;\n  top: 0;\n  background: black;\n  height: 100vh;\n  width: 100vw;\n  position: fixed; }\n\n#viewports-container {\n  display: flex;\n  width: 100vw; }\n\ninput, button {\n  font-family: 'Ropa Sans'; }\n\n#gamename {\n  font-size: 2em; }\n\n#camera-container {\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  height: 66vh; }\n\n.button-container {\n  flex-grow: 1;\n  padding: 5px; }\n\n.camera-button {\n  font-size: 3em;\n  width: 100%;\n  height: 100%;\n  transition: 0.4s;\n  background: #ddd; }\n\n.camera-button:hover {\n  background: white; }\n\n#cameraSelect {\n  text-align: center; }\n", ""]);
 
 	// exports
 
@@ -21889,7 +21887,7 @@
 	          'OUT OF BODY'
 	        )
 	      ),
-	      this.state.phase === 'chooseCharacter' ? _react2.default.createElement(_characterSelect2.default, { selectCharacter: this._selectCharacter }) : this.state.phase === 'cameraSelect' ? _react2.default.createElement(_cameraSelect2.default, { selectCamera: this._selectCamera }) : _react2.default.createElement(_game2.default, { localStream: this.state.localStream, character: this.state.character, gameroom: this.state.gameroom })
+	      this.state.phase === 'chooseCharacter' ? _react2.default.createElement(_characterSelect2.default, { selectCharacter: this._selectCharacter }) : this.state.phase === 'cameraSelect' ? _react2.default.createElement(_cameraSelect2.default, { character: this.state.character, selectCamera: this._selectCamera }) : _react2.default.createElement(_game2.default, { constraints: this.state.constraints, localStream: this.state.localStream, character: this.state.character, gameroom: this.state.gameroom })
 	    );
 	  }
 	});
@@ -21947,29 +21945,29 @@
 	      'div',
 	      { id: 'character-select' },
 	      _react2.default.createElement(
-	        'h1',
-	        null,
-	        'enter a unique name for your game'
-	      ),
-	      _react2.default.createElement('input', { id: 'gamename', type: 'text', placeholder: 'your game name', ref: 'gamename' }),
-	      _react2.default.createElement(
-	        'h1',
-	        null,
-	        'Choose your character'
+	        'div',
+	        { className: 'character', id: 'box' },
+	        _react2.default.createElement('img', { src: 'images/boxManHead.png', id: 'bm', onClick: this._selCharacter, alt: 'Box Man', width: '135%' })
 	      ),
 	      _react2.default.createElement(
 	        'div',
-	        { id: 'character-container' },
+	        { id: 'center-flex' },
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'character' },
-	          _react2.default.createElement('img', { src: 'images/boxManHead.png', id: 'bm', onClick: this._selCharacter, width: '135%' })
+	          'h1',
+	          null,
+	          'enter a unique name for your game'
 	        ),
+	        _react2.default.createElement('input', { id: 'gamename', type: 'text', placeholder: 'your game name', ref: "gamename", autoCapitalize: 'off' }),
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'character' },
-	          _react2.default.createElement('img', { src: 'images/camera_guy.png', id: 'cg', onClick: this._selCharacter, width: '100%' })
+	          'h1',
+	          null,
+	          'then choose your character'
 	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'character', id: 'guy' },
+	        _react2.default.createElement('img', { src: 'images/camera_guy.png', alt: 'Camera Guy', id: 'cg', onClick: this._selCharacter, width: '100%' })
 	      )
 	    );
 	  }
@@ -22004,7 +22002,8 @@
 	  },
 
 	  propTypes: {
-	    selectCamera: _react2.default.PropTypes.func.isRequired
+	    selectCamera: _react2.default.PropTypes.func.isRequired,
+	    character: _react2.default.PropTypes.string.isRequired
 	  },
 
 	  componentDidMount: function componentDidMount() {
@@ -22019,45 +22018,63 @@
 	      if (deviceInfos[i].kind === 'videoinput') {
 	        this.state.availableCams.push(deviceInfos[i]);
 	        console.log(deviceInfos[i]);
+	        this.setState(this.state);
 	      }
 	    }
-	    this.setState(this.state);
+	    // if boxman, choose the back camera automatically (if it is available)
+	    // I am assuming the back camera is listed second...this should be done with a regex
+	    if (this.props.character === 'boxMan' && this.state.availableCams.length > 0) {
+	      this.props.selectCamera(this.state.availableCams[this.state.availableCams.length - 1].deviceId);
+	    }
 	  },
 
 	  _submit: function _submit(evt) {
 	    evt.preventDefault();
-	    var checkedButton = document.querySelectorAll('.radioBtn:checked');
-	    if (checkedButton.length === 1) {
-	      this.props.selectCamera(checkedButton[0].value);
-	    }
+	    console.log('event clicked target', evt);
+	    this.props.selectCamera(evt.target.value);
+	    // const checkedButton = document.querySelectorAll('.radioBtn:checked');
+	    // console.log('checkedButton', checkedButton)
+	    // if (checkedButton.length === 1) {
+	    //   this.props.selectCamera(checkedButton[0].value);
+	    // }
 	  },
 
 	  render: function render() {
+	    var _this = this;
+
 	    return _react2.default.createElement(
 	      'div',
 	      { id: 'cameraSelect' },
-	      this.state.cameraSelected ? _react2.default.createElement(
+	      _react2.default.createElement(
+	        'h1',
+	        null,
+	        'Choose your camera'
+	      ),
+	      this.props.character === 'cameraGuy' ? this.state.cameraSelected ? _react2.default.createElement(
 	        'p',
 	        null,
 	        'Choose your camera in a second'
 	      ) : _react2.default.createElement(
-	        'form',
-	        { onSubmit: this._submit },
+	        'div',
+	        { id: 'camera-container' },
 	        this.state.availableCams.map(function (deviceInfo, i) {
 	          console.log(deviceInfo);
 	          console.log(deviceInfo.label);
 	          return _react2.default.createElement(
 	            'div',
-	            { key: Math.random() },
-	            _react2.default.createElement('input', {
-	              className: 'radioBtn',
-	              type: 'radio',
-	              name: 'camera',
-	              value: deviceInfo.deviceId,
-	              label: deviceInfo.label || 'camera ' + i
-	            }),
-	            deviceInfo.label || 'camera ' + i,
-	            ' ',
+	            { className: 'button-container', key: Math.random() },
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                onClick: _this._submit,
+	                className: 'camera-button',
+	                name: 'camera',
+	                value: deviceInfo.deviceId,
+	                label: deviceInfo.label || 'camera ' + i,
+	                ref: deviceInfo.label
+	              },
+	              deviceInfo.label || 'camera ' + i
+	            ),
 	            _react2.default.createElement('br', null)
 	          );
 	        }),
@@ -22065,8 +22082,8 @@
 	          'p',
 	          null,
 	          'Make sure the app can access your camera!'
-	        ) : _react2.default.createElement('input', { type: 'submit', value: 'Go' })
-	      )
+	        ) : null
+	      ) : null
 	    );
 	  }
 	});
@@ -22091,7 +22108,7 @@
 
 	var _boxMan2 = _interopRequireDefault(_boxMan);
 
-	var _cameraGuy = __webpack_require__(183);
+	var _cameraGuy = __webpack_require__(184);
 
 	var _cameraGuy2 = _interopRequireDefault(_cameraGuy);
 
@@ -22104,13 +22121,14 @@
 	  return _react2.default.createElement(
 	    'div',
 	    null,
-	    props.character === 'boxMan' ? _react2.default.createElement(_boxMan2.default, { localStream: props.localStream, gameroom: props.gameroom }) : _react2.default.createElement(_cameraGuy2.default, { localStream: props.localStream, gameroom: props.gameroom })
+	    props.character === 'boxMan' ? _react2.default.createElement(_boxMan2.default, { localStream: props.localStream, gameroom: props.gameroom }) : _react2.default.createElement(_cameraGuy2.default, { constraints: props.constraints, localStream: props.localStream, gameroom: props.gameroom })
 	  );
 	};
 	Game.propTypes = {
 	  character: _react2.default.PropTypes.string.isRequired,
 	  gameroom: _react2.default.PropTypes.string.isRequired,
-	  localStream: _react2.default.PropTypes.object.isRequired
+	  localStream: _react2.default.PropTypes.object.isRequired,
+	  constraints: _react2.default.PropTypes.object
 	};
 
 	exports.default = Game;
@@ -22137,26 +22155,11 @@
 
 	var _chatbox2 = _interopRequireDefault(_chatbox);
 
-	var _cameraSelect = __webpack_require__(178);
+	var _viewport = __webpack_require__(183);
 
-	var _cameraSelect2 = _interopRequireDefault(_cameraSelect);
+	var _viewport2 = _interopRequireDefault(_viewport);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// box man has two viewports (left and right), one for each eye
-	var Viewport = function Viewport(props) {
-	  return _react2.default.createElement(
-	    'div',
-	    { id: props.id, className: 'viewport' },
-	    _react2.default.createElement('video', { className: 'currentVideo', autoPlay: true }),
-	    _react2.default.createElement('video', { id: 'hiddenVideo', display: 'none' }),
-	    _react2.default.createElement(_chatbox2.default, { msg: props.displayMsg })
-	  );
-	};
-	Viewport.propTypes = {
-	  id: _react2.default.PropTypes.string.isRequired,
-	  displayMsg: _react2.default.PropTypes.object.isRequired
-	};
 
 	var BoxMan = _react2.default.createClass({
 	  displayName: 'BoxMan',
@@ -22170,17 +22173,48 @@
 	    return {
 	      streams: [],
 	      currentStream: null,
-	      displayMsg: {},
-	      cameraSelected: false
+	      displayMsg: {}
 	    };
 	  },
 
 	  componentDidMount: function componentDidMount() {
+	    this._addTouchEvents();
 	    this.state.streams.push(this.props.localStream);
 	    this.state.currentStream = this.props.localStream;
 	    this.setState(this.state);
 	    console.log('component mounted and about to change video');
 	    this._changeVideo();
+	  },
+
+	  _addTouchEvents: function _addTouchEvents() {
+	    var _this = this;
+
+	    document.addEventListener('touchstart', function (evt) {
+	      _this.lastTouch = evt.touches[0];
+	    });
+	    document.addEventListener('touchmove', this._handleTouch);
+	  },
+
+	  _handleTouch: function _handleTouch(evt) {
+
+	    // try to go full screen for box man
+	    if (!document.fullScreenElement) {
+	      this.refs.bmContainer.webkitRequestFullscreen();
+	    }
+	    this.refs.bmContainer.webkitRequestFullscreen();
+
+	    console.log(document.querySelector('.currentVideo').style.height);
+	    var curHeight = document.querySelector('.currentVideo').style.height.match(/[-\.\d]*/)[0];
+	    console.log('curHeight', curHeight);
+	    var newHeight = curHeight * (1 + Math.sign(evt.touches[0].clientX - this.lastTouch.clientX) / 10);
+	    if (newHeight > 100) newHeight = 100;else if (newHeight === 0) newHeight = 50;
+	    var views = document.querySelectorAll('.currentVideo');
+	    views.forEach(function (view) {
+	      view.style.height = newHeight + 'vh';
+	    });
+	    // console.log('multiplied by ', newHeight)
+
+	    this.lastTouch = evt.touches[0];
 	  },
 
 	  _addedVideo: function _addedVideo(newStream) {
@@ -22266,7 +22300,7 @@
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
-	      { onClick: this._cycleCameras },
+	      { ref: "bmContainer", onClick: this._cycleCameras },
 	      _react2.default.createElement(_rtc2.default, {
 	        config: { character: 'boxMan', roomName: this.props.gameroom, constraints: { audio: false, video: false } },
 	        addedVideo: this._addedVideo,
@@ -22275,9 +22309,13 @@
 	      }),
 	      _react2.default.createElement(
 	        'div',
-	        { id: 'viewports-container' },
-	        _react2.default.createElement(Viewport, { id: 'left', displayMsg: this.state.displayMsg }),
-	        _react2.default.createElement(Viewport, { id: 'right', displayMsg: this.state.displayMsg })
+	        { id: 'vertical-flexbox' },
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'viewports-container' },
+	          _react2.default.createElement(_viewport2.default, { id: 'left', displayMsg: this.state.displayMsg }),
+	          _react2.default.createElement(_viewport2.default, { id: 'right', displayMsg: this.state.displayMsg })
+	        )
 	      )
 	    );
 	  }
@@ -22360,7 +22398,7 @@
 	      media: config.constraints,
 	      peerConnectionConfig: config.iceServers
 	    });
-	    console.log('media', config.constraints);
+	    console.log('config contraints', config.constraints);
 
 	    this.webrtc.on('readyToCall', function () {
 	      _this2.webrtc.joinRoom(config.roomName, function (err, roomDescription) {
@@ -22444,36 +22482,55 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _rtc = __webpack_require__(181);
-
-	var _rtc2 = _interopRequireDefault(_rtc);
-
-	var _cameraSelect = __webpack_require__(178);
-
-	var _cameraSelect2 = _interopRequireDefault(_cameraSelect);
-
 	var _chatbox = __webpack_require__(182);
 
 	var _chatbox2 = _interopRequireDefault(_chatbox);
 
-	var _messenger = __webpack_require__(184);
-
-	var _messenger2 = _interopRequireDefault(_messenger);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// what the camera guy sees from his camera
-	var Viewfinder = function Viewfinder(props) {
+	// box man has two viewports (left and right), one for each eye
+	var Viewport = function Viewport(props) {
 	  return _react2.default.createElement(
 	    'div',
-	    { id: 'viewfinder' },
-	    _react2.default.createElement('video', { id: 'viewfinder-video', autoPlay: true }),
+	    { id: props.id, className: 'viewport' },
+	    _react2.default.createElement('video', { className: 'currentVideo', autoPlay: true }),
 	    _react2.default.createElement(_chatbox2.default, { msg: props.displayMsg })
 	  );
 	};
-	Viewfinder.propTypes = {
+	Viewport.propTypes = {
+	  id: _react2.default.PropTypes.string.isRequired,
 	  displayMsg: _react2.default.PropTypes.object.isRequired
 	};
+
+	exports.default = Viewport;
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _rtc = __webpack_require__(181);
+
+	var _rtc2 = _interopRequireDefault(_rtc);
+
+	var _messenger = __webpack_require__(185);
+
+	var _messenger2 = _interopRequireDefault(_messenger);
+
+	var _viewfinder = __webpack_require__(186);
+
+	var _viewfinder2 = _interopRequireDefault(_viewfinder);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/* =======================================================
 	  Camera Guy Component
@@ -22483,66 +22540,22 @@
 
 	  propTypes: {
 	    gameroom: _react2.default.PropTypes.string.isRequired,
-	    localStream: _react2.default.PropTypes.object.isRequired
+	    localStream: _react2.default.PropTypes.object.isRequired,
+	    constraints: _react2.default.PropTypes.object.isRequired
 	  },
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      cameraSelected: false,
 	      availableCams: [],
 	      currentStream: null,
-	      displayMsg: {},
-	      constraints: {
-	        audio: false,
-	        video: true
-	      }
+	      displayMsg: {}
 	    };
 	  },
 
 	  componentDidMount: function componentDidMount() {
 	    var videoEl = document.getElementById('viewfinder-video') || document.createElement('new-video');
 	    videoEl.srcObject = this.props.localStream;
-	    // navigator.mediaDevices.enumerateDevices().then(this._gotDevices).catch(err => { console.error(err); });
 	  },
-
-	  // _gotDevices: function (deviceInfos) {
-	  //   console.log('got devices', deviceInfos);
-	  //   for (let i = 0; i < deviceInfos.length; i++) {
-	  //     if (deviceInfos[i].kind === 'videoinput') {
-	  //       this.state.availableCams.push(deviceInfos[i]);
-	  //       console.log(deviceInfos[i]);
-	  //     }
-	  //   }
-	  //   this.setState(this.state);
-	  // },
-
-	  // _selectCamera: function(cam) {
-
-	  //   console.log('in _switch camera with ', cam)
-	  //   if (window.stream) {
-	  //     console.log('already was a window stream: ', window.stream);
-	  //     window.stream.getTracks().forEach(function (track) {
-	  //       track.stop();
-	  //     });
-	  //   }
-	  //   var videoSource = cam;
-	  //   this.state.constraints = {
-	  //     audio: false,
-	  //     video: { deviceId: videoSource ? { exact: videoSource } : undefined }
-	  //   };
-	  //   navigator.mediaDevices.getUserMedia(this.state.constraints)
-	  //     .then(stream => {
-	  //       window.stream = stream;
-	  //       const videoEl = document.getElementById('viewfinder-video');
-	  //       videoEl.srcObject = stream;
-	  //       document.getElementById('viewfinder').style.display = "flex";
-
-	  //       // changing cameraSelected triggers Camera Guy to do RTC with Box Man
-	  //       this.state.cameraSelected = true;
-	  //       this.setState(this.state);
-	  //     })
-	  //     .catch(err => { console.error(err); });
-	  // },
 
 	  _newMessage: function _newMessage(msg) {
 	    this.state.displayMsg = msg;
@@ -22568,12 +22581,12 @@
 	    return _react2.default.createElement(
 	      'div',
 	      null,
-	      _react2.default.createElement(Viewfinder, { displayMsg: this.state.displayMsg }),
+	      _react2.default.createElement(_viewfinder2.default, { displayMsg: this.state.displayMsg }),
 	      _react2.default.createElement(_rtc2.default, {
 	        config: {
 	          character: 'cameraGuy',
 	          roomName: this.props.gameroom,
-	          constraints: this.state.constraints
+	          constraints: this.props.constraints
 	        },
 	        newMessage: this._newMessage,
 	        ref: "myRTC"
@@ -22586,7 +22599,7 @@
 	exports.default = CameraGuy;
 
 /***/ },
-/* 184 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22636,6 +22649,41 @@
 	});
 
 	exports.default = Messenger;
+
+/***/ },
+/* 186 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _chatbox = __webpack_require__(182);
+
+	var _chatbox2 = _interopRequireDefault(_chatbox);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// what the camera guy sees from his camera
+	var Viewfinder = function Viewfinder(props) {
+	  return _react2.default.createElement(
+	    'div',
+	    { id: 'viewfinder' },
+	    _react2.default.createElement('video', { id: 'viewfinder-video', autoPlay: true }),
+	    _react2.default.createElement(_chatbox2.default, { msg: props.displayMsg })
+	  );
+	};
+	Viewfinder.propTypes = {
+	  displayMsg: _react2.default.PropTypes.object.isRequired
+	};
+
+	exports.default = Viewfinder;
 
 /***/ }
 /******/ ]);

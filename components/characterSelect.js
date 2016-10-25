@@ -32,13 +32,18 @@ const CharacterSelect= React.createClass({
   render: function() {
     return (
       <div id="character-select">
-        <h1>enter a unique name for your game</h1>
-        <input id="gamename" type="text" placeholder="your game name" ref={"gamename"} autoCapitalize="off"/>
-        <h1>Choose your character</h1>
-        <div id="character-container" >
-          <div className="character"><img src="images/boxManHead.png" id="bm" onClick={this._selCharacter} width="135%" /></div>
-          <div className="character"><img src="images/camera_guy.png" id="cg" onClick={this._selCharacter} width="100%"/></div>
+        <div className="character" id="box" >
+          <img src="images/boxManHead.png" id="bm" onClick={this._selCharacter} alt="Box Man" width="135%" />
         </div>
+        <div id="center-flex">
+          <h1>enter a unique name for your game</h1>
+          <input id="gamename" type="text" placeholder="your game name" ref={"gamename"} autoCapitalize="off"/>
+          <h1>then choose your character</h1>
+        </div>
+        <div className="character" id="guy">
+          <img src="images/camera_guy.png" alt="Camera Guy" id="cg" onClick={this._selCharacter} width="100%"/>
+        </div>
+        
       </div>
     );
   }

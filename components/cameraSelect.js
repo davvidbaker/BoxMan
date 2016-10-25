@@ -48,15 +48,16 @@ const CameraSelect = React.createClass({
   render: function() {
     return (
       <div id="cameraSelect">
+        <h1>Choose your camera</h1>
       {this.props.character === 'cameraGuy' ?
         this.state.cameraSelected  ?
         <p>Choose your camera in a second</p> :
-        <div>
+        <div id="camera-container">
           {this.state.availableCams.map((deviceInfo, i) => {
               console.log(deviceInfo);
               console.log(deviceInfo.label);
               return (
-                <div key={Math.random()}>
+                <div className="button-container" key={Math.random()}>
                   <button
                     onClick={this._submit}
                     className="camera-button"
