@@ -155,8 +155,8 @@ const BoxMan = React.createClass({
     this.canvas2 = document.getElementById('canvas-right');
     this.ctx2 = this.canvas2.getContext('2d');
     this.ctx2.globalAlpha = 0.1;
-    ctx1.globalCompositeOperation = "difference";
-    ctx2.globalCompositeOperation = "difference";
+    this.ctx1.globalCompositeOperation = "difference";
+    this.ctx2.globalCompositeOperation = "difference";
     this._draw();
   },
 
