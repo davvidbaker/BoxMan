@@ -20,16 +20,19 @@ const Application = React.createClass({
         audio: false,
         video: true
       },
-      localStream: null
+      localStream: null,
+      fxMode: false
     });
   },
 
-  _selectCharacter: function(yourChar, gameroom) {
+  _selectCharacter: function(yourChar, gameroom, fxBool) {
     this.state.character = yourChar;
     this.state.phase = 'cameraSelect';
+    this.state.fxMode = fxBool;
     // add suffix box-man to quasi-ensure unique game room name
     this.state.gameroom = gameroom + 'box-man';
     this.setState(this.state);
+    console.log(this.state)
   },
 
   _selectCamera: function(cam) {
@@ -73,7 +76,7 @@ const Application = React.createClass({
           <CharacterSelect selectCharacter={this._selectCharacter} /> :
           (this.state.phase === 'cameraSelect') ? 
             <CameraSelect character={this.state.character} selectCamera={this._selectCamera} /> :
-            <Game constraints={this.state.constraints} localStream={this.state.localStream} character={this.state.character} gameroom={this.state.gameroom}/>
+            <Game fxMode={this.state.fxMode} constraints={this.state.constraints} localStream={this.state.localStream} character={this.state.character} gameroom={this.state.gameroom}/>
         }
       </div>
     );

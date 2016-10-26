@@ -16,12 +16,13 @@ const CharacterSelect= React.createClass({
       this.refs.gamename.focus();
     } 
     else {
+      console.log('checbox value',this.refs.fx.value);
       switch (event.target.id) {
       case 'bm': 
-        this.props.selectCharacter('boxMan', this.refs.gamename.value);
+        this.props.selectCharacter('boxMan', this.refs.gamename.value, this.refs.fx.checked);
         break;
       case 'cg':
-        this.props.selectCharacter('cameraGuy', this.refs.gamename.value);
+        this.props.selectCharacter('cameraGuy', this.refs.gamename.value, this.refs.fx.checked);
         break;
       default: break;
     }  
@@ -39,6 +40,7 @@ const CharacterSelect= React.createClass({
           <h1>enter a unique name for your game</h1>
           <input id="gamename" type="text" placeholder="your game name" ref={"gamename"} autoCapitalize="off"/>
           <h1>then choose your character</h1>
+          <label><input type="checkbox" ref={"fx"} />FX Mode</label>
         </div>
         <div className="character" id="guy">
           <img src="images/camera_guy.png" alt="Camera Guy" id="cg" onClick={this._selCharacter} width="100%"/>

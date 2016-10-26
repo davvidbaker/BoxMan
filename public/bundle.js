@@ -21827,16 +21827,19 @@
 	        audio: false,
 	        video: true
 	      },
-	      localStream: null
+	      localStream: null,
+	      fxMode: false
 	    };
 	  },
 
-	  _selectCharacter: function _selectCharacter(yourChar, gameroom) {
+	  _selectCharacter: function _selectCharacter(yourChar, gameroom, fxBool) {
 	    this.state.character = yourChar;
 	    this.state.phase = 'cameraSelect';
+	    this.state.fxMode = fxBool;
 	    // add suffix box-man to quasi-ensure unique game room name
 	    this.state.gameroom = gameroom + 'box-man';
 	    this.setState(this.state);
+	    console.log(this.state);
 	  },
 
 	  _selectCamera: function _selectCamera(cam) {
@@ -21887,7 +21890,7 @@
 	          'OUT OF BODY'
 	        )
 	      ),
-	      this.state.phase === 'chooseCharacter' ? _react2.default.createElement(_characterSelect2.default, { selectCharacter: this._selectCharacter }) : this.state.phase === 'cameraSelect' ? _react2.default.createElement(_cameraSelect2.default, { character: this.state.character, selectCamera: this._selectCamera }) : _react2.default.createElement(_game2.default, { constraints: this.state.constraints, localStream: this.state.localStream, character: this.state.character, gameroom: this.state.gameroom })
+	      this.state.phase === 'chooseCharacter' ? _react2.default.createElement(_characterSelect2.default, { selectCharacter: this._selectCharacter }) : this.state.phase === 'cameraSelect' ? _react2.default.createElement(_cameraSelect2.default, { character: this.state.character, selectCamera: this._selectCamera }) : _react2.default.createElement(_game2.default, { fxMode: this.state.fxMode, constraints: this.state.constraints, localStream: this.state.localStream, character: this.state.character, gameroom: this.state.gameroom })
 	    );
 	  }
 	});
@@ -21927,12 +21930,13 @@
 	      document.getElementById('gamename').className += 'angry';
 	      this.refs.gamename.focus();
 	    } else {
+	      console.log('checbox value', this.refs.fx.value);
 	      switch (event.target.id) {
 	        case 'bm':
-	          this.props.selectCharacter('boxMan', this.refs.gamename.value);
+	          this.props.selectCharacter('boxMan', this.refs.gamename.value, this.refs.fx.checked);
 	          break;
 	        case 'cg':
-	          this.props.selectCharacter('cameraGuy', this.refs.gamename.value);
+	          this.props.selectCharacter('cameraGuy', this.refs.gamename.value, this.refs.fx.checked);
 	          break;
 	        default:
 	          break;
@@ -21962,6 +21966,12 @@
 	          'h1',
 	          null,
 	          'then choose your character'
+	        ),
+	        _react2.default.createElement(
+	          'label',
+	          null,
+	          _react2.default.createElement('input', { type: 'checkbox', ref: "fx" }),
+	          'FX Mode'
 	        )
 	      ),
 	      _react2.default.createElement(
@@ -22125,13 +22135,14 @@
 	  return _react2.default.createElement(
 	    'div',
 	    null,
-	    props.character === 'boxMan' ? _react2.default.createElement(_boxMan2.default, { localStream: props.localStream, gameroom: props.gameroom }) : _react2.default.createElement(_cameraGuy2.default, { constraints: props.constraints, localStream: props.localStream, gameroom: props.gameroom })
+	    props.character === 'boxMan' ? _react2.default.createElement(_boxMan2.default, { fxMode: props.fxMode, localStream: props.localStream, gameroom: props.gameroom }) : _react2.default.createElement(_cameraGuy2.default, { constraints: props.constraints, localStream: props.localStream, gameroom: props.gameroom })
 	  );
 	};
 	Game.propTypes = {
 	  character: _react2.default.PropTypes.string.isRequired,
 	  gameroom: _react2.default.PropTypes.string.isRequired,
 	  localStream: _react2.default.PropTypes.object.isRequired,
+	  fxMode: _react2.default.PropTypes.bool.isRequired,
 	  constraints: _react2.default.PropTypes.object
 	};
 
@@ -22174,7 +22185,8 @@
 
 	  propTypes: {
 	    gameroom: _react2.default.PropTypes.string.isRequired,
-	    localStream: _react2.default.PropTypes.object
+	    localStream: _react2.default.PropTypes.object,
+	    fxMode: _react2.default.PropTypes.bool.isRequired
 	  },
 
 	  getInitialState: function getInitialState() {
@@ -22186,7 +22198,9 @@
 	  },
 
 	  componentDidMount: function componentDidMount() {
-	    this._initCanvas();
+	    if (this.props.fxMode) {
+	      this._initCanvas();
+	    }
 	    this._addTouchEvents();
 	    this.state.streams.push(this.props.localStream);
 	    this.state.currentStream = this.props.localStream;
@@ -22205,6 +22219,7 @@
 	  },
 
 	  _handleTouch: function _handleTouch(evt) {
+	    var _this2 = this;
 
 	    // try to go full screen for box man
 	    if (!document.fullScreenElement) {
@@ -22212,27 +22227,31 @@
 	    }
 	    this.refs.bmContainer.webkitRequestFullscreen();
 
-	    console.log(document.querySelector('canvas').style.height);
-	    var canvas = document.querySelector('canvas').style.height.match(/[-\.\d]*/)[0];
-	    console.log('canvas', canvas);
-	    var newHeight = canvas * (1 + Math.sign(evt.touches[0].clientX - this.lastTouch.clientX) / 10);
-	    if (newHeight > 100) newHeight = 100;else if (newHeight === 0) newHeight = 50;
-	    var views = document.querySelectorAll('canvas');
-	    views.forEach(function (view) {
-	      view.style.height = newHeight + 'vh';
-	    });
-
-	    // console.log(document.querySelector('.currentVideo').style.height);
-	    // let curHeight = document.querySelector('.currentVideo').style.height.match(/[-\.\d]*/)[0]
-	    // console.log('curHeight', curHeight)
-	    // let newHeight = curHeight * (1 + (Math.sign(evt.touches[0].clientX - this.lastTouch.clientX)/10));
-	    // if (newHeight > 100) newHeight = 100;
-	    // else if (newHeight === 0) newHeight = 50;
-	    // const views = document.querySelectorAll('.currentVideo')
-	    // views.forEach(view => {
-	    //   view.style.height = `${newHeight}vh`;
-	    // });
-	    // // console.log('multiplied by ', newHeight)
+	    if (this.props.fxMode) {
+	      (function () {
+	        console.log(document.querySelector('canvas').style.height);
+	        var canvas = document.querySelector('canvas').style.height.match(/[-\.\d]*/)[0];
+	        console.log('canvas', canvas);
+	        var newHeight = canvas * (1 + Math.sign(evt.touches[0].clientX - _this2.lastTouch.clientX) / 10);
+	        if (newHeight > 100) newHeight = 100;else if (newHeight === 0) newHeight = 50;
+	        var views = document.querySelectorAll('canvas');
+	        views.forEach(function (view) {
+	          view.style.height = newHeight + 'vh';
+	        });
+	      })();
+	    } else {
+	      (function () {
+	        console.log(document.querySelector('.currentVideo').style.height);
+	        var curHeight = document.querySelector('.currentVideo').style.height.match(/[-\.\d]*/)[0];
+	        console.log('curHeight', curHeight);
+	        var newHeight = curHeight * (1 + Math.sign(evt.touches[0].clientX - _this2.lastTouch.clientX) / 10);
+	        if (newHeight > 100) newHeight = 100;else if (newHeight === 0) newHeight = 50;
+	        var views = document.querySelectorAll('.currentVideo');
+	        views.forEach(function (view) {
+	          view.style.height = newHeight + 'vh';
+	        });
+	      })();
+	    }
 
 	    this.lastTouch = evt.touches[0];
 	  },
@@ -22282,7 +22301,25 @@
 	    if (currentVideos.length > 0) {
 	      console.log(currentVideos);
 	      for (var i = 0; i < currentVideos.length; i++) {
+	        if (currentVideos[i].videoWidth > 0) {
+	          if (this.canvas1) {
+	            this.canvas1.width = currentVideos[i].videoWidth;
+	            this.canvas1.height = currentVideos[i].videoHeight;
+	            this.canvas2.width = currentVideos[i].videoWidth;
+	            this.canvas2.height = currentVideos[i].videoHeight;
+
+	            // set the global alpha
+	            this.ctx1.globalAlpha = this.canvasControls.globalAlpha;
+	            this.ctx2.globalAlpha = this.canvasControls.globalAlpha;
+	            // set the blend mode
+	            this.ctx1.globalCompositeOperation = this.canvasControls.globalCompositeOperation;
+	            this.ctx2.globalCompositeOperation = this.canvasControls.globalCompositeOperation;
+	          }
+	        }
+	        console.log(currentVideos[i].videoHeight);
 	        currentVideos[i].srcObject = this.state.currentStream;
+	        console.log(currentVideos[i].videoHeight);
+	        console.dir(currentVideos[i]);
 	      }
 	    }
 	  },
@@ -22318,22 +22355,52 @@
 	  },
 
 	  _initCanvas: function _initCanvas() {
+	    var _this3 = this;
+
 	    this.videoEl = document.querySelector('.currentVideo');
 	    this.canvas1 = document.getElementById('canvas-left');
-	    this.ctx1 = this.canvas1.getContext('2d');
-	    this.ctx1.globalAlpha = 0.9;
 	    this.canvas2 = document.getElementById('canvas-right');
+	    this.ctx1 = this.canvas1.getContext('2d');
 	    this.ctx2 = this.canvas2.getContext('2d');
-	    this.ctx2.globalAlpha = 0.9;
-	    this.ctx1.globalCompositeOperation = "difference";
-	    this.ctx2.globalCompositeOperation = "difference";
+
+	    this.canvasControls = {
+	      globalAlpha: 0.8,
+	      globalCompositeOperation: "difference"
+	    };
+
+	    // set the global alpha
+	    this.ctx1.globalAlpha = this.canvasControls.globalAlpha;
+	    this.ctx2.globalAlpha = this.canvasControls.globalAlpha;
+	    // set the blend mode
+	    this.ctx1.globalCompositeOperation = this.canvasControls.globalCompositeOperation;
+	    this.ctx2.globalCompositeOperation = this.canvasControls.globalCompositeOperation;
+
+	    var gui = new dat.GUI();
+	    var alphaController = gui.add(this.canvasControls, 'globalAlpha', 0, 1);
+	    var blendController = gui.add(this.canvasControls, 'globalCompositeOperation', ['source-over', 'source-in', 'source-atop', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'lighter', 'copy', 'xor', 'screen', 'multiply', 'overlay', 'darken', 'lighten', 'color-burn', 'color-dodge', 'hard-light', 'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity']);
+
+	    alphaController.onChange(function (alpha) {
+	      _this3.ctx1.globalAlpha = alpha;
+	      _this3.ctx2.globalAlpha = alpha;
+	      _this3.canvasControls.globalAlpha = alpha;
+	    });
+
+	    blendController.onChange(function (mode) {
+	      _this3.ctx1.globalCompositeOperation = mode;
+	      _this3.ctx2.globalCompositeOperation = mode;
+	      _this3.canvasControls.globalCompositeOperation = mode;
+	    });
+
 	    this._draw();
 	  },
 
 	  _draw: function _draw() {
 	    this.ctx1.drawImage(this.videoEl, 0, 0, this.canvas1.width, this.canvas1.height); //;, 400, 0, 0,this.canvas1.width,this.canvas1.height)
 	    this.ctx2.drawImage(this.videoEl, 0, 0, this.canvas1.width, this.canvas1.height); //;, 400, 0, 0,canvas1.width,canvas1.height)
-	    window.requestAnimationFrame(this._draw);
+
+	    // don't want it rendering higher than 12.5fps to get the cool fx
+	    setTimeout(this._draw, 80);
+	    // window.requestAnimationFrame(this._draw);
 	  },
 
 	  render: function render() {
@@ -22349,11 +22416,16 @@
 	      _react2.default.createElement(
 	        'div',
 	        { id: 'vertical-flexbox' },
-	        _react2.default.createElement(
+	        this.props.fxMode ? _react2.default.createElement(
 	          'div',
 	          { id: 'viewports-container' },
 	          _react2.default.createElement(_viewportFX2.default, { id: 'left', displayMsg: this.state.displayMsg }),
 	          _react2.default.createElement(_viewportFX2.default, { id: 'right', displayMsg: this.state.displayMsg })
+	        ) : _react2.default.createElement(
+	          'div',
+	          { id: 'viewports-container' },
+	          _react2.default.createElement(_viewport2.default, { id: 'left', displayMsg: this.state.displayMsg }),
+	          _react2.default.createElement(_viewport2.default, { id: 'right', displayMsg: this.state.displayMsg })
 	        )
 	      )
 	    );
