@@ -22321,10 +22321,12 @@
 	    this.videoEl = document.querySelector('.currentVideo');
 	    this.canvas1 = document.getElementById('canvas-left');
 	    this.ctx1 = this.canvas1.getContext('2d');
-	    this.ctx1.globalAlpha = 0.25;
+	    this.ctx1.globalAlpha = 0.1;
 	    this.canvas2 = document.getElementById('canvas-right');
 	    this.ctx2 = this.canvas2.getContext('2d');
-	    this.ctx2.globalAlpha = 0.25;
+	    this.ctx2.globalAlpha = 0.1;
+	    ctx1.globalCompositeOperation = "difference";
+	    ctx2.globalCompositeOperation = "difference";
 	    this._draw();
 	  },
 
