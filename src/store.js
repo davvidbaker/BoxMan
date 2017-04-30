@@ -7,8 +7,9 @@ import * as actionCreators from 'actions';
 
 export const sagaMiddleware = createSagaMiddleware();
 
-const composeEnhancers =
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ actionCreators }) || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE
+  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ actionCreators })
+  : compose;
 
 const configureStore = preloadedState =>
   createStore(
@@ -19,11 +20,10 @@ const configureStore = preloadedState =>
 
 let store;
 if (process.env.NODE_ENV === 'development') {
-  store = configureStore({})
-}
-else {
   store = configureStore({});
-} 
+} else {
+  store = configureStore({});
+}
 
 sagaMiddleware.run(rootSaga);
 
