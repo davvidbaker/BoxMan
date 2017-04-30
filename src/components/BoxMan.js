@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import RTC from './rtc.js';
 import Chatbox from './chatbox.js';
 import Viewport from './viewport.js';
 import ViewportFX from './viewportFX.js';
@@ -9,14 +8,14 @@ import ViewportFX from './viewportFX.js';
 class BoxMan extends Component {
   static propTypes = {
     gameroom: PropTypes.string.isRequired,
-    localStream: PropTypes.object,
     fxMode: PropTypes.bool.isRequired,
+    localStream: PropTypes.object,
+    remoteStreams: PropTypes.array
   };
 
   constructor() {
     super();
     this.state = {
-      streams: [],
       currentStream: null,
       displayMsg: {},
     };
@@ -27,11 +26,17 @@ class BoxMan extends Component {
       this._initCanvas();
     }
     this._addTouchEvents();
-    this.state.streams.push(this.props.localStream);
     this.state.currentStream = this.props.localStream;
     this.setState(this.state);
     console.log('component mounted and about to change video');
     this._changeVideo();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.remoteStreams.length !== this.props.remoteStreams.length) {
+      this._addedVideo(nextProps.remoteStreams[nextProps.remoteStreams.length-1]);
+      console.log('addedvideo: ', nextProps.remoteStreams[nextProps.remoteStreams.length-1])
+    }
   }
 
   _addTouchEvents() {
@@ -86,15 +91,15 @@ class BoxMan extends Component {
   _addedVideo(newStream) {
     // make sure the stream isn't already there
     let duplicate = false;
-    for (let i = 0; i < this.state.streams.length; i++) {
-      if (this.state.streams[i].id === newStream.id) {
+    for (let i = 0; i < this.props.remoteStreams.length; i++) {
+      if (this.props.remoteStreams[i].id === newStream.id) {
         console.log('there was a dupe!');
         duplicate = true;
         break;
       }
     }
     if (!duplicate) {
-      this.state.streams.push(newStream);
+      this.props.remoteStreams.push(newStream);
       this.state.currentStream = newStream;
       this.setState(this.state);
       console.log('new boxman state after adding video', this.state);
@@ -104,17 +109,17 @@ class BoxMan extends Component {
 
   _removedVideo(oldStream) {
     console.log('oldStream', oldStream);
-    for (let i = 0; i < this.state.streams.length; i++) {
-      if (this.state.streams[i].id === oldStream.id) {
-        this.state.streams.splice(i, 1);
+    for (let i = 0; i < this.props.remoteStreams.length; i++) {
+      if (this.props.remoteStreams[i].id === oldStream.id) {
+        this.props.remoteStreams.splice(i, 1);
         break;
       }
     }
     // if we removed the currentStream, set it to another if any are available
     if (oldStream.id === this.state.currentStream.id) {
       console.log('removed the current stream');
-      if (this.state.streams.length > 0) {
-        this.state.currentStream = this.state.streams[0];
+      if (this.props.remoteStreams.length > 0) {
+        this.state.currentStream = this.props.remoteStreams[0];
         this._changeVideo();
       }
     }
@@ -151,13 +156,13 @@ class BoxMan extends Component {
     }
   }
 
-  _cycleCameras() {
+  cycleCameras() {
     console.log('BoxMan trying to cycle cameras');
-    if (this.state.streams.length > 1) {
-      for (let i = 0; i < this.state.streams.length; i++) {
-        if (this.state.streams[i].id === this.state.currentStream.id) {
-          this.state.currentStream = this.state.streams[
-            (i + 1) % this.state.streams.length
+    if (this.props.remoteStreams.length > 1) {
+      for (let i = 0; i < this.props.remoteStreams.length; i++) {
+        if (this.props.remoteStreams[i].id === this.state.currentStream.id) {
+          this.state.currentStream = this.props.remoteStreams[
+            (i + 1) % this.props.remoteStreams.length
           ];
           this.setState(this.state);
           this._changeVideo();
@@ -274,17 +279,12 @@ class BoxMan extends Component {
 
   render() {
     return (
-      <div ref={'bmContainer'} onClick={this._cycleCameras}>
-        <RTC
-          config={{
-            character: 'boxMan',
-            roomName: this.props.gameroom,
-            constraints: { audio: false, video: false },
-          }}
-          addedVideo={this._addedVideo}
-          removedVideo={this._removedVideo}
-          newMessage={this._newMessage}
-        />
+      <div
+        ref={'bmContainer'}
+        onClick={() => {
+          this.cycleCameras();
+        }}
+      >
         <div id="vertical-flexbox">
           {this.props.fxMode
             ? <div id="viewports-container">

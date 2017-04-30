@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import CharacterSelect from 'components/CharacterSelect.js';
 import CameraSelect from 'components/CameraSelect.js';
+import RTC from 'containers/RTC.js';
 import Game from 'components/Game.js';
 import {
   selectCharacter,
@@ -13,20 +14,20 @@ import {
   changeConstraints,
   changeCamera,
   foundCamera,
+  fetchIceServers,
+  initiateRTC,
 } from 'actions';
 
 class Application extends Component {
   static propTypes = {
     localStream: PropTypes.object,
-    remoteStream: PropTypes.object,
   };
-
 
   constructor() {
     super();
-    
+
     /** Redux can't store MediaStream objects in its store, but doing it at React state level works. */
-    this.state = { localStream: null, remoteStream: null };
+    this.state = { localStream: null, remoteStreams: [] };
   }
 
   componentDidMount() {
@@ -39,6 +40,20 @@ class Application extends Component {
       .catch(err => {
         console.error(err);
       });
+
+    // start up rtc stuff
+    this.props.fetchIceServers();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.phase === 'game' && this.props.phase !== 'game') {
+      this.props.initiateRTC();
+    }
+
+    if (nextProps.remoteStreamsCount !== this.props.remoteStreamsCount) {
+      console.log(window.remoteStreams);
+      this.setState({ remoteStreams: window.remoteStreams });
+    }
   }
 
   changeStream(stream, localOrRemote) {
@@ -67,6 +82,31 @@ class Application extends Component {
   render() {
     return (
       <div className="application">
+        {/*<RTC />*/}
+        {/*<RTC
+          config={{
+            character: 'boxMan',
+            roomName: this.props.gameroom,
+            constraints: { audio: false, video: false },
+          }}
+          addedVideo={this._addedVideo}
+          removedVideo={this._removedVideo}
+          newMessage={this._newMessage}
+        />*/}
+
+        {/*        
+        <RTC
+          config={{
+            character: 'cameraGuy',
+            roomName: this.props.gameroom,
+            constraints: this.props.constraints,
+          }}
+          newMessage={() => {
+            this._newMessage();
+          }}
+          ref={'myRTC'}
+        />*/}
+
         <div id="background-title">
           <p id="title">BOX MAN</p>
           <p id="subtitle">OUT OF BODY</p>
@@ -90,6 +130,7 @@ class Application extends Component {
                 />
               : <Game
                   localStream={this.state.localStream}
+                  remoteStreams={this.state.remoteStreams}
                   fxMode={this.props.fxMode}
                   constraints={this.props.constraints}
                   character={this.props.character}
@@ -106,7 +147,8 @@ const mapStateToProps = (state, ownProps) => ({
   gameroom: state.gameroom,
   availableCameras: state.camera.availableCameras,
   constraints: state.constraints,
-  
+  remoteStreamsCount: state.remoteStreamsCount,
+
   camera: null,
   localStream: null,
   fxMode: false,
@@ -121,6 +163,8 @@ const mapDispatchToProps = dispatch => ({
   changeCamera: selectedCamera => dispatch(changeCamera(selectedCamera)),
   changeConstraints: constraints => dispatch(changeConstraints(constraints)),
   foundCamera: newCamera => dispatch(foundCamera(newCamera)),
+  fetchIceServers: () => dispatch(fetchIceServers()),
+  initiateRTC: () => dispatch(initiateRTC()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Application);

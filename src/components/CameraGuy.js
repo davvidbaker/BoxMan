@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import RTC from './rtc.js';
 import Messenger from './messenger.js';
 import Viewfinder from './viewfinder.js';
 
@@ -59,17 +58,6 @@ class CameraGuy extends Component {
       <div>
         <Viewfinder displayMsg={this.state.displayMsg} />
 
-        <RTC
-          config={{
-            character: 'cameraGuy',
-            roomName: this.props.gameroom,
-            constraints: this.props.constraints,
-          }}
-          newMessage={() => {
-            this._newMessage();
-          }}
-          ref={'myRTC'}
-        />
         <Messenger
           send={() => {
             this._sendMessage();

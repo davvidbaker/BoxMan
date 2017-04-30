@@ -5,6 +5,12 @@ export const CHANGE_GAMEROOM = 'CHANGE_GAMEROOM';
 export const CHANGE_CAMERA = 'CHANGE_CAMERA';
 export const CHANGE_CONSTRAINTS = 'CHANGE_CONSTRAINTS';
 export const FOUND_CAMERA = 'FOUND_CAMERA';
+export const INITIATE_RTC = 'INITIATE_RTC';
+export const FETCH_ICE_SERVERS = 'FETCH_ICE_SERVERS';
+export const GOT_ICE_SERVERS = 'GOT_ICE_SERVERS';
+export const REAL_TIME_CONNECTION = 'REAL_TIME_CONNECTION';
+export const ADDED_REMOTE_STREAM = 'ADDED_REMOTE_STREAM';
+export const REMOVE_VIDEO = 'REMOVE_VIDEO';
 
 export const selectCharacter = character => ({
   type: SELECT_CHARACTER,
@@ -39,7 +45,20 @@ export const foundCamera = cameraInfo => ({
 // getUserMedia constraints
 export const changeConstraints = constraints => ({
   type: CHANGE_CONSTRAINTS,
-  constraints
-})
+  constraints,
+});
 
-export function actionOne() {}
+export const initiateRTC = () => ({
+  type: INITIATE_RTC,
+});
+
+// TODO if I want to make it more secure, pass in a string for the ice servers here maybe.
+export const fetchIceServers = () => ({
+  type: FETCH_ICE_SERVERS,
+});
+
+export const addedRemoteStream = () => {
+  return {
+    type: ADDED_REMOTE_STREAM,
+  };
+};

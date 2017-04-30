@@ -57,7 +57,7 @@ const availableCameras = (state = [], action) => {
 
 const camera = combineReducers({ selectedCamera, availableCameras });
 
-const constraints = (state = {video: true, audio: false}, action) => {
+const constraints = (state = { video: true, audio: false }, action) => {
   switch (action.type) {
     case ActionTypes.CHANGE_CONSTRAINTS:
       return action.constraints;
@@ -65,6 +65,34 @@ const constraints = (state = {video: true, audio: false}, action) => {
       return state;
   }
 };
+
+const iceServers = (state = null, action) => {
+  switch (action.type) {
+    case ActionTypes.GOT_ICE_SERVERS:
+      return action.iceServers;
+    default:
+      return state;
+  }
+};
+
+const realTimeConnection = (state = null, action) => {
+  switch (action.type) {
+    case ActionTypes.REAL_TIME_CONNECTION:
+      return action.webrtc;
+    default:
+      return state;
+  }
+};
+
+const remoteStreamsCount = (state = null, action) => {
+  switch (action.type) {
+    case ActionTypes.ADDED_REMOTE_STREAM:
+      return window.remoteStreams.length;
+    default:
+      return state;
+  }
+};
+
 // const streams = combineReducers({ local, remote });
 
 const rootReducer = combineReducers({
@@ -74,6 +102,9 @@ const rootReducer = combineReducers({
   gameroom,
   camera,
   constraints,
+  iceServers,
+  realTimeConnection,
+  remoteStreamsCount,
 });
 
 export default rootReducer;

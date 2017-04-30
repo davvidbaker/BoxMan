@@ -7,13 +7,14 @@ import CameraGuy from './CameraGuy.js';
 // TODO change this
 const roomName = 'testing';
 
-const Game = ({localStream, fxMode, constraints, character, gameroom}) => {
+const Game = ({localStream, remoteStreams, fxMode, constraints, character, gameroom}) => {
   return (
     <div>
       {character === 'boxMan'
         ? <BoxMan
             fxMode={fxMode}
             localStream={localStream}
+            remoteStreams={remoteStreams}
             gameroom={gameroom}
           />
         : <CameraGuy
@@ -28,9 +29,10 @@ const Game = ({localStream, fxMode, constraints, character, gameroom}) => {
 Game.propTypes = {
   character: PropTypes.string.isRequired,
   gameroom: PropTypes.string.isRequired,
-  localStream: PropTypes.object.isRequired,
   fxMode: PropTypes.bool.isRequired,
   constraints: PropTypes.object,
+  localStream: PropTypes.object,
+  remoteStreams: PropTypes.array,
 };
 
 export default Game;
