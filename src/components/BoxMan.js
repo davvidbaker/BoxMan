@@ -28,18 +28,23 @@ class BoxMan extends Component {
     this.addTouchEvents();
     this.state.currentStream = this.props.localStream;
     this.setState(this.state);
-    this.changeVideo();
+    this.changeCanvasVideo();
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.remoteStreams.length !== this.props.remoteStreams.length) {
+    console.log(
+      'received props',
+      nextProps.remoteStreams.length,
+      this.props.remoteStreams.length
+    );
+    if (nextProps.remoteStreams.length > this.props.remoteStreams.length) {
       this.addedVideo(
         nextProps.remoteStreams[nextProps.remoteStreams.length - 1]
       );
-      console.log(
-        'addedvideo: ',
-        nextProps.remoteStreams[nextProps.remoteStreams.length - 1]
-      );
+    } else if (
+      nextProps.remoteStreams.length < this.props.remoteStreams.length
+    ) {
+      this.removedVideo();
     }
   }
 
@@ -102,39 +107,26 @@ class BoxMan extends Component {
       }
     }
     if (!duplicate) {
-      this.props.remoteStreams.push(newStream);
+      // this.props.remoteStreams.push(newStream);
       this.state.currentStream = newStream;
-      this.setState(this.state);
+      this.setState({ currentStream: newStream });
       console.log('new boxman state after adding video', this.state);
-      this.changeVideo();
+      this.changeCanvasVideo();
     }
   }
 
-  removedVideo(oldStream) {
-    console.log('oldStream', oldStream);
-    for (let i = 0; i < this.props.remoteStreams.length; i++) {
-      if (this.props.remoteStreams[i].id === oldStream.id) {
-        this.props.remoteStreams.splice(i, 1);
-        break;
-      }
+  removedVideo() {
+    console.log('WE REMOVED THE VIDEO');
+    if (this.state.currentStream.active === false) {
+      this.setState({ currentStream: this.props.localStream });
+      this.changeCanvasVideo();
     }
-    // if we removed the currentStream, set it to another if any are available
-    if (oldStream.id === this.state.currentStream.id) {
-      console.log('removed the current stream');
-      if (this.props.remoteStreams.length > 0) {
-        this.state.currentStream = this.props.remoteStreams[0];
-        this.changeVideo();
-      }
-    }
-    this.setState(this.state);
-    console.log('new boxman state after removing video', this.state);
   }
 
-  changeVideo() {
+  changeCanvasVideo() {
     // setting the video source to the media stream by passing it as a prop didn't seem to be working (React was telling me srcObject is not a valid prop for video elements), so I did this workaround, which is less Reacty
     const currentVideos = document.querySelectorAll('.currentVideo');
     if (currentVideos.length > 0) {
-      console.log(currentVideos);
       for (let i = 0; i < currentVideos.length; i++) {
         if (currentVideos[i].videoWidth > 0) {
           if (this.canvas1) {
@@ -156,26 +148,35 @@ class BoxMan extends Component {
     }
   }
 
-  cycleCameras() {
-    console.log('BoxMan trying to cycle cameras');
-    if (this.props.remoteStreams.length > 1) {
-      for (let i = 0; i < this.props.remoteStreams.length; i++) {
-        if (this.props.remoteStreams[i].id === this.state.currentStream.id) {
-          this.state.currentStream = this.props.remoteStreams[
-            (i + 1) % this.props.remoteStreams.length
-          ];
-          this.setState(this.state);
-          this.changeVideo();
-          break;
+  cycleRemoteStreams() {
+    const streams = [...this.props.remoteStreams, this.props.localStream];
+    console.log(
+      'BoxMan trying to cycle cameras',
+      'currentVideo',
+      this.state.currentStream,
+      streams
+    );
+    console.log('remote stream', this.props.remoteStreams);
+    if (streams.length > 0) {
+      for (let i = 0; i < streams.length; i++) {
+        if (streams[i].id === this.state.currentStream.id) {
+          this.setState({ currentStream: streams[(i + 1) % streams.length] });
+          this.changeCanvasVideo();
+          return;
         }
       }
+      // if we make it through without any match, set to local
+      this.setState({ currentStream: this.props.localStream });
+      this.changeCanvasVideo();
     }
   }
 
-  _newMessage(msg) {
+  newMessage(msg) {
     this.state.displayMsg = msg;
     this.setState(this.state);
+
     const chat = document.querySelectorAll('.chatbox');
+
     chat.forEach(div => {
       div.style.opacity = 1;
     });
@@ -285,7 +286,7 @@ class BoxMan extends Component {
           this.bmContainer = ref;
         }}
         onClick={() => {
-          this.cycleCameras();
+          this.cycleRemoteStreams();
         }}
       >
         <div id="vertical-flexbox">

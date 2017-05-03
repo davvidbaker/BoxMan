@@ -88,6 +88,8 @@ const remoteStreamsCount = (state = null, action) => {
   switch (action.type) {
     case ActionTypes.ADDED_REMOTE_STREAM:
       return window.remoteStreams.length;
+    case ActionTypes.REMOVED_REMOTE_STREAM:
+      return window.remoteStreams.length;
     default:
       return state;
   }

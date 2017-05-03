@@ -8,6 +8,7 @@ import {
   GOT_ICE_SERVERS,
   REAL_TIME_CONNECTION,
   addedRemoteStream,
+  removedRemoteStream,
 } from 'actions';
 
 function* getIceServers() {
@@ -57,47 +58,33 @@ function* initiateRTC() {
 
   if (state.character === 'boxMan') {
     webrtc.on('videoAdded', (videoEl, peer) => {
-      // put({ADD_VIDEO, video: videoEl.srcObject})
-      // this.props.addedVideo(videoEl.srcObject);
       // can't manage streams with redux
       window.remoteStreams = window.remoteStreams ? window.remoteStreams : [];
       window.remoteStreams.push(videoEl.srcObject);
 
       // this is how I am getting around the fact that I can't 'put' in here
       // this will cause a prop of Application to change, so we can pick up on the new stream
-      store.dispatch(addedRemoteStream())
+      store.dispatch(addedRemoteStream());
     });
     webrtc.on('videoRemoved', (videoEl, peer) => {
       // this.props.removedVideo(videoEl.srcObject);
-      console.log('oldStream', oldStream);
+      const oldStream = videoEl.srcObject;
       for (let i = 0; i < window.remoteStreams.length; i++) {
         if (window.remoteStreams[i].id === oldStream.id) {
           window.remoteStreams.splice(i, 1);
+          store.dispatch(removedRemoteStream());
           break;
         }
       }
-      // if we removed the currentStream, set it to another if any are available
-      if (oldStream.id === this.state.currentStream.id) {
-        console.log('removed the current stream');
-        if (this.state.streams.length > 0) {
-          this.state.currentStream = this.state.streams[0];
-          this._changeVideo();
-        }
-      }
-      this.setState(this.state);
-      console.log('new boxman state after removing video', this.state);
     });
   }
 
   // for some reason, I couldn't figure out how to get webrtc.sendToAll to work (via sockets), so I ended up using the P2P data channel
   webrtc.on('channelMessage', (peer, channel, data) => {
     console.log('channelMessage', peer, channel, data);
-    // console.log('message received with data: ', data, other)
-    // if (data.type !== 'candidate' && data.type !== 'offer')      console.log(data)
     if (data.type === 'chat') {
       console.log('incoming message:', data.payload);
       this.props.newMessage(data.payload);
-      // webrtc.sendDirectlyToAll('channelMessage', 'chat', `love from data channel ${config.character}`)
     }
   });
 
@@ -107,15 +94,6 @@ function* initiateRTC() {
 function* rtcSaga() {
   yield takeLatest(FETCH_ICE_SERVERS, getIceServers);
   yield takeLatest(INITIATE_RTC, initiateRTC);
-  // yield takeLatest(CHANGE_GAMEROOM, action => {
-  //   debugger;
-  //   if (action.phase === 'game') {
-  //     initifateRTC();
-  //   }
-  // });
-  // yield takeLatest(CHANGE_PHASE, initiateRTC);
-  // yield takeLatest(FIND_KEY, maxyLogic);
-  // yield takeLatest(FIND_MAXY, maxyLogic);
 }
 
 export default function* rootSaga() {

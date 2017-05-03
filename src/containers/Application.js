@@ -66,46 +66,11 @@ class Application extends Component {
         this.props.foundCamera(deviceInfos[i]);
       }
     }
-    // if boxman, choose the back camera automatically (if it is available)
-    // I am assuming the back camera is listed second...this should be done with a regex TODO still need to ensure the right camera is chosen
-    /*if (
-      this.props.character === 'boxMan' &&
-      this.state.availableCams.length > 0
-    ) {
-      this.state.availableCams.forEach(cam => {
-        if (cam.label.includes('Logitech') || cam.label.includes('back'))
-          this.props.changeCamera(cam.deviceId);
-      });
-    }*/
   }
 
   render() {
     return (
       <div className="application">
-        {/*<RTC />*/}
-        {/*<RTC
-          config={{
-            character: 'boxMan',
-            roomName: this.props.gameroom,
-            constraints: { audio: false, video: false },
-          }}
-          addedVideo={this._addedVideo}
-          removedVideo={this._removedVideo}
-          newMessage={this._newMessage}
-        />*/}
-
-        {/*        
-        <RTC
-          config={{
-            character: 'cameraGuy',
-            roomName: this.props.gameroom,
-            constraints: this.props.constraints,
-          }}
-          newMessage={() => {
-            this._newMessage();
-          }}
-          ref={'myRTC'}
-        />*/}
 
         <div id="background-title">
           <p id="title">BOX MAN</p>
@@ -158,11 +123,14 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = dispatch => ({
   selectCharacter: character => dispatch(selectCharacter(character)),
   toggleFX: checked => dispatch(toggleFX(checked)),
+
   changePhase: newPhase => dispatch(changePhase(newPhase)),
   changeGameroom: newGameroom => dispatch(changeGameroom(newGameroom)),
   changeCamera: selectedCamera => dispatch(changeCamera(selectedCamera)),
   changeConstraints: constraints => dispatch(changeConstraints(constraints)),
+
   foundCamera: newCamera => dispatch(foundCamera(newCamera)),
+
   fetchIceServers: () => dispatch(fetchIceServers()),
   initiateRTC: () => dispatch(initiateRTC()),
 });

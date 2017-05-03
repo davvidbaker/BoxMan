@@ -10,6 +10,8 @@ export const FETCH_ICE_SERVERS = 'FETCH_ICE_SERVERS';
 export const GOT_ICE_SERVERS = 'GOT_ICE_SERVERS';
 export const REAL_TIME_CONNECTION = 'REAL_TIME_CONNECTION';
 export const ADDED_REMOTE_STREAM = 'ADDED_REMOTE_STREAM';
+export const REMOVED_REMOTE_STREAM = 'REMOVED_REMOTE_STREAM';
+// export const CHANGE_VIEWPORT_STREAM = 'CHANGE_VIEWPORT_STREAM';
 export const REMOVE_VIDEO = 'REMOVE_VIDEO';
 
 export const selectCharacter = character => ({
@@ -62,3 +64,15 @@ export const addedRemoteStream = () => {
     type: ADDED_REMOTE_STREAM,
   };
 };
+
+export const removedRemoteStream = () => {
+  return {
+    type: REMOVED_REMOTE_STREAM,
+  };
+};
+
+// export const changeViewportStream = () => {
+//   return {
+//     type: CHANGE_VIEWPORT_STREAM,
+//   };
+// };
