@@ -48,7 +48,9 @@ function* initiateRTC() {
     media: state.constraints,
     peerConnectionConfig: state.iceServers,
   });
-  console.log('contraints', state.constraints);
+
+  //
+  // window.webrtc = webrtc;
 
   webrtc.on('readyToCall', () => {
     webrtc.joinRoom(state.gameroom, (err, roomDescription) => {

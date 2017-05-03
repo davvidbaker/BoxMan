@@ -31,7 +31,7 @@ const phase = (state = 'characterSelect', action) => {
 const gameroom = (state = null, action) => {
   switch (action.type) {
     case ActionTypes.CHANGE_GAMEROOM:
-      return action.room;
+      return `${action.room}-boxman`; // append boxman so gameroom is more unique
     default:
       return state;
   }
