@@ -9,7 +9,7 @@ import Viewfinder from './viewfinder.js';
 ======================================================= */
 class CameraGuy extends Component {
   static propTypes = {
-    gameroom: PropTypes.string.isRequired,
+    realTimeConnection: PropTypes.object,
     localStream: PropTypes.object.isRequired,
     constraints: PropTypes.object.isRequired,
   };
@@ -46,11 +46,15 @@ class CameraGuy extends Component {
     }, 2000);
   }
 
-  _sendMessage(msg) {
+  sendMessage(msg) {
     console.log('sending this message', msg);
-    this.refs.myRTC.webrtc.sendDirectlyToAll('channelMessage', 'chat', {
-      message: msg,
-    });
+    this.props.realTimeConnection.webrtc.sendDirectlyToAll(
+      'channelMessage',
+      'chat',
+      {
+        message: msg,
+      }
+    );
   }
 
   render() {
@@ -59,8 +63,8 @@ class CameraGuy extends Component {
         <Viewfinder displayMsg={this.state.displayMsg} />
 
         <Messenger
-          send={() => {
-            this._sendMessage();
+          send={msg => {
+            this.sendMessage(msg);
           }}
         />
       </div>

@@ -100,6 +100,8 @@ class Application extends Component {
                   constraints={this.props.constraints}
                   character={this.props.character}
                   gameroom={this.props.gameroom}
+                  realTimeConnection={this.props.realTimeConnection}
+                  messageFromPeer={this.props.messageFromPeer}
                 />}
       </div>
     );
@@ -113,10 +115,11 @@ const mapStateToProps = (state, ownProps) => ({
   availableCameras: state.camera.availableCameras,
   constraints: state.constraints,
   remoteStreamsCount: state.remoteStreamsCount,
+  realTimeConnection: state.realTimeConnection,
   fxMode: state.fxMode,
 
-  camera: null,
-  localStream: null,
+  messageFromPeer: state.messageFromPeer,
+
   ...ownProps,
 });
 

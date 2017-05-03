@@ -7,10 +7,10 @@ import ViewportFX from './viewportFX.js';
 
 class BoxMan extends Component {
   static propTypes = {
-    // gameroom: PropTypes.string.isRequired,
     fxMode: PropTypes.bool.isRequired,
     localStream: PropTypes.object,
     remoteStreams: PropTypes.array,
+    messageFromPeer: PropTypes.object,
   };
 
   constructor() {
@@ -37,6 +37,7 @@ class BoxMan extends Component {
       nextProps.remoteStreams.length,
       this.props.remoteStreams.length
     );
+
     if (nextProps.remoteStreams.length > this.props.remoteStreams.length) {
       this.addedVideo(
         nextProps.remoteStreams[nextProps.remoteStreams.length - 1]
@@ -45,6 +46,12 @@ class BoxMan extends Component {
       nextProps.remoteStreams.length < this.props.remoteStreams.length
     ) {
       this.removedVideo();
+    }
+
+    if (
+      nextProps.messageFromPeer.message !== this.props.messageFromPeer.message
+    ) {
+      this.newMessage(nextProps.messageFromPeer);
     }
   }
 

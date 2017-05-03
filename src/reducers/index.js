@@ -95,6 +95,14 @@ const remoteStreamsCount = (state = null, action) => {
   }
 };
 
+const messageFromPeer = (state = { message: null }, action) => {
+  switch (action.type) {
+    case ActionTypes.RECEIVED_MESSAGE:
+      return action.messageFromPeer;
+    default:
+      return state;
+  }
+};
 // const streams = combineReducers({ local, remote });
 
 const rootReducer = combineReducers({
@@ -107,6 +115,7 @@ const rootReducer = combineReducers({
   iceServers,
   realTimeConnection,
   remoteStreamsCount,
+  messageFromPeer,
 });
 
 export default rootReducer;

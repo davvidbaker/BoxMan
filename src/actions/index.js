@@ -12,7 +12,7 @@ export const REAL_TIME_CONNECTION = 'REAL_TIME_CONNECTION';
 export const ADDED_REMOTE_STREAM = 'ADDED_REMOTE_STREAM';
 export const REMOVED_REMOTE_STREAM = 'REMOVED_REMOTE_STREAM';
 // export const CHANGE_VIEWPORT_STREAM = 'CHANGE_VIEWPORT_STREAM';
-export const REMOVE_VIDEO = 'REMOVE_VIDEO';
+export const RECEIVED_MESSAGE = 'RECEIVED_MESSAGE';
 
 export const selectCharacter = character => ({
   type: SELECT_CHARACTER,
@@ -68,6 +68,13 @@ export const addedRemoteStream = () => {
 export const removedRemoteStream = () => {
   return {
     type: REMOVED_REMOTE_STREAM,
+  };
+};
+
+export const receivedMessage = msg => {
+  return {
+    type: RECEIVED_MESSAGE,
+    messageFromPeer: msg,
   };
 };
 

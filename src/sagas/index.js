@@ -9,6 +9,7 @@ import {
   REAL_TIME_CONNECTION,
   addedRemoteStream,
   removedRemoteStream,
+  receivedMessage,
 } from 'actions';
 
 function* getIceServers() {
@@ -66,6 +67,7 @@ function* initiateRTC() {
       // this will cause a prop of Application to change, so we can pick up on the new stream
       store.dispatch(addedRemoteStream());
     });
+
     webrtc.on('videoRemoved', (videoEl, peer) => {
       // this.props.removedVideo(videoEl.srcObject);
       const oldStream = videoEl.srcObject;
@@ -84,7 +86,7 @@ function* initiateRTC() {
     console.log('channelMessage', peer, channel, data);
     if (data.type === 'chat') {
       console.log('incoming message:', data.payload);
-      this.props.newMessage(data.payload);
+      store.dispatch(receivedMessage(data.payload));
     }
   });
 
