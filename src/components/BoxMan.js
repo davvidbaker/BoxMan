@@ -7,10 +7,10 @@ import ViewportFX from './viewportFX.js';
 
 class BoxMan extends Component {
   static propTypes = {
-    gameroom: PropTypes.string.isRequired,
+    // gameroom: PropTypes.string.isRequired,
     fxMode: PropTypes.bool.isRequired,
     localStream: PropTypes.object,
-    remoteStreams: PropTypes.array
+    remoteStreams: PropTypes.array,
   };
 
   constructor() {
@@ -23,44 +23,48 @@ class BoxMan extends Component {
 
   componentDidMount() {
     if (this.props.fxMode) {
-      this._initCanvas();
+      this.initCanvas();
     }
-    this._addTouchEvents();
+    this.addTouchEvents();
     this.state.currentStream = this.props.localStream;
     this.setState(this.state);
-    console.log('component mounted and about to change video');
-    this._changeVideo();
+    this.changeVideo();
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.remoteStreams.length !== this.props.remoteStreams.length) {
-      this._addedVideo(nextProps.remoteStreams[nextProps.remoteStreams.length-1]);
-      console.log('addedvideo: ', nextProps.remoteStreams[nextProps.remoteStreams.length-1])
+      this.addedVideo(
+        nextProps.remoteStreams[nextProps.remoteStreams.length - 1]
+      );
+      console.log(
+        'addedvideo: ',
+        nextProps.remoteStreams[nextProps.remoteStreams.length - 1]
+      );
     }
   }
 
-  _addTouchEvents() {
+  addTouchEvents() {
     document.addEventListener('touchstart', evt => {
       this.lastTouch = evt.touches[0];
     });
-    document.addEventListener('touchmove', this._handleTouch);
+    document.addEventListener('touchmove', () => {
+      this.handleTouch();
+    });
   }
 
-  _handleTouch(evt) {
+  handleTouch(evt) {
     // try to go full screen for box man
     if (!document.fullScreenElement) {
-      this.refs.bmContainer.webkitRequestFullscreen();
+      this.bmContainer.webkitRequestFullscreen();
     }
-    this.refs.bmContainer.webkitRequestFullscreen();
+    this.bmContainer.webkitRequestFullscreen();
 
     if (this.props.fxMode) {
-      console.log(document.querySelector('canvas').style.height);
-      let canvas = document
+      const canvasHeight = document
         .querySelector('canvas')
-        .style.height.match(/[-\.\d]*/)[0];
-      console.log('canvas', canvas);
+        .style.height.match(/[-.\d]*/)[0];
       let newHeight =
-        canvas *
+        canvasHeight *
         (1 + Math.sign(evt.touches[0].clientX - this.lastTouch.clientX) / 10);
       if (newHeight > 100) newHeight = 100;
       else if (newHeight === 0) newHeight = 50;
@@ -69,16 +73,15 @@ class BoxMan extends Component {
         view.style.height = `${newHeight}vh`;
       });
     } else {
-      console.log(document.querySelector('.currentVideo').style.height);
       let curHeight = document
         .querySelector('.currentVideo')
-        .style.height.match(/[-\.\d]*/)[0];
-      console.log('curHeight', curHeight);
+        .style.height.match(/[-.\d]*/)[0];
       let newHeight =
         curHeight *
         (1 + Math.sign(evt.touches[0].clientX - this.lastTouch.clientX) / 10);
-      if (newHeight > 100) newHeight = 100;
-      else if (newHeight === 0) newHeight = 50;
+      if (newHeight > 100) {
+        newHeight = 100;
+      } else if (newHeight === 0) newHeight = 50;
       const views = document.querySelectorAll('.currentVideo');
       views.forEach(view => {
         view.style.height = `${newHeight}vh`;
@@ -88,7 +91,7 @@ class BoxMan extends Component {
     this.lastTouch = evt.touches[0];
   }
 
-  _addedVideo(newStream) {
+  addedVideo(newStream) {
     // make sure the stream isn't already there
     let duplicate = false;
     for (let i = 0; i < this.props.remoteStreams.length; i++) {
@@ -103,11 +106,11 @@ class BoxMan extends Component {
       this.state.currentStream = newStream;
       this.setState(this.state);
       console.log('new boxman state after adding video', this.state);
-      this._changeVideo();
+      this.changeVideo();
     }
   }
 
-  _removedVideo(oldStream) {
+  removedVideo(oldStream) {
     console.log('oldStream', oldStream);
     for (let i = 0; i < this.props.remoteStreams.length; i++) {
       if (this.props.remoteStreams[i].id === oldStream.id) {
@@ -120,14 +123,14 @@ class BoxMan extends Component {
       console.log('removed the current stream');
       if (this.props.remoteStreams.length > 0) {
         this.state.currentStream = this.props.remoteStreams[0];
-        this._changeVideo();
+        this.changeVideo();
       }
     }
     this.setState(this.state);
     console.log('new boxman state after removing video', this.state);
   }
 
-  _changeVideo() {
+  changeVideo() {
     // setting the video source to the media stream by passing it as a prop didn't seem to be working (React was telling me srcObject is not a valid prop for video elements), so I did this workaround, which is less Reacty
     const currentVideos = document.querySelectorAll('.currentVideo');
     if (currentVideos.length > 0) {
@@ -148,10 +151,7 @@ class BoxMan extends Component {
             this.ctx2.globalCompositeOperation = this.canvasControls.globalCompositeOperation;
           }
         }
-        console.log(currentVideos[i].videoHeight);
         currentVideos[i].srcObject = this.state.currentStream;
-        console.log(currentVideos[i].videoHeight);
-        console.dir(currentVideos[i]);
       }
     }
   }
@@ -165,7 +165,7 @@ class BoxMan extends Component {
             (i + 1) % this.props.remoteStreams.length
           ];
           this.setState(this.state);
-          this._changeVideo();
+          this.changeVideo();
           break;
         }
       }
@@ -188,7 +188,7 @@ class BoxMan extends Component {
     }, 2000);
   }
 
-  _initCanvas() {
+  initCanvas() {
     this.videoEl = document.querySelector('.currentVideo');
     this.canvas1 = document.getElementById('canvas-left');
     this.canvas2 = document.getElementById('canvas-right');
@@ -253,10 +253,10 @@ class BoxMan extends Component {
       this.canvasControls.globalCompositeOperation = mode;
     });
 
-    this._draw();
+    this.draw();
   }
 
-  _draw() {
+  draw() {
     this.ctx1.drawImage(
       this.videoEl,
       0,
@@ -270,17 +270,20 @@ class BoxMan extends Component {
       0,
       this.canvas1.width,
       this.canvas1.height
-    ); //;, 400, 0, 0,canvas1.width,canvas1.height)
+    );
 
     // don't want it rendering higher than 12.5fps to get the cool fx
-    setTimeout(this._draw, 80);
-    // window.requestAnimationFrame(this._draw);
+    setTimeout(() => {
+      this.draw();
+    }, 80);
   }
 
   render() {
     return (
       <div
-        ref={'bmContainer'}
+        ref={ref => {
+          this.bmContainer = ref;
+        }}
         onClick={() => {
           this.cycleCameras();
         }}

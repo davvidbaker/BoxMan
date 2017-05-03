@@ -28,7 +28,7 @@ module.exports = {
         SwitchCase: 1,
       },
     ],
-    'import/external-module-folders': ['node_modules'],
+    // 'import/external-module-folders': ['node_modules'],
     'import/no-extraneous-dependencies': 0,
     'import/no-unresolved': 0,
     'import/extensions': 0,

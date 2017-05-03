@@ -148,10 +148,10 @@ const mapStateToProps = (state, ownProps) => ({
   availableCameras: state.camera.availableCameras,
   constraints: state.constraints,
   remoteStreamsCount: state.remoteStreamsCount,
+  fxMode: state.fxMode,
 
   camera: null,
   localStream: null,
-  fxMode: false,
   ...ownProps,
 });
 
