@@ -1,0 +1,326 @@
+/*copy and paste from sassmeister (Codepen currently down!!!)*/
+body {
+  margin: auto 0;
+  background: #646464;
+  font-family: 'Ropa Sans';
+  overflow-x: hidden;
+}
+
+.page {
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.page-title {
+  /*position: fixed;*/
+  clear: both;
+  float: left;
+  top: 0;
+  overflow-y: hidden;
+  min-height: 100vh;
+}
+
+/*.page-blank {
+  position:absolute;
+  top:200%;
+}*/
+.page-how {
+  /*position: absolute;*/
+ 
+  /*top: 100%;*/
+  float: left;
+  clear: both;
+  background: #333333;
+  z-index: 3;
+  min-height: 100vh;
+  /*min-height: 100vh;*/
+  /*minheight: auto;*/
+  font-family: 'Ropa Sans';
+  box-shadow: 0 0 10px #000000;
+}
+
+.page-faq {
+  /*position: absolute;*/
+  float: left;
+  clear: both;
+  /*top: 200%;*/
+  z-index: 2;
+  background: #222222;
+}
+
+.footer {
+  overflow-x:hidden;
+  width: 100vw;
+  float: left;
+  clear: both;
+  
+  color: white;
+  background: black;
+  font-family: 'Ropa Sans';
+  text-align:center;
+  /*padding: 50px;*/
+  /*padding-right: 100px;*/
+}
+
+.footer-text {
+  margin: 50px;
+  
+  width: 90vw;
+  text-align:left;
+  font-size: 1.5rem;
+}
+
+.page-title-flexbox {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.main-flexbox {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
+  width: 100%;
+}
+
+.title-flexbox {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-flex: 2;
+  -webkit-flex-grow: 2;
+      -ms-flex-positive: 2;
+          flex-grow: 2;
+  text-align: center;
+  margin-left: 3%;
+}
+
+.title {
+  font-family: 'Bangers';
+  font-size: 10vw;
+  cursor: pointer;
+  color: #fcbe1f;
+}
+
+.brains {
+  margin-left: 2%;
+  width: 100%;
+  bottom: 10vh;
+  font-family: 'Ropa Sans';
+  font-size: 2vw;
+  color: white;
+  margin-top: 50px;
+  text-align: center;
+}
+
+.subtitle {
+  font-family: 'Bangers';
+  font-size: 7vw;
+  cursor: pointer;
+  color: #fcbe1f;
+}
+
+.character {
+  margin: 10px;
+  width: 25%;
+  max-width: 300px;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+
+.character-cameraGuy {
+  text-align: right;
+  -webkit-align-self: flex-end;
+      -ms-flex-item-align: end;
+          align-self: flex-end;
+}
+
+.instructions-container {
+  font-family: 'Ropa Sans';
+  /*position: absolute;*/
+  width: 100%;
+  color: white;
+  font-size: 30px;
+}
+
+.faq-title {
+  font-size: 50px;
+  color: #fcbe1f;
+  padding: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.instructions-title {
+  font-size: 50px;
+  color: #fcbe1f;
+  padding: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+ol {
+  /*position: absolute;*/
+  margin: 50px;
+  margin-top: 0;
+  width: 80%;
+  text-align: left;
+}
+
+ul {
+  position: absolute;
+  list-style: none;
+  margin: 50px;
+  width: 80%;
+  text-align: left;
+}
+
+li {
+  margin-bottom: 25px;
+}
+
+a {
+  color: #fcbe1f;
+  text-decoration: none;
+}
+
+.hNote {
+  color: inherit;
+  -webkit-animation: hAn 3s ease-in-out infinite alternate;
+          animation: hAn 3s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes hAn {
+  100% {
+    color: #dc4437;
+  }
+}
+
+@keyframes hAn {
+  100% {
+    color: #dc4437;
+  }
+}
+.question-answer {
+  -webkit-transition: all 0.3s ease;
+          transition: all 0.3s ease;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  color: white;
+  font-family: 'Ropa Sans';
+  /*//height: 100px;*/
+  /*font-size: 2rem;*/
+  margin-bottom: 25px;
+  /*padding-right: 10px;*/
+}
+
+.question {
+  /*flex-grow: 1000;*/
+  cursor: pointer;
+  padding-left: 50px;
+  padding-right: 50px;
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.question:hover {
+  /*flex-grow: 1000;*/
+  color: #fcbe1f;
+    float: left;
+  clear: both;
+  /*font-size: 2rem;*/
+}
+
+.answer {
+  /*flex-grow: 0;*/
+  overflow: hidden;
+  height: 0;
+  /*width: 100%;*/
+  -webkit-transition: all 0.3s ease;
+          transition: all 0.3s ease;
+  padding: 0;
+    /*float: left;*/
+  /*clear: both;*/
+  padding-left: 50px;
+  padding-right: 65px;
+  background: #646464;
+  box-shadow: inset 0 0 10px #000000;
+  font-size: 20px;
+  /*position: absolute;*/
+}
+
+.answer-reveal {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  padding: 5px;
+  /*width: 100%;*/
+  padding-left: 50px;
+  padding-right: 65px;
+  /*height: 5rem;*/
+  height: auto;
+  /*float: left;*/
+  /*clear: both;*/
+  -webkit-transition: all 0.3s ease;
+          transition: all 0.3s ease;
+  box-shadow: inset 0 0 10px #000000;
+  /*font-size: 1rem;*/
+  overflow-y: scroll;
+}
+
+.strike {
+  text-decoration: line-through;
+}
