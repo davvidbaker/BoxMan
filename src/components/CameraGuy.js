@@ -28,6 +28,7 @@ class CameraGuy extends Component {
     const videoEl =
       document.getElementById('viewfinder-video') ||
       document.createElement('new-video');
+    console.log('this.props.localStream', this.props.localStream);
     videoEl.srcObject = this.props.localStream;
   }
 

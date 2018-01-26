@@ -1,7 +1,15 @@
-import { put, call, takeEvery, takeLatest, select } from 'redux-saga/effects';
+import {
+  put,
+  call,
+  takeEvery,
+  takeLatest,
+  select,
+  all,
+} from 'redux-saga/effects';
+
 import store from 'store';
 import {
-  INITIATE_RTC,
+  RTC_INITIALIZE,
   CHANGE_GAMEROOM,
   CHANGE_PHASE,
   FETCH_ICE_SERVERS,
@@ -11,11 +19,12 @@ import {
   removedRemoteStream,
   receivedMessage,
 } from 'actions';
+import webrtc from './webrtc';
 
 function* getIceServers() {
   const state = yield select();
   let conf;
-  console.log('connecting to XirSys...');
+  console.log('shitconnecting to XirSys...');
 
   // debugger;
   // TODO I know including the secret here isn't super secure, but it's a free stun and turn server so whatevs
@@ -41,9 +50,10 @@ function* initiateRTC() {
   const state = yield select();
 
   const webrtc = new SimpleWebRTC({
-    localVideoEl: state.character === 'cameraGuy'
-      ? document.getElementById('video-viewfinder')
-      : null, //document.getElementById('hidden-video'),
+    localVideoEl:
+      state.character === 'cameraGuy'
+        ? document.getElementById('video-viewfinder')
+        : null, //document.getElementById('hidden-video'),
     autoRequestMedia: true, //config.character === 'cameraGuy' ? true : false,
     media: state.constraints,
     peerConnectionConfig: state.iceServers,
@@ -97,9 +107,9 @@ function* initiateRTC() {
 
 function* rtcSaga() {
   yield takeLatest(FETCH_ICE_SERVERS, getIceServers);
-  yield takeLatest(INITIATE_RTC, initiateRTC);
+  yield takeLatest(RTC_INITIALIZE, initiateRTC);
 }
 
 export default function* rootSaga() {
-  yield [rtcSaga()];
+  yield all([webrtc()]);
 }

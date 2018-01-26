@@ -1,10 +1,6 @@
 module.exports = {
   entry: ['babel-polyfill', './src/index.js'],
 
-  output: {
-    filename: 'bundle.js', // use npm run build to build production bundle
-  },
-
   module: {
     rules: [
       {
@@ -16,16 +12,11 @@ module.exports = {
         test: /\.scss$/,
         loaders: ['style-loader', 'css-loader', 'sass-loader'],
       },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        loaders: ['file-loader', 'image-webpack-loader'],
+      },
     ],
-  },
-
-  devtool: process.env.NODE_ENV === 'production'
-    ? 'source-map'
-    : 'cheap-module-source-map',
-
-  // hacky way to view on remote computer (dev machine local IP is 192.168.0.15)
-  devServer: {
-    public: '192.168.0.15:9000',
   },
 
   resolve: {

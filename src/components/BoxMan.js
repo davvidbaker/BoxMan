@@ -66,10 +66,10 @@ class BoxMan extends Component {
 
   handleTouch(evt) {
     // try to go full screen for box man
-    if (!document.fullScreenElement) {
-      this.bmContainer.webkitRequestFullscreen();
-    }
-    this.bmContainer.webkitRequestFullscreen();
+    // if (!document.fullScreenElement) {
+    //   this.bmContainer.webkitRequestFullscreen();
+    // }
+    // this.bmContainer.webkitRequestFullscreen();
 
     if (this.props.fxMode) {
       const canvasHeight = document
@@ -297,15 +297,17 @@ class BoxMan extends Component {
         }}
       >
         <div id="vertical-flexbox">
-          {this.props.fxMode
-            ? <div id="viewports-container">
-                <ViewportFX id="left" displayMsg={this.state.displayMsg} />
-                <ViewportFX id="right" displayMsg={this.state.displayMsg} />
-              </div>
-            : <div id="viewports-container">
-                <Viewport id="left" displayMsg={this.state.displayMsg} />
-                <Viewport id="right" displayMsg={this.state.displayMsg} />
-              </div>}
+          {this.props.fxMode ? (
+            <div id="viewports-container">
+              <ViewportFX id="left" displayMsg={this.state.displayMsg} />
+              <ViewportFX id="right" displayMsg={this.state.displayMsg} />
+            </div>
+          ) : (
+            <div id="viewports-container">
+              <Viewport id="left" displayMsg={this.state.displayMsg} />
+              <Viewport id="right" displayMsg={this.state.displayMsg} />
+            </div>
+          )}
         </div>
       </div>
     );

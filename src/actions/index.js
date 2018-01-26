@@ -2,21 +2,27 @@ export const SELECT_CHARACTER = 'SELECT_CHARACTER';
 export const TOGGLE_FX = 'TOGGLE_FX';
 export const CHANGE_PHASE = 'CHANGE_PHASE';
 export const CHANGE_GAMEROOM = 'CHANGE_GAMEROOM';
-export const CHANGE_CAMERA = 'CHANGE_CAMERA';
+export const CAMERA_SELECT = 'CAMERA_SELECT';
+export const CAMERAS_ENUMERATE = 'CAMERAS_ENUMERATE';
 export const CHANGE_CONSTRAINTS = 'CHANGE_CONSTRAINTS';
 export const FOUND_CAMERA = 'FOUND_CAMERA';
-export const INITIATE_RTC = 'INITIATE_RTC';
-export const FETCH_ICE_SERVERS = 'FETCH_ICE_SERVERS';
-export const GOT_ICE_SERVERS = 'GOT_ICE_SERVERS';
+export const RTC_INITIALIZE = 'RTC_INITIALIZE';
+export const RTC_ICE_SERVERS_FETCH = 'RTC_ICE_SERVERS_FETCH';
+export const RTC_ICE_SERVERS_GOT = 'RTC_ICE_SERVERS_GOT';
 export const REAL_TIME_CONNECTION = 'REAL_TIME_CONNECTION';
 export const ADDED_REMOTE_STREAM = 'ADDED_REMOTE_STREAM';
 export const REMOVED_REMOTE_STREAM = 'REMOVED_REMOTE_STREAM';
 // export const CHANGE_VIEWPORT_STREAM = 'CHANGE_VIEWPORT_STREAM';
 export const RECEIVED_MESSAGE = 'RECEIVED_MESSAGE';
+export const STREAM_CHANGE = 'STREAM_CHANGE';
 
 export const selectCharacter = character => ({
   type: SELECT_CHARACTER,
   character,
+});
+
+export const enumerateCameras = () => ({
+  type: CAMERAS_ENUMERATE,
 });
 
 export const toggleFX = checked => ({
@@ -34,8 +40,8 @@ export const changeGameroom = room => ({
   room,
 });
 
-export const changeCamera = cameraInfo => ({
-  type: CHANGE_CAMERA,
+export const selectCamera = cameraInfo => ({
+  type: CAMERA_SELECT,
   cameraInfo,
 });
 
@@ -51,12 +57,11 @@ export const changeConstraints = constraints => ({
 });
 
 export const initiateRTC = () => ({
-  type: INITIATE_RTC,
+  type: RTC_INITIALIZE,
 });
 
-// TODO if I want to make it more secure, pass in a string for the ice servers here maybe.
 export const fetchIceServers = () => ({
-  type: FETCH_ICE_SERVERS,
+  type: RTC_ICE_SERVERS_FETCH,
 });
 
 export const addedRemoteStream = () => {

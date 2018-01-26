@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 class Messenger extends Component {
   static propTypes = {
-    send: React.PropTypes.func.isRequired,
+    send: PropTypes.func.isRequired,
   };
 
   constructor() {

@@ -68,7 +68,7 @@ const constraints = (state = { video: true, audio: false }, action) => {
 
 const iceServers = (state = null, action) => {
   switch (action.type) {
-    case ActionTypes.GOT_ICE_SERVERS:
+    case ActionTypes.RTC_ICE_SERVERS_GOT:
       return action.iceServers;
     default:
       return state;
@@ -103,7 +103,19 @@ const messageFromPeer = (state = { message: null }, action) => {
       return state;
   }
 };
-// const streams = combineReducers({ local, remote });
+
+/** 💁 this is basically just a flag that Application uses to check if window.stream has changed */
+const streamChange = (
+  state = { flag: false, localOrRemote: 'local' },
+  action
+) => {
+  switch (action.type) {
+    case ActionTypes.STREAM_CHANGE:
+      return !state;
+    default:
+      return state;
+  }
+};
 
 const rootReducer = combineReducers({
   phase,
@@ -116,6 +128,7 @@ const rootReducer = combineReducers({
   realTimeConnection,
   remoteStreamsCount,
   messageFromPeer,
+  streamChange,
 });
 
 export default rootReducer;

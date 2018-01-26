@@ -1,16 +1,24 @@
-$y: #FCBE1F;
-$r: #DE4536;
+$y: #fcbe1f;
+$r: #de4536;
+
+html,
+body,
+#root,
+.application {
+  height: 100%;
+}
 
 body {
   background: #646464;
   font-family: 'Ropa Sans';
-  // overflow: hidden;
+  margin: 0;
 }
 
-#left, #right {
+#left,
+#right {
   width: 50vw;
   overflow: hidden;
-  text-align:center;
+  text-align: center;
 }
 // #left {
 //   left: 0;
@@ -20,7 +28,7 @@ body {
 // }
 .chatbox {
   position: fixed;
-  line-height:100vh;
+  line-height: 100vh;
   width: 50vw;
   text-align: center;
   top: 0;
@@ -42,7 +50,7 @@ body {
   justify-content: space-around;
 }
 #viewfinder-video {
-  width:100%;
+  width: 100%;
 }
 
 #gamename {
@@ -57,35 +65,36 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  height:100vh;
-  align-items:center;
+  // height:100vh;
+  align-items: center;
 }
 
-h1, h2 {
+h1,
+h2 {
   font-family: Bangers;
   font-weight: 400;
   color: $y;
-  font-size:1.8em;
+  font-size: 1.8em;
 }
 
 h2 {
-  font-size:1.4em;
+  font-size: 1.4em;
 }
 
 #background-title {
   position: fixed;
   bottom: 0;
   text-align: center;
-  width:96vw;
+  width: 96vw;
   font-family: Bangers;
   color: #606060;
   z-index: -10;
   display: flex;
   flex-direction: column;
   // justify-content: center;
-  align-items:center;
+  align-items: center;
   // height: 100vh;
-  transition:0.3s;
+  transition: 0.3s;
 }
 
 #title {
@@ -94,7 +103,7 @@ h2 {
 }
 
 #subtitle {
-  margin:20px;
+  margin: 20px;
   font-size: 21vw;
 }
 
@@ -105,64 +114,62 @@ h2 {
   // width:100vw;
 }
 
-
 .character {
-  padding:20px;
+  padding: 20px;
   // width:20%;
   max-width: 200px;
-  min-width:50px;
-  transition: 0.3s;
+  min-width: 50px;
+  // transition: 0.3s;
   cursor: pointer;
 }
-.character:hover {
-  transform: scale(1.1);
-}
+// .character:hover {
+//   transform: scale(1.1);
+// }
 
-@media (max-width: 450px) {
-  #character-select {
-    flex-direction: column;
-  }
-  .character {
-    position:fixed;
-    bottom:0;
-    width:100px;
-  }
-  #guy {
-    right:20px;
-  }
-  #box {
-    left:20px;
-  }
-  #background-title {
-    top: 5px;
-  }
-  #subtitle {
-    font-size:15vw;
-  }
-  #center-flex {
-    position:fixed;
-    top:20vh;
-  }
-  @media (max-height: 450px) {
-    .character {
-      min-width:30px;
-      width:50px;
-    }
-
-  }
-}
+// @media (max-width: 450px) {
+//   #character-select {
+//     flex-direction: column;
+//   }
+//   .character {
+//     position: fixed;
+//     bottom: 0;
+//     width: 100px;
+//   }
+//   #guy {
+//     right: 20px;
+//   }
+//   #box {
+//     left: 20px;
+//   }
+//   #background-title {
+//     top: 5px;
+//   }
+//   #subtitle {
+//     font-size: 15vw;
+//   }
+//   #center-flex {
+//     position: fixed;
+//     top: 20vh;
+//   }
+//   @media (max-height: 450px) {
+//     .character {
+//       min-width: 30px;
+//       width: 50px;
+//     }
+//   }
+// }
 
 .angry::-webkit-input-placeholder {
   color: $r;
 }
 
 #messenger {
-  position:fixed;
+  position: fixed;
   bottom: 10px;
   text-align: center;
   display: flex;
   justify-content: center;
-  width:100vw;
+  width: 100vw;
   // margin-top: 20px;
 }
 .message-form {
@@ -179,37 +186,37 @@ h2 {
   justify-content: center;
   left: 0;
   top: 0;
-  background:black;
-  height:100vh;
-  width:100vw;
-  position:fixed;
+  background: black;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
 }
 
 #viewports-container {
   display: flex;
-  width:100vw;
-
+  width: 100vw;
 }
 
-input, button {
-  font-family: 'Ropa Sans'
+input,
+button {
+  font-family: 'Ropa Sans';
 }
 
 #gamename {
   // margin-top: 2px;
-  font-size:2em;
+  font-size: 2em;
 }
 
 #camera-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height:66vh;
+  height: 66vh;
 }
 
 .button-container {
   // height:20%;
-  flex-grow:1;
+  flex-grow: 1;
   padding: 5px;
 }
 .camera-button {
@@ -218,20 +225,20 @@ input, button {
   height: 100%;
   // flex-grow: 2;
   transition: 0.4s;
-  
-  background:#ddd;
+
+  background: #ddd;
 }
 
 .camera-button:hover {
-  background:white;
+  background: white;
 }
 
 #cameraSelect {
   text-align: center;
 }
 
-#hide-me{
-  display:none;
+#hide-me {
+  display: none;
 }
 
 canvas {

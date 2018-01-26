@@ -31,6 +31,7 @@ class CameraSelect extends Component {
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then(stream => {
+        console.log('stream', stream);
         window.stream = stream;
         const videoEl =
           document.getElementById('viewfinder-video') ||
@@ -50,8 +51,8 @@ class CameraSelect extends Component {
 
   submit(evt) {
     evt.preventDefault();
-    console.log('event clicked target', evt);
-    this.selectCamera(evt.target.value);
+    // this.selectCamera(evt.target.value);
+    this.props.selectCamera(evt.target.value);
   }
 
   render() {
@@ -59,29 +60,29 @@ class CameraSelect extends Component {
       <div id="cameraSelect">
         <h1>Choose your camera</h1>
         {/*{this.props.character === 'cameraGuy'*/}
-        {true
-          ? <div id="camera-container">
-              {this.props.availableCameras.map((deviceInfo, i) => {
-                return (
-                  <div className="button-container" key={Math.random()}>
-                    <button
-                      onClick={evt => {
-                        this.submit(evt);
-                      }}
-                      className="camera-button"
-                      name="camera"
-                      value={deviceInfo.deviceId}
-                      label={deviceInfo.label || `camera ${i}`}
-                      ref={deviceInfo.label}
-                    >
-                      {deviceInfo.label || `camera ${i}`}
-                    </button><br />
-                  </div>
-                );
-              })}
-            </div>
-          : null}
-
+        {true ? (
+          <div id="camera-container">
+            {this.props.availableCameras.map((deviceInfo, i) => {
+              return (
+                <div className="button-container" key={Math.random()}>
+                  <button
+                    onClick={evt => {
+                      this.submit(evt);
+                    }}
+                    className="camera-button"
+                    name="camera"
+                    value={deviceInfo.deviceId}
+                    label={deviceInfo.label || `camera ${i}`}
+                    ref={deviceInfo.label}
+                  >
+                    {deviceInfo.label || `camera ${i}`}
+                  </button>
+                  <br />
+                </div>
+              );
+            })}
+          </div>
+        ) : null}
       </div>
     );
   }
