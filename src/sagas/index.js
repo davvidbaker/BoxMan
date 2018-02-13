@@ -9,10 +9,8 @@ import {
 
 import store from 'store';
 import {
-  RTC_INITIALIZE,
-  CHANGE_GAMEROOM,
+  CHANNEL_NAME_CHANGE,
   CHANGE_PHASE,
-  FETCH_ICE_SERVERS,
   GOT_ICE_SERVERS,
   REAL_TIME_CONNECTION,
   addedRemoteStream,
@@ -20,32 +18,9 @@ import {
   receivedMessage,
 } from 'actions';
 import webrtc from './webrtc';
+import signalServer from './signalServer';
 
-function* getIceServers() {
-  const state = yield select();
-  let conf;
-  console.log('shitconnecting to XirSys...');
-
-  // debugger;
-  // TODO I know including the secret here isn't super secure, but it's a free stun and turn server so whatevs
-  const iceServers = yield fetch(
-    'https://service.xirsys.com/ice?ident=brainsandspace&secret=09f8d0aa-7940-11e5-8514-a68d4d023276&domain=www.brainsandspace.com&application=default&room=default&secure=1'
-  )
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      // debugger;
-      console.log('...connected to XirSys', data.d);
-      return data.d;
-    })
-    .catch(err => {
-      console.error(err);
-    });
-  // data.d is where the ICE servers object lives
-  yield put({ type: GOT_ICE_SERVERS, iceServers: iceServers.iceServers });
-}
-
+/*
 function* initiateRTC() {
   const state = yield select();
 
@@ -106,10 +81,10 @@ function* initiateRTC() {
 }
 
 function* rtcSaga() {
-  yield takeLatest(FETCH_ICE_SERVERS, getIceServers);
   yield takeLatest(RTC_INITIALIZE, initiateRTC);
 }
+*/
 
 export default function* rootSaga() {
-  yield all([webrtc()]);
+  yield all([signalServer(), webrtc()]);
 }

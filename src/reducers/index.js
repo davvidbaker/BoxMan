@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import * as ActionTypes from 'actions';
+import * as ActionTypes from '../actions';
 
 const character = (state = null, action) => {
   switch (action.type) {
-    case ActionTypes.SELECT_CHARACTER:
+    case ActionTypes.CHARACTER_SELECT:
       return action.character;
     default:
       return state;
@@ -28,19 +28,20 @@ const phase = (state = 'characterSelect', action) => {
   }
 };
 
-const gameroom = (state = null, action) => {
+const channelName = (state = null, action) => {
   switch (action.type) {
-    case ActionTypes.CHANGE_GAMEROOM:
-      return `${action.room}-boxman`; // append boxman so gameroom is more unique
+    case ActionTypes.CHANNEL_NAME_CHANGE:
+      return `${action.room}-boxman`; // append boxman so channelName is more unique
     default:
       return state;
   }
 };
 
 const selectedCamera = (state = null, action) => {
+  console.log('action', action);
   switch (action.type) {
-    case ActionTypes.SELECT_CAMERA:
-      return action.cameraID;
+    case ActionTypes.CAMERA_SELECT:
+      return action.cameraInfo;
     default:
       return state;
   }
@@ -48,7 +49,7 @@ const selectedCamera = (state = null, action) => {
 
 const availableCameras = (state = [], action) => {
   switch (action.type) {
-    case ActionTypes.FOUND_CAMERA:
+    case ActionTypes.CAMERA_FOUND:
       return [...state, action.cameraInfo];
     default:
       return state;
@@ -111,7 +112,7 @@ const streamChange = (
 ) => {
   switch (action.type) {
     case ActionTypes.STREAM_CHANGE:
-      return !state;
+      return { ...state, flag: !state.flag };
     default:
       return state;
   }
@@ -121,7 +122,7 @@ const rootReducer = combineReducers({
   phase,
   character,
   fxMode,
-  gameroom,
+  channelName,
   camera,
   constraints,
   iceServers,

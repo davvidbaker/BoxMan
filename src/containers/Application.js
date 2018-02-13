@@ -11,6 +11,7 @@ import {
   changeConstraints,
   changeGameroom,
   changePhase,
+  connectToSignalServer,
   enumerateCameras,
   foundCamera,
   fetchIceServers,
@@ -35,6 +36,7 @@ class Application extends Component {
   async componentDidMount() {
     /* Start 👁looking👁 for cameras as soon as component mounts */
     this.props.enumerateCameras();
+    this.props.connectToSignalServer();
 
     // start up rtc stuff
     this.props.fetchIceServers();
@@ -51,7 +53,11 @@ class Application extends Component {
     }
 
     if (nextProps.streamChange.flag !== this.props.streamChange.flag) {
-      console.log('should handle stream change');
+      console.log('handle stream change here', this.props.streamChange);
+
+      if (this.props.streamChange.localOrRemote === 'local') {
+        this.setState({ localStream: window.localStream });
+      }
     }
   }
 
@@ -75,6 +81,7 @@ class Application extends Component {
               <li>{stream && stream.id}</li>
             ))}
           </ul>
+          <div>character: {this.props.character}</div>
         </Debug>
         <div id="background-title">
           <p id="title">BOX MAN</p>
@@ -110,6 +117,7 @@ class Application extends Component {
             messageFromPeer={this.props.messageFromPeer}
           />
         )}
+        <video />
       </div>
     );
   }
@@ -140,6 +148,8 @@ const mapDispatchToProps = dispatch => ({
   changeGameroom: newGameroom => dispatch(changeGameroom(newGameroom)),
   changeCamera: selectedCamera => dispatch(changeCamera(selectedCamera)),
   changeConstraints: constraints => dispatch(changeConstraints(constraints)),
+
+  connectToSignalServer: () => dispatch(connectToSignalServer()),
 
   enumerateCameras: () => dispatch(enumerateCameras()),
 

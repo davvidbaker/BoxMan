@@ -1,12 +1,14 @@
-export const SELECT_CHARACTER = 'SELECT_CHARACTER';
+export const CHARACTER_SELECT = 'CHARACTER_SELECT';
 export const TOGGLE_FX = 'TOGGLE_FX';
 export const CHANGE_PHASE = 'CHANGE_PHASE';
-export const CHANGE_GAMEROOM = 'CHANGE_GAMEROOM';
+export const CHANNEL_NAME_CHANGE = 'CHANNEL_NAME_CHANGE';
+export const CHANGE_CONSTRAINTS = 'CHANGE_CONSTRAINTS';
+
 export const CAMERA_SELECT = 'CAMERA_SELECT';
 export const CAMERAS_ENUMERATE = 'CAMERAS_ENUMERATE';
-export const CHANGE_CONSTRAINTS = 'CHANGE_CONSTRAINTS';
-export const FOUND_CAMERA = 'FOUND_CAMERA';
-export const RTC_INITIALIZE = 'RTC_INITIALIZE';
+export const CAMERA_FOUND = 'CAMERA_FOUND';
+
+export const RTC_INITIATE = 'RTC_INITIATE';
 export const RTC_ICE_SERVERS_FETCH = 'RTC_ICE_SERVERS_FETCH';
 export const RTC_ICE_SERVERS_GOT = 'RTC_ICE_SERVERS_GOT';
 export const REAL_TIME_CONNECTION = 'REAL_TIME_CONNECTION';
@@ -16,8 +18,14 @@ export const REMOVED_REMOTE_STREAM = 'REMOVED_REMOTE_STREAM';
 export const RECEIVED_MESSAGE = 'RECEIVED_MESSAGE';
 export const STREAM_CHANGE = 'STREAM_CHANGE';
 
+export const SIGNAL_SERVER_CONNECT = 'SIGNAL_SERVER_CONNECT';
+
+export const connectToSignalServer = () => ({
+  type: SIGNAL_SERVER_CONNECT,
+});
+
 export const selectCharacter = character => ({
-  type: SELECT_CHARACTER,
+  type: CHARACTER_SELECT,
   character,
 });
 
@@ -36,7 +44,7 @@ export const changePhase = phase => ({
 });
 
 export const changeGameroom = room => ({
-  type: CHANGE_GAMEROOM,
+  type: CHANNEL_NAME_CHANGE,
   room,
 });
 
@@ -46,7 +54,7 @@ export const selectCamera = cameraInfo => ({
 });
 
 export const foundCamera = cameraInfo => ({
-  type: FOUND_CAMERA,
+  type: CAMERA_FOUND,
   cameraInfo,
 });
 
@@ -57,7 +65,7 @@ export const changeConstraints = constraints => ({
 });
 
 export const initiateRTC = () => ({
-  type: RTC_INITIALIZE,
+  type: RTC_INITIATE,
 });
 
 export const fetchIceServers = () => ({

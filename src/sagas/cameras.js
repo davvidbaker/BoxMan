@@ -12,8 +12,6 @@ function* getCameras() {
     }
   });
 
-  console.log('deviceInformations', deviceInformations);
-
   for (let i = 0; i < deviceInformations.length; i++) {
     if (deviceInformations[i].kind === 'videoinput') {
       yield put(foundCamera(deviceInformations[i]));

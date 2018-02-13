@@ -53,12 +53,6 @@ body {
   width: 100%;
 }
 
-#gamename {
-  font-family: 'Ropa Sans';
-  text-align: center;
-  font-size: 3vw;
-  // margin-top: -20vh;
-}
 
 #character-select {
   text-align: center;
@@ -160,7 +154,6 @@ h2 {
 // }
 
 .angry::-webkit-input-placeholder {
-  color: $r;
 }
 
 #messenger {
