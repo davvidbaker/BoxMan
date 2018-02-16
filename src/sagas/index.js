@@ -6,8 +6,9 @@ import {
   select,
   all,
 } from 'redux-saga/effects';
+import { channel } from 'redux-saga';
 
-import store from 'store';
+import store from '../store';
 import {
   CHANNEL_NAME_CHANGE,
   CHANGE_PHASE,
@@ -16,9 +17,9 @@ import {
   addedRemoteStream,
   removedRemoteStream,
   receivedMessage,
-} from 'actions';
+} from '../actions';
 import webrtc from './webrtc';
-import signalServer from './signalServer';
+import websocket from './websocket';
 
 /*
 function* initiateRTC() {
@@ -86,5 +87,14 @@ function* rtcSaga() {
 */
 
 export default function* rootSaga() {
-  yield all([signalServer(), webrtc()]);
+  // channel for communicating between websocket and webrtc sagas
+  const sagaChannel = yield call(channel);
+  console.log('channel', sagaChannel);
+  // yield takeEvery(sagaChannel, function*(action) {
+  //   yield put({
+  //     ...action,
+  //     type: `${action.type}_taken_from_saga_channel`,
+  //   });
+  // });
+  yield all([websocket(sagaChannel), webrtc(sagaChannel)]);
 }

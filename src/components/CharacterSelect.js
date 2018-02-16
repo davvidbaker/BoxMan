@@ -29,6 +29,7 @@ class CharacterSelect extends Component {
 
   state = {
     inputAngry: false,
+    controlInput: true,
   };
 
   componentDidMount() {
@@ -43,11 +44,11 @@ class CharacterSelect extends Component {
     } else {
       switch (evt.target.id) {
         case 'bm':
-          this.props.selectCharacter('boxMan', this.channelNameInput.value);
+          this.props.selectCharacter('boxman', this.channelNameInput.value);
           break;
 
         case 'cg':
-          this.props.selectCharacter('cameraGuy', this.channelNameInput.value);
+          this.props.selectCharacter('cameraguy', this.channelNameInput.value);
           break;
 
         default:
@@ -57,6 +58,12 @@ class CharacterSelect extends Component {
       this.props.changeGameroom(this.channelNameInput.value);
     }
   }
+
+  uncontrolInput = () => {
+    if (this.state.controlInput) {
+      this.setState({ controlInput: false });
+    }
+  };
 
   render() {
     return (
@@ -99,6 +106,15 @@ class CharacterSelect extends Component {
                   this.channelNameInput = ref;
                 }}
                 autoCapitalize="off"
+                value={
+                  /** 💁 This kinda confusing logic is to prevent the value prop on the input from being null */
+                  this.state.controlInput
+                    ? this.props.channelName
+                      ? this.props.channelName
+                      : undefined
+                    : undefined
+                }
+                onFocus={this.uncontrolInput}
               />
               <h1>then choose your character</h1>
               <label>

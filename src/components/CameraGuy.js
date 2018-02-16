@@ -29,7 +29,19 @@ class CameraGuy extends Component {
       document.getElementById('viewfinder-video') ||
       document.createElement('new-video');
     console.log('this.props.localStream', this.props.localStream);
-    videoEl.srcObject = this.props.localStream;
+    if (this.props.localStream) {
+      videoEl.srcObject = this.props.localStream;
+    }
+  }
+
+  componentWillReceiveProps(newProps, props) {
+    const videoEl =
+      document.getElementById('viewfinder-video') ||
+      document.createElement('new-video');
+    console.log('newProps, props', newProps, props);
+    if (newProps.localStream && !props.localStream) {
+      videoEl.srcObject = newProps.localStream;
+    }
   }
 
   _newMessage(msg) {

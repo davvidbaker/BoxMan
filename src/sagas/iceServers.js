@@ -1,7 +1,7 @@
-import XIRSYS_SECRET from '../xirsys.secret';
-import { RTC_ICE_SERVERS_GOT } from 'actions';
 import { put } from 'redux-saga/effects';
 
+import XIRSYS_SECRET from '../xirsys.secret';
+import { RTC_ICE_SERVERS_GOT } from '../actions';
 function* getIceServers() {
   console.log('gettings Ice Servers/connecting to XirSys...');
 
@@ -20,7 +20,6 @@ function* getIceServers() {
     .then(data => {
       if (data.s === 'ok') {
         // data.v is where the ICE servers object lives
-        console.log('...connected to XirSys', data.v);
         return data.v;
       } else {
         throw new Error(data.s);

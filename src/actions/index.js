@@ -91,6 +91,12 @@ export const receivedMessage = msg => {
   };
 };
 
+export const clear = () => {
+  return {
+    type: 'CLEAR',
+  };
+};
+
 // export const changeViewportStream = () => {
 //   return {
 //     type: CHANGE_VIEWPORT_STREAM,

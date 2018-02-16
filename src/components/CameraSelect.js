@@ -42,7 +42,6 @@ class CameraSelect extends Component {
         // changing cameraSelected triggers the next phase, which is the game
         window.stream = stream;
         this.props.changeStream(stream, 'local');
-        this.props.changePhase('game');
       })
       .catch(err => {
         console.error(err);
@@ -53,6 +52,7 @@ class CameraSelect extends Component {
     evt.preventDefault();
     // this.selectCamera(evt.target.value);
     this.props.selectCamera(evt.target.value);
+    this.props.changePhase('game');
   }
 
   render() {

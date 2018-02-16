@@ -62,10 +62,10 @@ module.exports = {
     'react/sort-comp': 'off',
   },
   settings: {
-    'import/resolver': {
-      webpack: {
-        config: './webpack.common.js',
-      },
-    },
+    // 'import/resolver': {
+    //   webpack: {
+    //     config: './webpack.common.js',
+    //   },
+    // },
   },
 };

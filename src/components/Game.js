@@ -15,22 +15,27 @@ const Game = ({
   character,
   realTimeConnection,
   messageFromPeer,
+  initiateRTC,
 }) => {
+  if (!localStream) {
+    initiateRTC();
+  }
   return (
     <div>
-      {character === 'boxMan'
-        ? <BoxMan
-            fxMode={fxMode}
-            localStream={localStream}
-            messageFromPeer={messageFromPeer}
-            remoteStreams={remoteStreams}
-          />
-        : <CameraGuy
-            constraints={constraints}
-            localStream={localStream}
-            realTimeConnection={realTimeConnection}
-          />}
-
+      {character === 'boxman' ? (
+        <BoxMan
+          fxMode={fxMode}
+          localStream={localStream}
+          messageFromPeer={messageFromPeer}
+          remoteStreams={remoteStreams}
+        />
+      ) : (
+        <CameraGuy
+          constraints={constraints}
+          localStream={localStream}
+          realTimeConnection={realTimeConnection}
+        />
+      )}
     </div>
   );
 };

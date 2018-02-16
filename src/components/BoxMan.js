@@ -16,7 +16,7 @@ class BoxMan extends Component {
   constructor() {
     super();
     this.state = {
-      currentStream: null,
+      currentStream: { id: null },
       displayMsg: {},
     };
   }
@@ -26,12 +26,20 @@ class BoxMan extends Component {
       this.initCanvas();
     }
     this.addTouchEvents();
-    this.state.currentStream = this.props.localStream;
+    this.state.currentStream = this.props.localStream || { id: null };
     this.setState(this.state);
     this.changeCanvasVideo();
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps, props) {
+    console.log('newProps, props', nextProps, props);
+    if (nextProps.localStream && !props.localStream) {
+      this.setState(
+        { currentStream: nextProps.localStream },
+        this.changeCanvasVideo
+      );
+    }
+
     console.log(
       'received props',
       nextProps.remoteStreams.length,
@@ -150,20 +158,16 @@ class BoxMan extends Component {
             this.ctx2.globalCompositeOperation = this.canvasControls.globalCompositeOperation;
           }
         }
-        currentVideos[i].srcObject = this.state.currentStream;
+        if (this.state.currentStream.id) {
+          currentVideos[i].srcObject = this.state.currentStream;
+        }
       }
     }
   }
 
-  cycleRemoteStreams() {
+  cycleStreams() {
     const streams = [...this.props.remoteStreams, this.props.localStream];
-    console.log(
-      'BoxMan trying to cycle cameras',
-      'currentVideo',
-      this.state.currentStream,
-      streams
-    );
-    console.log('remote stream', this.props.remoteStreams);
+
     if (streams.length > 0) {
       for (let i = 0; i < streams.length; i++) {
         if (streams[i].id === this.state.currentStream.id) {
@@ -293,7 +297,7 @@ class BoxMan extends Component {
           this.bmContainer = ref;
         }}
         onClick={() => {
-          this.cycleRemoteStreams();
+          this.cycleStreams();
         }}
       >
         <div id="vertical-flexbox">
