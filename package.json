@@ -4,8 +4,9 @@
   "description": "Box Man out of Body",
   "main": "server.js",
   "scripts": {
-    "start": "webpack-dev-server --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
+    "start": "concurrently \"npm run client:start\" \"npm run server:watch\"",
+    "client:build": "webpack --config webpack.prod.js",
+    "client:start": "webpack-dev-server --config webpack.dev.js",
     "server:watch": "nodemon signaling-server/index --watch signaling-server "
   },
   "repository": {
@@ -37,7 +38,9 @@
     "ws": "^4.0.0"
   },
   "devDependencies": {
+    "@babel/preset-flow": "^7.0.0-beta.40",
     "babel-core": "^6.24.1",
+    "babel-eslint": "^8.2.2",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -46,9 +49,18 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "chalk": "^2.3.1",
+    "concurrently": "^3.5.1",
     "css-loader": "^0.28.9",
+    "eslint": "^4.18.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-flowtype": "^2.46.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0",
     "file-loader": "^1.1.6",
+    "flow-bin": "^0.66.0",
     "image-webpack-loader": "^4.0.0",
+    "ip": "^1.1.5",
     "node-sass": "^4.7.2",
     "nodemon": "^1.14.12",
     "sass-loader": "^6.0.6",

@@ -1,15 +1,20 @@
 const path = require('path');
+
+const chalk = require('chalk');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ip = require('ip');
 
 const common = require('./webpack.common.js');
+
+console.log('local ip address', chalk.yellow(chalk.bold(ip.address())));
 
 module.exports = merge(common, {
   devtool: 'cheap-module-eval-source-map',
 
   devServer: {
-    host: '0.0.0.0',
+    host: ip.address(),
     port: 9000,
     hot: true,
     historyApiFallback: true,
