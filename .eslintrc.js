@@ -54,6 +54,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/no-unresolved': 'off',
     'jsx-a11y/accessible-emoji': 'off',
+    'jsx-a11y/media-has-caption': 'off',
     'jsx-a11y/href-no-hash': 'off',
     'jsx-a11y/label-has-for': 'off',
     'react/jsx-filename-extension': 'off',

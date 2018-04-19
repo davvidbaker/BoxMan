@@ -43,6 +43,17 @@ body {
   width: 50vw;
 }
 
+.filter-loop {
+  filter: grayscale(0%);
+  animation: filterInOut 10s infinite alternate;
+}
+
+@keyframes filterInOut {
+  to {
+    filter: grayscale(100%);
+  }
+}
+
 #viewfinder {
   // this changes once a camera has been selected
   display: flex;
@@ -52,7 +63,6 @@ body {
 #viewfinder-video {
   width: 100%;
 }
-
 
 #character-select {
   text-align: center;

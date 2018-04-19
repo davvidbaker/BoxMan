@@ -59,7 +59,6 @@ class CameraSelect extends Component {
     return (
       <div id="cameraSelect">
         <h1>Choose your camera</h1>
-        {/*{this.props.character === 'cameraGuy'*/}
         {true ? (
           <div id="camera-container">
             {this.props.availableCameras.map((deviceInfo, i) => {

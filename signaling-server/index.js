@@ -48,16 +48,20 @@ server.listen(443, () => {
       }
     });
   };
-  wss.on('connection', function connection(ws) {
+
+  wss.on('connection', (ws) => {
+
     console.log(
       chalk.green('new connection'),
       chalk.grey(`current num connections: ${wss.clients.size}`)
     );
-    ws.on('message', function incoming(data) {
+    
+    ws.on('message', (data) => {
       console.log(
         'incoming message',
         chalk.grey(`${data.substring(0, 40)}${data.length > 40 ? '...' : ''}`)
       );
+      
       try {
         const parsed = JSON.parse(data);
         if (parsed.type === 'offer') {
@@ -83,16 +87,18 @@ server.listen(443, () => {
         console.error('JSON parse fail', e);
       }
     });
-    ws.on('error', function(err) {
+
+    ws.on('error', (err) => {
       console.log('error', err);
     });
+
   }); // clients is a Set
   function broadcastToOthers(clients, ws, data) {
-    // console.log('clients', clients);
     console.log('clients.size', clients.size); // Broadcast to everyone else.
-    clients.forEach(function each(client) {
+    clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         if (client !== ws) {
+          console.log('sending data to client', data);
           client.send(data);
         } else if (client === ws) {
           const x = `{"type": "rebound", "data": ${data}}`; // debugger;

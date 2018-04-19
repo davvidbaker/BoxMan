@@ -25,10 +25,6 @@ import {
 } from '../actions';
 
 class Application extends Component {
-  static propTypes = {
-    localStream: PropTypes.object,
-  };
-
   constructor() {
     super();
 
@@ -50,16 +46,13 @@ class Application extends Component {
       this.props.initiateRTC();
     }
 
-    if (nextProps.remoteStreamsCount !== this.props.remoteStreamsCount) {
-      console.log(window.remoteStreams);
-      this.setState({ remoteStreams: window.remoteStreams });
-    }
-
     if (nextProps.streamChange.flag !== this.props.streamChange.flag) {
       console.log('/** 🔮 handle stream change here', this.props.streamChange);
 
       if (this.props.streamChange.localOrRemote === 'local') {
         this.setState({ localStream: window.localStream });
+      } else if (this.props.streamChange.localOrRemote === 'remote') {
+        this.setState({ remoteStreams: window.remoteStreams });
       }
     }
   }
@@ -112,7 +105,7 @@ class Application extends Component {
               )
             }
           />
-          <Debug>
+          <Debug isVisible={false}>
             <div>
               localStream:{' '}
               {JSON.stringify(
@@ -123,7 +116,7 @@ class Application extends Component {
               remoteStreams:{' '}
               {this.state.remoteStreams &&
                 this.state.remoteStreams.map(stream => (
-                  <li>{stream && stream.id}</li>
+                  <li key={stream.id}>{stream && stream.id}</li>
                 ))}
             </ul>
             <div>character: {this.props.character}</div>

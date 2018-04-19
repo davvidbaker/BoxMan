@@ -100,18 +100,18 @@ const realTimeConnection = (state = null, action) => {
   }
 };
 
-const remoteStreamsCount = (state = 0, action) => {
-  switch (action.type) {
-    case ActionTypes.ADDED_REMOTE_STREAM:
-      return window.remoteStreams.length;
-    case ActionTypes.REMOVED_REMOTE_STREAM:
-      return window.remoteStreams.length;
-    case 'CLEAR':
-      return 0;
-    default:
-      return state;
-  }
-};
+// const remoteStreamsCount = (state = 0, action) => {
+//   switch (action.type) {
+//     case ActionTypes.ADDED_REMOTE_STREAM:
+//       return window.remoteStreams.length;
+//     case ActionTypes.REMOVED_REMOTE_STREAM:
+//       return window.remoteStreams.length;
+//     case 'CLEAR':
+//       return 0;
+//     default:
+//       return state;
+//   }
+// };
 
 const messageFromPeer = (state = { message: null }, action) => {
   switch (action.type) {
@@ -131,7 +131,7 @@ const streamChange = (
 ) => {
   switch (action.type) {
     case ActionTypes.STREAM_CHANGE:
-      return { ...state, flag: !state.flag };
+      return { ...state, flag: !state.flag, localOrRemote: action.localOrRemote };
     case 'CLEAR':
       return { flag: false, localOrRemote: 'local' };
     default:
@@ -148,7 +148,6 @@ const rootReducer = combineReducers({
   constraints,
   iceServers,
   realTimeConnection,
-  remoteStreamsCount,
   messageFromPeer,
   streamChange,
   router: routerReducer,

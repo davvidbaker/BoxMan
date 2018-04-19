@@ -1,28 +1,21 @@
 // @flow
-import { put, call, takeEvery, takeLatest } from 'redux-saga/effects';
+import { put, call, takeEvery, takeLatest, select } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 
 import type { Channel, Saga } from 'redux-saga';
 
-import { SIGNAL_SERVER_CONNECT } from '../actions';
+import { SIGNAL_SERVER_CONNECT, STREAM_CHANGE } from '../actions';
 import config from '../config';
 
 console.log('config', config);
-function* websocket(sagaChannel: Channel): Saga<void> {
-  const socket = yield takeLatest(
-    SIGNAL_SERVER_CONNECT,
-    connectToSignalServer,
-    sagaChannel
-  );
-}
 
-function createSocketEventChannel(socket: WebSocket) {
+function createSocketEventChannel(socket: WebSocket, character) {
   return eventChannel(emit => {
     socket.addEventListener('open', event => {
-      socket.send(JSON.stringify({ message: 'Hello Server!' }));
+      socket.send(JSON.stringify({ type: 'newCharacter', character }));
       emit({ type: 'SOCKET_OPEN', event });
     }); // Listen for messages // 🤯 use flow typing! at least occasionally
-    socket.addEventListener('message', (ws, event: MessageEvent) => {
+    socket.addEventListener('message', (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
         emit({
@@ -32,7 +25,7 @@ function createSocketEventChannel(socket: WebSocket) {
       } catch (e) {
         emit({
           type: 'SOCKET_MESSAGE_RECEIVED_ERROR',
-          data: event.data
+          data: e
         });
         console.error(e);
       } // debugger;
@@ -62,7 +55,13 @@ function createSocketEventChannel(socket: WebSocket) {
 
 function* connectToSignalServer(sagaChannel) {
   const socket = new WebSocket(`wss://${config.SOCKET_SERVER_ADDRESS}:443`);
-  const socketEventChannel = yield call(createSocketEventChannel, socket);
+  const character = yield select(state => state.character);
+
+  const socketEventChannel = yield call(
+    createSocketEventChannel,
+    socket,
+    character
+  );
   yield takeEvery(socketEventChannel, function* everythingOnSocketEventChannel(action) {
     yield put(sagaChannel, action);
   }); //  THIS IS THE SAGA CHANNEL SUBSCRIPTION KINDA
@@ -73,6 +72,11 @@ function* connectToSignalServer(sagaChannel) {
       case 'PEER_SIGNAL_CANDIDATE':
         socket.send(JSON.stringify(action.data));
         break;
+      case 'PEER_STREAM':
+      case 'PEER_DATA':
+      console.log('stream_change');
+        yield put({ type: STREAM_CHANGE, localOrRemote: 'remote' });
+        break;
       case 'SOCKET_MESSAGE_RECEIVED':
         yield put(action);
         break;
@@ -81,4 +85,13 @@ function* connectToSignalServer(sagaChannel) {
     }
   });
 }
+
+function* websocket(sagaChannel: Channel): Saga<void> {
+  const socket = yield takeLatest(
+    SIGNAL_SERVER_CONNECT,
+    connectToSignalServer,
+    sagaChannel
+  );
+}
+
 export default websocket;

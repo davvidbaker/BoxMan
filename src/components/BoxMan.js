@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import Chatbox from './chatbox.js';
 import Viewport from './viewport.js';
+import ShakeEffect from './fx-shake.js';
 import ViewportFX from './viewportFX.js';
+import Debug from './Debug';
+import Graph from './graph';
 
 class BoxMan extends Component {
   static propTypes = {
@@ -47,9 +50,7 @@ class BoxMan extends Component {
     );
 
     if (nextProps.remoteStreams.length > this.props.remoteStreams.length) {
-      this.addedVideo(
-        nextProps.remoteStreams[nextProps.remoteStreams.length - 1]
-      );
+      this.addedVideo(nextProps.remoteStreams[nextProps.remoteStreams.length - 1]);
     } else if (
       nextProps.remoteStreams.length < this.props.remoteStreams.length
     ) {
@@ -275,7 +276,7 @@ class BoxMan extends Component {
       0,
       this.canvas1.width,
       this.canvas1.height
-    ); //;, 400, 0, 0,this.canvas1.width,this.canvas1.height)
+    ); // ;, 400, 0, 0,this.canvas1.width,this.canvas1.height)
     this.ctx2.drawImage(
       this.videoEl,
       0,
@@ -301,17 +302,31 @@ class BoxMan extends Component {
         }}
       >
         <div id="vertical-flexbox">
-          {this.props.fxMode ? (
-            <div id="viewports-container">
+          {this.props.fxMode
+            ? <div id="viewports-container">
               <ViewportFX id="left" displayMsg={this.state.displayMsg} />
               <ViewportFX id="right" displayMsg={this.state.displayMsg} />
             </div>
-          ) : (
-            <div id="viewports-container">
-              <Viewport id="left" displayMsg={this.state.displayMsg} />
-              <Viewport id="right" displayMsg={this.state.displayMsg} />
-            </div>
-          )}
+            : <ShakeEffect
+              render={({ acc, rotRate, orientation }) => (
+                <Fragment>
+                <Debug isVisible><Graph data={acc}/></Debug>
+                <div id="viewports-container">
+                  <Viewport id="left" displayMsg={this.state.displayMsg} />
+                  <Viewport id="right" displayMsg={this.state.displayMsg} />
+                </div>
+                </ Fragment>
+              )}
+            />
+
+            // <div id="viewports-container">
+
+            //   <Viewport id="left" displayMsg={this.state.displayMsg} />
+
+            //   <Viewport id="right" displayMsg={this.state.displayMsg} />
+
+            // </div>
+          }
         </div>
       </div>
     );

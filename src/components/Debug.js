@@ -4,6 +4,7 @@ import styled from 'styled-components';
 const Wrapper = styled.pre`
   position: absolute;
   color: red;
+  display: ${props => (props.isVisible ? 'block' : 'none')};
   background: rgba(0, 0, 0, 0.8);
   padding: 1em;
   margin: 0;
@@ -11,9 +12,6 @@ const Wrapper = styled.pre`
   z-index: 10;
 `;
 
-const Debug = props => {
-  console.log(props);
-  return <Wrapper>{props.children}</Wrapper>;
-};
+const Debug = props => <Wrapper {...props}>{props.children}</Wrapper>;
 
 export default Debug;
