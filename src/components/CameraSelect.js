@@ -1,24 +1,29 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { navigate, Link } from '@reach/router';
 
 class CameraSelect extends Component {
   static propTypes = {
-    character: PropTypes.string.isRequired,
     availableCameras: PropTypes.array.isRequired,
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    console.log('🔥  props', props);
+  }
+
+  componentDidMount(){
+    console.log('cdm')
   }
 
   selectCamera(cam) {
     if (window.stream) {
       console.log('already was a window stream: ', window.stream);
-      window.stream.getTracks().forEach(function(track) {
+      window.stream.getTracks().forEach(track => {
         track.stop();
       });
     }
-    var videoSource = cam;
+    const videoSource = cam;
     // this.props.changeCamera(cam);
 
     const constraints = {
@@ -33,9 +38,8 @@ class CameraSelect extends Component {
       .then(stream => {
         console.log('stream', stream);
         window.stream = stream;
-        const videoEl =
-          document.getElementById('viewfinder-video') ||
-          document.createElement('new-video');
+        const videoEl = document.getElementById('viewfinder-video')
+          || document.createElement('new-video');
         // this.props.localStream = stream;
         videoEl.srcObject = stream;
 
@@ -53,16 +57,18 @@ class CameraSelect extends Component {
     // this.selectCamera(evt.target.value);
     this.props.selectCamera(evt.target.value);
     this.props.changePhase('game');
+    navigate(`/game/${this.props.channelName}`);
   }
 
   render() {
     return (
-      <div id="cameraSelect">
-        <h1>Choose your camera</h1>
-        {true ? (
-          <div id="camera-container">
-            {this.props.availableCameras.map((deviceInfo, i) => {
-              return (
+      <>
+        <Link to="../">back</Link>
+        <div id="cameraSelect">
+          <h1>Choose your camera</h1>
+          {true ? (
+            <div id="camera-container">
+              {this.props.availableCameras.map((deviceInfo, i) => (
                 <div className="button-container" key={Math.random()}>
                   <button
                     onClick={evt => {
@@ -78,11 +84,11 @@ class CameraSelect extends Component {
                   </button>
                   <br />
                 </div>
-              );
-            })}
-          </div>
-        ) : null}
-      </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </>
     );
   }
 }

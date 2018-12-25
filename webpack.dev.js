@@ -13,13 +13,18 @@ console.log('local ip address', chalk.yellow(chalk.bold(ip.address())));
 module.exports = merge(common, {
   devtool: 'cheap-module-eval-source-map',
 
+  mode: 'development',
   devServer: {
     host: ip.address(),
     port: 9000,
     hot: true,
-    historyApiFallback: true,
     https: true,
     contentBase: path.join(__dirname, 'dist'),
+    historyApiFallback: true,
+  },
+
+  output: {
+    publicPath: "/",
   },
 
   plugins: [

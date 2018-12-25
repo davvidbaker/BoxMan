@@ -10,16 +10,16 @@ module.exports = {
   env: {
     browser: true,
     commonjs: true,
-    es6: true
+    es6: true,
   },
   parser: 'babel-eslint',
   extends: 'airbnb',
   parserOptions: {
     ecmaFeatures: {
-      experimentalObjectRestSpread: true
+      experimentalObjectRestSpread: true,
     },
     // ecmaVersion: 6,
-    sourceType: 'module'
+    sourceType: 'module',
   },
   plugins: ['import', 'react', 'jsx-a11y', 'flowtype'],
   globals: {
@@ -27,12 +27,13 @@ module.exports = {
     SERVER: true,
     describe: true,
     it: true,
-    expect: true
+    expect: true,
   },
   rules: {
     'arrow-parens': 'off',
     camelcase: 'off',
     'comma-dangle': 'off',
+    'linebreak-style': 'off',
     'max-len': 'off',
     'one-var': 'off',
     'no-bitwise': 'off',
@@ -46,8 +47,8 @@ module.exports = {
       'error',
       2,
       {
-        SwitchCase: 1
-      }
+        SwitchCase: 1,
+      },
     ],
     'import/no-extraneous-dependencies': 'off',
     'import/extensions': 'off',
@@ -56,11 +57,13 @@ module.exports = {
     'jsx-a11y/accessible-emoji': 'off',
     'jsx-a11y/media-has-caption': 'off',
     'jsx-a11y/href-no-hash': 'off',
+    'jsx-a11y/tabindex-no-positive': 'off',
     'jsx-a11y/label-has-for': 'off',
+    'react/destructuring-assignment': 'off',
     'react/jsx-filename-extension': 'off',
     'react/no-multi-comp': 'off',
     'react/prop-types': 'off',
-    'react/sort-comp': 'off'
+    'react/sort-comp': 'off',
   },
   settings: {
     // 'import/resolver': {
@@ -68,5 +71,5 @@ module.exports = {
     //     config: './webpack.common.js',
     //   },
     // },
-  }
+  },
 };

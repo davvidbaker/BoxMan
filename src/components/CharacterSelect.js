@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import * as React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Media from 'react-media';
+import { Link } from '@reach/router';
 
 import Grid, { GridItem } from './Grid';
 import BoxManImg from '../images/boxManHead.png';
@@ -22,42 +24,59 @@ const TextInput = styled.input`
   }
 `;
 
-class CharacterSelect extends Component {
+class CharacterSelect extends React.Component {
   static propTypes = {
     selectCharacter: PropTypes.func.isRequired,
   };
 
-  state = {
-    inputAngry: false,
-    controlInput: true,
-  };
+  constructor(props) {
+    super(props);
+    this.channelNameInput = React.createRef();
+
+    this.state = {
+      inputAngry: false,
+      controlInput: true,
+      textInput: props.channelName || '',
+    };
+  }
 
   componentDidMount() {
-    this.channelNameInput.focus();
+    this.channelNameInput.current.focus();
   }
 
   selectCharacter(evt) {
-    if (this.channelNameInput.value.length <= 0) {
-      this.channelNameInput.placeholder = 'enter a game name';
+    if (this.channelNameInput.current.value.length <= 0) {
+      this.channelNameInput.current.placeholder = 'enter a game name';
       this.setState({ inputAngry: true });
-      this.channelNameInput.focus();
+      this.channelNameInput.current.focus();
     } else {
       switch (evt.target.id) {
         case 'bm':
-          this.props.selectCharacter('boxman', this.channelNameInput.value);
+          this.props.selectCharacter(
+            'boxman',
+            this.channelNameInput.current.value,
+          );
           break;
 
         case 'cg':
-          this.props.selectCharacter('cameraguy', this.channelNameInput.value);
+          this.props.selectCharacter(
+            'cameraguy',
+            this.channelNameInput.current.value,
+          );
           break;
 
         default:
           break;
       }
       this.props.changePhase('cameraSelect');
-      this.props.changeGameroom(this.channelNameInput.value);
+      this.props.changeGameroom(this.channelNameInput.current.value);
+      // navigate('/camera-select');
     }
   }
+
+  handleTextChange = e => {
+    this.setState({ textInput: e.target.value });
+  };
 
   uncontrolInput = () => {
     if (this.state.controlInput) {
@@ -79,17 +98,21 @@ class CharacterSelect extends Component {
           >
             {!portrait && <GridItem column={!portrait && '1 / span 3'} />}
             <GridItem row={portrait && 2} className="character" id="box">
-              <input
-                type="image"
-                tabIndex={3}
-                src={BoxManImg}
-                id="bm"
+              <Link
+                to={this.state.textInput.length > 0 ? 'camera-select' : ''}
                 onClick={evt => {
                   this.selectCharacter(evt);
                 }}
-                alt="Box Man"
-                width="135%"
-              />
+              >
+                <input
+                  type="image"
+                  tabIndex={3}
+                  src={BoxManImg}
+                  id="bm"
+                  alt="Box Man"
+                  width="135%"
+                />
+              </Link>
             </GridItem>
             <GridItem
               id="center-flex"
@@ -102,30 +125,22 @@ class CharacterSelect extends Component {
                 type="text"
                 placeholder="unique name"
                 className={this.state.inputAngry ? 'angry' : ''}
-                innerRef={ref => {
-                  this.channelNameInput = ref;
-                }}
+                ref={this.channelNameInput}
                 autoCapitalize="off"
-                value={
-                  /** 💁 This kinda confusing logic is to prevent the value prop on the input from being null */
-                  this.state.controlInput
-                    ? this.props.channelName
-                      ? this.props.channelName
-                      : undefined
-                    : undefined
-                }
-                onFocus={this.uncontrolInput}
+                value={this.state.textInput}
+                onChange={this.handleTextChange}
               />
               <h1>then choose your character</h1>
               <label>
                 <input
                   tabIndex={2}
                   type="checkbox"
-                  ref={'fx'}
+                  ref="fx"
                   onClick={evt => {
                     this.props.toggleFX(evt.target.checked);
                   }}
-                />FX Mode
+                />
+                FX Mode
               </label>
             </GridItem>
             <GridItem
@@ -134,17 +149,21 @@ class CharacterSelect extends Component {
               className="character"
               id="guy"
             >
-              <input
-                tabIndex={4}
-                type="image"
-                src={CameraGuyImg}
-                alt="Camera Guy"
-                id="cg"
+              <Link
+                to={this.state.textInput.length > 0 ? 'camera-select' : ''}
                 onClick={evt => {
                   this.selectCharacter(evt);
                 }}
-                width="100%"
-              />
+              >
+                <input
+                  tabIndex={4}
+                  type="image"
+                  src={CameraGuyImg}
+                  alt="Camera Guy"
+                  id="cg"
+                  width="100%"
+                />
+              </Link>
             </GridItem>
           </Grid>
         )}

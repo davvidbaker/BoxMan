@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
-import { push } from 'react-router-redux';
+import { Router, Link } from '@reach/router';
+// import { BrowserRouter, Route, Link } from 'react-router-dom';
+// import { push } from 'react-router-redux';
 
-import CharacterSelect from '../components/CharacterSelect.js';
-import CameraSelect from '../components/CameraSelect.js';
-import Game from '../components/Game.js';
-import Debug from '../components/Debug';
+import Home from './Home';
+import Game from './Game.js';
+import Debug from './Debug';
 import {
   changeCamera,
   changeConstraints,
@@ -62,81 +61,43 @@ class Application extends Component {
   }
 
   render() {
+    const Other = props => console.log('🔥 other appolication', props) || <div>other</div>;
+
     return (
-      <BrowserRouter>
+      <>
         <div className="application">
-          <Route
-            path="/"
-            render={({ location }) =>
-              this.props.phase === 'characterSelect' ? (
-                <CharacterSelect
-                  selectCharacter={character => {
-                    this.props.selectCharacter(character);
-                    this.props.push(`/${character}`);
-                  }}
-                  toggleFX={this.props.toggleFX}
-                  changePhase={this.props.changePhase}
-                  changeGameroom={this.props.changeGameroom}
-                  channelName={this.props.channelName}
-                />
-              ) : this.props.phase === 'cameraSelect' ? (
-                <CameraSelect
-                  character={this.props.character}
-                  selectCamera={this.props.selectCamera}
-                  availableCameras={this.props.availableCameras}
-                  // changeStream={(stream, localOrRemote) => {
-                  //   this.changeStream(stream, localOrRemote);
-                  // }}
-                  changePhase={this.props.changePhase}
-                  changeConstraints={this.props.changeConstraints}
-                />
-              ) : (
-                <Game
-                  initiateRTC={this.props.initiateRTC}
-                  localStream={this.state.localStream}
-                  remoteStreams={this.state.remoteStreams}
-                  fxMode={this.props.fxMode}
-                  constraints={this.props.constraints}
-                  character={this.props.character}
-                  gameroom={this.props.gameroom}
-                  realTimeConnection={this.props.realTimeConnection}
-                  messageFromPeer={this.props.messageFromPeer}
-                />
-              )
-            }
-          />
-          <Debug isVisible={false}>
-            <div>
-              localStream:{' '}
-              {JSON.stringify(
-                this.state.localStream && this.state.localStream.id
-              )}
-            </div>
-            <ul>
-              remoteStreams:{' '}
-              {this.state.remoteStreams &&
-                this.state.remoteStreams.map(stream => (
-                  <li key={stream.id}>{stream && stream.id}</li>
-                ))}
-            </ul>
-            <div>character: {this.props.character}</div>
-            <div>
-              channelName:{' '}
-              {this.props.channelName
-                ? this.props.channelName.match(/(.*)-boxman/)[1]
-                : ''}
-            </div>
-            <button style={{ zIndex: 1000 }} onClick={this.props.clear}>
-              CLEAR
-            </button>
-          </Debug>
+          <Router>
+            <Home path="*" phase={this.props.phase} />
+            <Game
+              path="/game/:roomName"
+              initiateRTC={this.props.initiateRTC}
+              localStream={this.state.localStream}
+              remoteStreams={this.state.remoteStreams}
+              fxMode={this.props.fxMode}
+              constraints={this.props.constraints}
+              character={this.props.character}
+              gameroom={this.props.gameroom}
+              realTimeConnection={this.props.realTimeConnection}
+              messageFromPeer={this.props.messageFromPeer}
+            />
+          </Router>
           <div id="background-title">
             <p id="title">BOX MAN</p>
             <p id="subtitle">OUT OF BODY</p>
           </div>
-          <video />
         </div>
-      </BrowserRouter>
+        <video />
+        {false && (
+          <Debug
+            localStream={this.state.localStream}
+            remoteStreams={this.state.remoteStreams}
+            character={this.props.character}
+            channelName={this.props.channelName}
+            clear={this.props.clear}
+            reset={this.props.reset}
+          />
+        )}
+      </>
     );
   }
 }
@@ -179,6 +140,10 @@ const mapDispatchToProps = dispatch => ({
   initiateRTC: () => dispatch(initiateRTC()),
 
   clear: () => dispatch(clear()),
+  reset: () => dispatch({ type: 'RESET' }),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Application);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Application);

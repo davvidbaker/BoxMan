@@ -16,8 +16,8 @@ class Graph extends Component {
       this.setState({ start: timestamp });
     }
 
-    console.log('this.props.data.x', this.props.data.x);
-    console.log('this.canvas.width', this.canvas.width);
+    // console.log('this.props.data.x', this.props.data.x);
+    // console.log('this.canvas.width', this.canvas.width);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.fillStyle = 'red';
     this.ctx.fillRect(

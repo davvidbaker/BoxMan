@@ -6,18 +6,16 @@ import {
   takeEvery,
   takeLatest,
   select,
-  take
+  take,
 } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
-
-import type { Saga, Channel } from 'redux-saga';
 
 import {
   RTC_ICE_SERVERS_FETCH,
   CAMERA_SELECT,
   CAMERAS_ENUMERATE,
   STREAM_CHANGE,
-  RTC_INITIATE
+  RTC_INITIATE,
 } from '../actions';
 import getIceServers from './iceServers';
 import { getStream, getCameras } from './cameras';
@@ -29,9 +27,11 @@ function createPeerEventChannel(peer) {
         type: `PEER_SIGNAL_${
           data.type
             ? data.type.toUpperCase()
-            : data.candidate ? 'CANDIDATE' : 'OTHER'
+            : data.candidate
+              ? 'CANDIDATE'
+              : 'OTHER'
         }`,
-        data
+        data,
       });
     });
 
@@ -96,7 +96,11 @@ function* initiateRTC(sagaChannel, { cameraInfo }) {
 
   const { channelName, character } = yield select(state => state);
 
-  const peer = yield call(createPeer, { stream, character, channelName });
+  const peer = yield call(createPeer, {
+    stream,
+    character,
+    channelName: `${channelName}-boxman`, // appending boxman for uniquer name
+  });
   console.log('peer', peer);
 
   const peerEventChannel = yield call(createPeerEventChannel, peer);
@@ -110,7 +114,7 @@ function* initiateRTC(sagaChannel, { cameraInfo }) {
       console.warn(
         'unexpected data in received socket message',
         data.type,
-        data
+        data,
       );
     }
   });
@@ -127,12 +131,12 @@ function createPeer({ stream, character, channelName }) {
     initiator: character === 'cameraguy',
     // trickle: false,
     channelName,
-    stream
+    stream,
   });
   return p;
 }
 
-function* webrtc(sagaChannel: Channel): Saga<void> {
+function* webrtc(sagaChannel) {
   yield takeLatest(CAMERAS_ENUMERATE, getCameras);
   yield takeLatest(RTC_ICE_SERVERS_FETCH, getIceServers);
   yield takeLatest([CAMERA_SELECT, RTC_INITIATE], initiateRTC, sagaChannel);

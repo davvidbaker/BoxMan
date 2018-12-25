@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
+// import { routerReducer } from 'react-router-redux';
 
 import * as ActionTypes from '../actions';
 
@@ -37,7 +37,7 @@ const phase = (state = 'characterSelect', action) => {
 const channelName = (state = null, action) => {
   switch (action.type) {
     case ActionTypes.CHANNEL_NAME_CHANGE:
-      return `${action.room}-boxman`; // append boxman so channelName is more unique
+      return `${action.room}`;
     case 'CLEAR':
       return null;
     default:
@@ -131,7 +131,11 @@ const streamChange = (
 ) => {
   switch (action.type) {
     case ActionTypes.STREAM_CHANGE:
-      return { ...state, flag: !state.flag, localOrRemote: action.localOrRemote };
+      return {
+        ...state,
+        flag: !state.flag,
+        localOrRemote: action.localOrRemote
+      };
     case 'CLEAR':
       return { flag: false, localOrRemote: 'local' };
     default:
@@ -139,7 +143,7 @@ const streamChange = (
   }
 };
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   phase,
   character,
   fxMode,
@@ -150,7 +154,10 @@ const rootReducer = combineReducers({
   realTimeConnection,
   messageFromPeer,
   streamChange,
-  router: routerReducer,
+  // router: routerReducer
 });
+
+const rootReducer = (state, action) =>
+  appReducer(action.type === ActionTypes.RESET ? undefined : state, action);
 
 export default rootReducer;

@@ -5,8 +5,8 @@ import Chatbox from './chatbox.js';
 import Viewport from './viewport.js';
 import ShakeEffect from './fx-shake.js';
 import ViewportFX from './viewportFX.js';
-import Debug from './Debug';
 import Graph from './graph';
+import CameraPreviews from './CameraPreviews';
 
 class BoxMan extends Component {
   static propTypes = {
@@ -39,18 +39,20 @@ class BoxMan extends Component {
     if (nextProps.localStream && !props.localStream) {
       this.setState(
         { currentStream: nextProps.localStream },
-        this.changeCanvasVideo
+        this.changeCanvasVideo,
       );
     }
 
     console.log(
       'received props',
       nextProps.remoteStreams.length,
-      this.props.remoteStreams.length
+      this.props.remoteStreams.length,
     );
 
     if (nextProps.remoteStreams.length > this.props.remoteStreams.length) {
-      this.addedVideo(nextProps.remoteStreams[nextProps.remoteStreams.length - 1]);
+      this.addedVideo(
+        nextProps.remoteStreams[nextProps.remoteStreams.length - 1],
+      );
     } else if (
       nextProps.remoteStreams.length < this.props.remoteStreams.length
     ) {
@@ -84,9 +86,8 @@ class BoxMan extends Component {
       const canvasHeight = document
         .querySelector('canvas')
         .style.height.match(/[-.\d]*/)[0];
-      let newHeight =
-        canvasHeight *
-        (1 + Math.sign(evt.touches[0].clientX - this.lastTouch.clientX) / 10);
+      let newHeight = canvasHeight
+        * (1 + Math.sign(evt.touches[0].clientX - this.lastTouch.clientX) / 10);
       if (newHeight > 100) newHeight = 100;
       else if (newHeight === 0) newHeight = 50;
       const views = document.querySelectorAll('canvas');
@@ -94,12 +95,11 @@ class BoxMan extends Component {
         view.style.height = `${newHeight}vh`;
       });
     } else {
-      let curHeight = document
+      const curHeight = document
         .querySelector('.currentVideo')
         .style.height.match(/[-.\d]*/)[0];
-      let newHeight =
-        curHeight *
-        (1 + Math.sign(evt.touches[0].clientX - this.lastTouch.clientX) / 10);
+      let newHeight = curHeight
+        * (1 + Math.sign(evt.touches[0].clientX - this.lastTouch.clientX) / 10);
       if (newHeight > 100) {
         newHeight = 100;
       } else if (newHeight === 0) newHeight = 50;
@@ -221,8 +221,8 @@ class BoxMan extends Component {
     this.ctx2.globalCompositeOperation = this.canvasControls.globalCompositeOperation;
 
     const gui = new dat.GUI();
-    let alphaController = gui.add(this.canvasControls, 'globalAlpha', 0, 1);
-    let blendController = gui.add(
+    const alphaController = gui.add(this.canvasControls, 'globalAlpha', 0, 1);
+    const blendController = gui.add(
       this.canvasControls,
       'globalCompositeOperation',
       [
@@ -251,7 +251,7 @@ class BoxMan extends Component {
         'saturation',
         'color',
         'luminosity',
-      ]
+      ],
     );
 
     alphaController.onChange(alpha => {
@@ -275,14 +275,14 @@ class BoxMan extends Component {
       0,
       0,
       this.canvas1.width,
-      this.canvas1.height
+      this.canvas1.height,
     ); // ;, 400, 0, 0,this.canvas1.width,this.canvas1.height)
     this.ctx2.drawImage(
       this.videoEl,
       0,
       0,
       this.canvas1.width,
-      this.canvas1.height
+      this.canvas1.height,
     );
 
     // don't want it rendering higher than 12.5fps to get the cool fx
@@ -292,6 +292,7 @@ class BoxMan extends Component {
   }
 
   render() {
+    console.log('🔥  render');
     return (
       <div
         ref={ref => {
@@ -302,22 +303,38 @@ class BoxMan extends Component {
         }}
       >
         <div id="vertical-flexbox">
-          {this.props.fxMode
-            ? <div id="viewports-container">
+          {this.props.fxMode ? (
+            <div id="viewports-container">
               <ViewportFX id="left" displayMsg={this.state.displayMsg} />
               <ViewportFX id="right" displayMsg={this.state.displayMsg} />
             </div>
-            : <ShakeEffect
+          ) : false ? (
+            /* ⚠️ do some work on the shake effect stuff */
+            <ShakeEffect
               render={({ acc, rotRate, orientation }) => (
                 <Fragment>
-                <Debug isVisible><Graph data={acc}/></Debug>
-                <div id="viewports-container">
-                  <Viewport id="left" displayMsg={this.state.displayMsg} />
-                  <Viewport id="right" displayMsg={this.state.displayMsg} />
-                </div>
-                </ Fragment>
+                  <div id="viewports-container">
+                    <CameraPreviews
+                      streams={[
+                        ...this.props.remoteStreams,
+                        this.props.localStream,
+                      ]}
+                    />
+                    <Viewport id="left" displayMsg={this.state.displayMsg} />
+                    <Viewport id="right" displayMsg={this.state.displayMsg} />
+                  </div>
+                </Fragment>
               )}
             />
+          ) : (
+            <div id="viewports-container">
+              <CameraPreviews
+                streams={[...this.props.remoteStreams, this.props.localStream]}
+              />
+              <Viewport id="left" displayMsg={this.state.displayMsg} />
+              <Viewport id="right" displayMsg={this.state.displayMsg} />
+            </div>
+          )
 
             // <div id="viewports-container">
 
@@ -325,7 +342,7 @@ class BoxMan extends Component {
 
             //   <Viewport id="right" displayMsg={this.state.displayMsg} />
 
-            // </div>
+          // </div>
           }
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import createHistory from 'history/createBrowserHistory';
-import { routerMiddleware, push } from 'react-router-redux';
+// import createHistory from 'history/createBrowserHistory';
+// import { routerMiddleware, push } from 'react-router-redux';
 
 import { saveState, loadState } from './utilities/localStorage';
 import rootReducer from './reducers';
@@ -15,10 +15,10 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
   : compose;
 
 // Create a history of your choosing (we're using a browser history in this case)
-export const history = createHistory();
+// export const history = createHistory();
 
 // Build the middleware for intercepting and dispatching navigation actions
-const middleware = routerMiddleware(history);
+// const middleware = routerMiddleware(history);
 // Now you can dispatch navigation actions from anywhere!
 // store.dispatch(push('/foo'))
 
@@ -26,15 +26,15 @@ const configureStore = preloadedState =>
   createStore(
     rootReducer,
     preloadedState,
-    composeEnhancers(applyMiddleware(middleware, sagaMiddleware))
+    composeEnhancers(applyMiddleware(/* middleware,  */ sagaMiddleware)),
   );
 
-let store;
+// let store;
 
 const persistedState = loadState();
 
 // if (process.env.NODE_ENV === 'development') {
-store = configureStore(persistedState);
+const store = configureStore(persistedState);
 // } else {
 //   store = configureStore(persistedState);
 // }

@@ -1,5 +1,7 @@
-$y: #fcbe1f;
-$r: #de4536;
+:root {
+  --yellow: #fcbe1f;
+  --red: #de4536;
+}
 
 html,
 body,
@@ -20,12 +22,7 @@ body {
   overflow: hidden;
   text-align: center;
 }
-// #left {
-//   left: 0;
-// }
-// #right {
-//   right: 0;
-// }
+
 .chatbox {
   position: fixed;
   line-height: 100vh;
@@ -34,7 +31,7 @@ body {
   top: 0;
   transition: 0.5s;
   z-index: 4;
-  color: $y;
+  color: var(--yellow);
   font-family: 'Ropa Sans';
   font-size: 28px;
   text-shadow: 1px 1px 1px #000;
@@ -77,7 +74,7 @@ h1,
 h2 {
   font-family: Bangers;
   font-weight: 400;
-  color: $y;
+  color: var(--yellow);
   font-size: 1.8em;
 }
 
@@ -125,45 +122,6 @@ h2 {
   min-width: 50px;
   // transition: 0.3s;
   cursor: pointer;
-}
-// .character:hover {
-//   transform: scale(1.1);
-// }
-
-// @media (max-width: 450px) {
-//   #character-select {
-//     flex-direction: column;
-//   }
-//   .character {
-//     position: fixed;
-//     bottom: 0;
-//     width: 100px;
-//   }
-//   #guy {
-//     right: 20px;
-//   }
-//   #box {
-//     left: 20px;
-//   }
-//   #background-title {
-//     top: 5px;
-//   }
-//   #subtitle {
-//     font-size: 15vw;
-//   }
-//   #center-flex {
-//     position: fixed;
-//     top: 20vh;
-//   }
-//   @media (max-height: 450px) {
-//     .character {
-//       min-width: 30px;
-//       width: 50px;
-//     }
-//   }
-// }
-
-.angry::-webkit-input-placeholder {
 }
 
 #messenger {

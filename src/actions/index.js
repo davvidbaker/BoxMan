@@ -1,3 +1,5 @@
+export const RESET = 'RESET';
+
 export const CHARACTER_SELECT = 'CHARACTER_SELECT';
 export const TOGGLE_FX = 'TOGGLE_FX';
 export const CHANGE_PHASE = 'CHANGE_PHASE';
@@ -21,81 +23,73 @@ export const STREAM_CHANGE = 'STREAM_CHANGE';
 export const SIGNAL_SERVER_CONNECT = 'SIGNAL_SERVER_CONNECT';
 
 export const connectToSignalServer = () => ({
-  type: SIGNAL_SERVER_CONNECT,
+  type: SIGNAL_SERVER_CONNECT
 });
 
 export const selectCharacter = character => ({
   type: CHARACTER_SELECT,
-  character,
+  character
 });
 
 export const enumerateCameras = () => ({
-  type: CAMERAS_ENUMERATE,
+  type: CAMERAS_ENUMERATE
 });
 
 export const toggleFX = checked => ({
   type: TOGGLE_FX,
-  checked,
+  checked
 });
 
 export const changePhase = phase => ({
   type: CHANGE_PHASE,
-  phase,
+  phase
 });
 
 export const changeGameroom = room => ({
   type: CHANNEL_NAME_CHANGE,
-  room,
+  room
 });
 
 export const selectCamera = cameraInfo => ({
   type: CAMERA_SELECT,
-  cameraInfo,
+  cameraInfo
 });
 
 export const foundCamera = cameraInfo => ({
   type: CAMERA_FOUND,
-  cameraInfo,
+  cameraInfo
 });
 
 // getUserMedia constraints
 export const changeConstraints = constraints => ({
   type: CHANGE_CONSTRAINTS,
-  constraints,
+  constraints
 });
 
 export const initiateRTC = () => ({
-  type: RTC_INITIATE,
+  type: RTC_INITIATE
 });
 
 export const fetchIceServers = () => ({
-  type: RTC_ICE_SERVERS_FETCH,
+  type: RTC_ICE_SERVERS_FETCH
 });
 
-export const addedRemoteStream = () => {
-  return {
-    type: ADDED_REMOTE_STREAM,
-  };
-};
+export const addedRemoteStream = () => ({
+  type: ADDED_REMOTE_STREAM
+});
 
-export const removedRemoteStream = () => {
-  return {
-    type: REMOVED_REMOTE_STREAM,
-  };
-};
+export const removedRemoteStream = () => ({
+  type: REMOVED_REMOTE_STREAM
+});
 
-export const receivedMessage = msg => {
-  return {
-    type: RECEIVED_MESSAGE,
-    messageFromPeer: msg,
-  };
-};
+export const receivedMessage = msg => ({
+  type: RECEIVED_MESSAGE,
+  messageFromPeer: msg
+});
 
-export const clear = () => {
-  return {
-    type: 'CLEAR',
-  };
-};
+export const clear = () => ({
+  type: 'CLEAR'
+});
 
 // export const changeViewportStream = () => {
 //   return {

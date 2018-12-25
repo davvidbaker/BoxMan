@@ -2,30 +2,28 @@
 import { put, call, takeEvery, takeLatest, select } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 
-import type { Channel, Saga } from 'redux-saga';
-
 import { SIGNAL_SERVER_CONNECT, STREAM_CHANGE } from '../actions';
 import config from '../config';
 
 console.log('config', config);
 
-function createSocketEventChannel(socket: WebSocket, character) {
+function createSocketEventChannel(socket, character) {
   return eventChannel(emit => {
     socket.addEventListener('open', event => {
       socket.send(JSON.stringify({ type: 'newCharacter', character }));
       emit({ type: 'SOCKET_OPEN', event });
     }); // Listen for messages // 🤯 use flow typing! at least occasionally
-    socket.addEventListener('message', (event: MessageEvent) => {
+    socket.addEventListener('message', event => {
       try {
         const data = JSON.parse(event.data);
         emit({
           type: 'SOCKET_MESSAGE_RECEIVED',
-          data
+          data,
         });
       } catch (e) {
         emit({
           type: 'SOCKET_MESSAGE_RECEIVED_ERROR',
-          data: e
+          data: e,
         });
         console.error(e);
       } // debugger;
@@ -34,15 +32,17 @@ function createSocketEventChannel(socket: WebSocket, character) {
       console.log('websocket close event', evt);
       emit({
         type: 'SOCKET_CLOSE',
-        evt
+        evt,
       }); /** 🔮 do something */
     });
     socket.addEventListener('error', e => {
       console.error('websocket error', e);
+      console.log('e.target.url', e.target.url);
+      window.open(e.target.url.replace('wss', 'https'));
       emit({
         type: 'SOCKET_ERROR',
 
-        e
+        e,
       }); /** 🔮 do something */
     }); // the subscriber must return an unsubscribe function // this will be invoked when the saga calls `channel.close` method
     const unsubscribe = () => {
@@ -60,9 +60,9 @@ function* connectToSignalServer(sagaChannel) {
   const socketEventChannel = yield call(
     createSocketEventChannel,
     socket,
-    character
+    character,
   );
-  yield takeEvery(socketEventChannel, function* everythingOnSocketEventChannel(action) {
+  yield takeEvery(socketEventChannel, function* everythingOnSocketEventChannel(action, ) {
     yield put(sagaChannel, action);
   }); //  THIS IS THE SAGA CHANNEL SUBSCRIPTION KINDA
   yield takeEvery(sagaChannel, function* everythingOnSagaChannel(action) {
@@ -74,7 +74,7 @@ function* connectToSignalServer(sagaChannel) {
         break;
       case 'PEER_STREAM':
       case 'PEER_DATA':
-      console.log('stream_change');
+        console.log('stream_change');
         yield put({ type: STREAM_CHANGE, localOrRemote: 'remote' });
         break;
       case 'SOCKET_MESSAGE_RECEIVED':
@@ -86,11 +86,11 @@ function* connectToSignalServer(sagaChannel) {
   });
 }
 
-function* websocket(sagaChannel: Channel): Saga<void> {
+function* websocket(sagaChannel) {
   const socket = yield takeLatest(
     SIGNAL_SERVER_CONNECT,
     connectToSignalServer,
-    sagaChannel
+    sagaChannel,
   );
 }
 

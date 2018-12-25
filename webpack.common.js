@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const ip = require('ip');
 
 module.exports = {
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: ['./src/index.js'],
 
   module: {
     rules: [
@@ -12,8 +12,8 @@ module.exports = {
         loaders: ['babel-loader'],
       },
       {
-        test: /\.scss$/,
-        loaders: ['style-loader', 'css-loader', 'sass-loader'],
+        test: /\.css$/,
+        loaders: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
