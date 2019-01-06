@@ -1,3 +1,5 @@
+/* 🤔 I think I want the signalling server to be totally stateless, buuuut do I need it for discovery...
+All information about parties should come from party members directly. */
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
@@ -6,24 +8,38 @@ const chalk = require('chalk');
 const WebSocket = require('ws');
 
 function handleRequest(req, res) {
-  //Process Post Request
+  // Process Post Request
   if (req.method === 'POST') {
-    var data = '';
+    let data = '';
 
-    req.on('data', function(chunk) {
+    req.on('data', chunk => {
       data += chunk;
     });
 
-    req.on('end', function() {
-      var parseData = qs.parse(data);
-      var prettyData = JSON.stringify(parseData, null, 2);
-      console.log('Post request with:\n' + prettyData);
+    req.on('end', () => {
+      const parseData = qs.parse(data);
+      const prettyData = JSON.stringify(parseData, null, 2);
+      console.log(`Post request with:\n${prettyData}`);
       res.end(prettyData);
     });
   } else {
-    //Send a simple response
-    res.end('Everything works');
+    // Send a simple response
+    res.end('Cool, everything is working. Go back to the other tab.');
   }
+}
+
+function broadcastToOthers(clients, ws, data) {
+  clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      if (client.username !== ws.username) {
+        console.log(`sending data to ${ws.username}`, data);
+        client.send(data);
+      } else if (client === ws) {
+        const x = `{"type": "rebound", "data": ${data}}`; // debugger;
+        client.send(x);
+      }
+    }
+  });
 }
 
 const server = https.createServer(
@@ -31,7 +47,7 @@ const server = https.createServer(
     cert: fs.readFileSync(path.resolve(__dirname, './cert.secret.pem')),
     key: fs.readFileSync(path.resolve(__dirname, './key.secret.pem')),
   },
-  handleRequest
+  handleRequest,
 );
 server.listen(443, () => {
   const wss = new WebSocket.Server({
@@ -42,69 +58,103 @@ server.listen(443, () => {
   // Broadcast to all.
   // 🤯 get eslint rules working again, so functions like this that are unused get flaagged (maybe)
   wss.broadcast = function broadcast(data) {
-    wss.clients.forEach(function each(client) {
+    wss.clients.forEach(client => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(data);
       }
     });
   };
 
-  wss.on('connection', (ws) => {
+  wss.on('connection', ws => {
+    ws.username = 'no username given';
 
     console.log(
       chalk.green('new connection'),
-      chalk.grey(`current num connections: ${wss.clients.size}`)
+      chalk.grey(`current num connections: ${wss.clients.size}`),
     );
-    
-    ws.on('message', (data) => {
+
+    ws.on('message', data => {
       console.log(
         'incoming message',
-        chalk.grey(`${data.substring(0, 40)}${data.length > 40 ? '...' : ''}`)
+        chalk.grey(`${data.substring(0, 80)}${data.length > 80 ? '...' : ''}`),
       );
-      
+
       try {
         const parsed = JSON.parse(data);
         if (parsed.type === 'offer') {
-          /** 🔮 probably eventually only broadcast to your channel name */ broadcastToOthers(
-            wss.clients,
-            ws,
-            data
+          /** 🔮 probably eventually only broadcast to your channel name */
+          const allPartyMembers = partyMembers(wss, ws.partyName);
+          console.log(
+            '🔥  allPartyMembers',
+            allPartyMembers.map(p => p.username),
           );
+
+          broadcastToOthers(allPartyMembers, ws, data);
         } else if (parsed.type === 'answer') {
-          /** 🤔 should this be to all others? probably not, but haven't thought through */ broadcastToOthers(
-            wss.clients,
-            ws,
-            data
+          const allPartyMembers = partyMembers(wss, ws.partyName);
+          console.log(
+            '🔥  allPartyMembers',
+            allPartyMembers.map(p => p.username),
           );
+
+          broadcastToOthers(allPartyMembers, ws, data);
+        } else if (parsed.type === 'new member') {
+          // eslint-disable-next-line
+          ws.username = parsed.username;
+
+          const existingPartyMembers = partyMembers(wss, parsed.partyName);
+          console.log(
+            '🔥  existingPartyMembers.map(ws => ws.username)',
+            existingPartyMembers.map(ws => ws.username),
+          );
+          ws.send(
+            JSON.stringify({
+              type: 'others',
+              count: existingPartyMembers.length,
+            }),
+          );
+
+          // eslint-disable-next-line
+          ws.partyName = parsed.partyName;
+
+          // this now includes you!
+          const allPartyMembers = partyMembers(wss, ws.partyName);
+
+          broadcastToOthers(allPartyMembers, ws, data);
         } else if (parsed.candidate) {
-          /** 🤔 should this be to all others? probably not, but haven't thought through */ broadcastToOthers(
-            wss.clients,
-            ws,
-            data
+          const allPartyMembers = partyMembers(wss, ws.partyName);
+          console.log(
+            '🔥  allPartyMembers',
+            allPartyMembers.map(p => p.username),
           );
+
+          broadcastToOthers(allPartyMembers, ws, data);
         }
       } catch (e) {
         console.error('JSON parse fail', e);
       }
     });
 
-    ws.on('error', (err) => {
-      console.log('error', err);
+    ws.on('close', data => {
+      console.log('a socket has closed', data);
+      broadcastToOthers(
+        wss.clients,
+        ws,
+        JSON.stringify({ type: 'peer lost', username: ws.username }),
+      );
     });
 
-  }); // clients is a Set
-  function broadcastToOthers(clients, ws, data) {
-    console.log('clients.size', clients.size); // Broadcast to everyone else.
-    clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        if (client !== ws) {
-          console.log('sending data to client', data);
-          client.send(data);
-        } else if (client === ws) {
-          const x = `{"type": "rebound", "data": ${data}}`; // debugger;
-          client.send(x);
-        }
-      }
+    ws.on('error', err => {
+      console.log('error', err);
     });
-  }
+  }); // clients is a Set
 });
+
+function partyMembers(wss, partyName) {
+  let members = [];
+  wss.clients.forEach(ws => {
+    console.log('🔥  ws.partyName', ws.partyName);
+    members = ws.partyName === partyName ? [...members, ws] : members;
+  });
+  return members;
+}

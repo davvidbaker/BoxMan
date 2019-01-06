@@ -1,15 +1,30 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
-// import { ConnectedRouter, routerMiddleware, push } from 'react-router-redux';
+import { ThemeProvider } from 'styled-components';
+
+import GlobalStyle from '../components/GlobalStyle';
+import { saveState, loadState } from '../utilities/localStorage';
 
 import Application from '../components/Application';
-import store /* , { history } */ from '../store';
+import initializeStore from '../store';
+
+const store = initializeStore(loadState());
+
+/** 🔮 Maybe don't save the entire state and maybe don't do it on every action */
+store.subscribe(() => {
+  saveState(store.getState());
+});
+
+const theme = {};
 
 const Root = () => (
   <Provider store={store}>
-    {/* <ConnectedRouter history={history}> */}
-    <Application />
-    {/* </ConnectedRouter> */}
+    <ThemeProvider theme={theme}>
+      <>
+        <Application />
+        <GlobalStyle />
+      </>
+    </ThemeProvider>
   </Provider>
 );
 

@@ -1,9 +1,9 @@
 export const RESET = 'RESET';
 
-export const CHARACTER_SELECT = 'CHARACTER_SELECT';
+export const ROLE_SELECT = 'ROLE_SELECT';
 export const TOGGLE_FX = 'TOGGLE_FX';
 export const CHANGE_PHASE = 'CHANGE_PHASE';
-export const CHANNEL_NAME_CHANGE = 'CHANNEL_NAME_CHANGE';
+export const PARTY_NAME_CHANGE = 'PARTY_NAME_CHANGE';
 export const CHANGE_CONSTRAINTS = 'CHANGE_CONSTRAINTS';
 
 export const CAMERA_SELECT = 'CAMERA_SELECT';
@@ -20,79 +20,86 @@ export const REMOVED_REMOTE_STREAM = 'REMOVED_REMOTE_STREAM';
 export const RECEIVED_MESSAGE = 'RECEIVED_MESSAGE';
 export const STREAM_CHANGE = 'STREAM_CHANGE';
 
+export const USER_ADD = 'USER_ADD';
+export const USER_REMOVE = 'USER_REMOVE';
+
 export const SIGNAL_SERVER_CONNECT = 'SIGNAL_SERVER_CONNECT';
 
 export const connectToSignalServer = () => ({
-  type: SIGNAL_SERVER_CONNECT
+  type: SIGNAL_SERVER_CONNECT,
 });
 
-export const selectCharacter = character => ({
-  type: CHARACTER_SELECT,
-  character
+export const selectRole = role => ({
+  type: ROLE_SELECT,
+  payload: { role },
 });
 
 export const enumerateCameras = () => ({
-  type: CAMERAS_ENUMERATE
+  type: CAMERAS_ENUMERATE,
 });
 
 export const toggleFX = checked => ({
   type: TOGGLE_FX,
-  checked
+  checked,
 });
 
 export const changePhase = phase => ({
   type: CHANGE_PHASE,
-  phase
+  phase,
 });
 
-export const changeGameroom = room => ({
-  type: CHANNEL_NAME_CHANGE,
-  room
+export const changePartyName = room => ({
+  type: PARTY_NAME_CHANGE,
+  room,
 });
 
 export const selectCamera = cameraInfo => ({
   type: CAMERA_SELECT,
-  cameraInfo
+  cameraInfo,
 });
 
 export const foundCamera = cameraInfo => ({
   type: CAMERA_FOUND,
-  cameraInfo
+  cameraInfo,
 });
 
 // getUserMedia constraints
 export const changeConstraints = constraints => ({
   type: CHANGE_CONSTRAINTS,
-  constraints
+  constraints,
 });
 
 export const initiateRTC = () => ({
-  type: RTC_INITIATE
+  type: RTC_INITIATE,
 });
 
 export const fetchIceServers = () => ({
-  type: RTC_ICE_SERVERS_FETCH
+  type: RTC_ICE_SERVERS_FETCH,
 });
 
 export const addedRemoteStream = () => ({
-  type: ADDED_REMOTE_STREAM
+  type: ADDED_REMOTE_STREAM,
 });
 
 export const removedRemoteStream = () => ({
-  type: REMOVED_REMOTE_STREAM
+  type: REMOVED_REMOTE_STREAM,
 });
 
 export const receivedMessage = msg => ({
   type: RECEIVED_MESSAGE,
-  messageFromPeer: msg
+  messageFromPeer: msg,
 });
 
 export const clear = () => ({
-  type: 'CLEAR'
+  type: 'CLEAR',
 });
 
-// export const changeViewportStream = () => {
-//   return {
-//     type: CHANGE_VIEWPORT_STREAM,
-//   };
-// };
+export function addUser({ username, preferences = {} }) {
+  return {
+    type: USER_ADD,
+    payload: {
+      username,
+      preferences,
+    },
+  };
+}

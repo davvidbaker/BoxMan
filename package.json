@@ -7,7 +7,8 @@
     "start": "concurrently \"npm run client:start\" \"npm run server:watch\"",
     "client:build": "webpack --config webpack.prod.js",
     "client:start": "webpack-dev-server --config webpack.dev.js",
-    "server:watch": "nodemon signaling-server/index --watch signaling-server "
+    "server:watch": "nodemon signaling-server/index --watch signaling-server ",
+    "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "repository": {
     "type": "git",
@@ -20,8 +21,12 @@
   },
   "homepage": "https://github.com/DBaker2/BoxMan#readme",
   "dependencies": {
+    "@babel/runtime": "^7.2.0",
     "@reach/router": "^1.2.1",
+    "@storybook/react": "^4.1.4",
+    "d3": "^5.7.0",
     "html-webpack-plugin": "^3.2.0",
+    "lodash": "^4.17.11",
     "prop-types": "^15.6.2",
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2",
@@ -35,16 +40,21 @@
     "webpack-merge": "^4.1.5",
     "webrtc-adapter": "^7.1.1",
     "ws": "^6.1.2",
-    "xstate": "^4.2.2"
+    "xstate": "^4.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.2.3",
+    "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "@storybook/addon-actions": "^4.1.4",
+    "@storybook/addon-options": "^4.1.4",
+    "@storybook/components": "^4.1.4",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.4",
+    "babel-plugin-styled-components": "^1.10.0",
     "chalk": "^2.4.1",
     "concurrently": "^4.1.0",
     "css-loader": "^2.1.0",

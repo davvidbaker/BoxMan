@@ -1,21 +1,25 @@
-// @flow
-import { put, call, takeEvery, takeLatest, select } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 
 import { SIGNAL_SERVER_CONNECT, STREAM_CHANGE } from '../actions';
 import config from '../config';
 
+import {
+  put, call, takeEvery, takeLatest, select
+} from 'redux-saga/effects';
+
 console.log('config', config);
 
-function createSocketEventChannel(socket, character) {
+function createSocketEventChannel(socket, role, username) {
   return eventChannel(emit => {
     socket.addEventListener('open', event => {
-      socket.send(JSON.stringify({ type: 'newCharacter', character }));
+      socket.send(JSON.stringify({ type: 'new member', role, username }));
       emit({ type: 'SOCKET_OPEN', event });
-    }); // Listen for messages // 🤯 use flow typing! at least occasionally
+    });
+
     socket.addEventListener('message', event => {
       try {
         const data = JSON.parse(event.data);
+        console.log('🔥  message received', data);
         emit({
           type: 'SOCKET_MESSAGE_RECEIVED',
           data,
@@ -28,6 +32,7 @@ function createSocketEventChannel(socket, character) {
         console.error(e);
       } // debugger;
     });
+
     socket.addEventListener('close', evt => {
       console.log('websocket close event', evt);
       emit({
@@ -35,6 +40,7 @@ function createSocketEventChannel(socket, character) {
         evt,
       }); /** 🔮 do something */
     });
+
     socket.addEventListener('error', e => {
       console.error('websocket error', e);
       console.log('e.target.url', e.target.url);
@@ -55,14 +61,17 @@ function createSocketEventChannel(socket, character) {
 
 function* connectToSignalServer(sagaChannel) {
   const socket = new WebSocket(`wss://${config.SOCKET_SERVER_ADDRESS}:443`);
-  const character = yield select(state => state.character);
+  const { role, currentUser } = yield select(state => state);
 
   const socketEventChannel = yield call(
     createSocketEventChannel,
     socket,
-    character,
+    role,
+    currentUser,
   );
-  yield takeEvery(socketEventChannel, function* everythingOnSocketEventChannel(action, ) {
+  yield takeEvery(socketEventChannel, function* everythingOnSocketEventChannel(
+    action,
+  ) {
     yield put(sagaChannel, action);
   }); //  THIS IS THE SAGA CHANNEL SUBSCRIPTION KINDA
   yield takeEvery(sagaChannel, function* everythingOnSagaChannel(action) {

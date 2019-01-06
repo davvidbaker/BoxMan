@@ -16,8 +16,8 @@ const Wrapper = styled.pre`
 
 const Debug = ({
   localStream,
-  character,
-  channelName,
+  role,
+  partyName,
   remoteStreams,
   clear,
   reset,
@@ -39,12 +39,12 @@ const Debug = ({
         ))}
     </ul>
     <div>
-      character:
-      {character}
+      role:
+      {role}
     </div>
     <div>
-      channelName:
-      {channelName || ''}
+      partyName:
+      {partyName || ''}
     </div>
     <button
       style={{ zIndex: 1000 }}

@@ -1,50 +1,73 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
-import { Router, Link } from '@reach/router';
-// import { BrowserRouter, Route, Link } from 'react-router-dom';
-// import { push } from 'react-router-redux';
+import { Router } from '@reach/router';
 
-import Home from './Home';
+import Users from './Users';
+import Nav from './Nav';
+import Config from './Config';
 import Game from './Game.js';
+import Background from './Background';
 import Debug from './Debug';
+import SpeechRecognizer from './SpeechRecognizer';
+import Party from './Party';
+import UserForm from './UserForm';
+import partyMachine from '../machines/party-machine';
+import cameraMachine from '../machines/camera-machine';
+import useMachine from '../machines/use-machine';
 import {
-  changeCamera,
   changeConstraints,
-  changeGameroom,
-  changePhase,
+  changePartyName,
   connectToSignalServer,
   enumerateCameras,
   foundCamera,
   fetchIceServers,
   initiateRTC,
   selectCamera,
-  selectCharacter,
+  selectRole,
   toggleFX,
   clear,
+  addUser as addUserAction,
 } from '../actions';
 
-class Application extends Component {
-  constructor() {
-    super();
+const Application = props => {
+  const [remoteStreams, setRemoteStreams] = React.useState([]);
+  // const [party, setParty] = React.useState({ members: [] });
 
-    /** Redux can't store MediaStream objects in its store, but doing it at React state level works. */
-    this.state = { localStream: null, remoteStreams: [] };
-  }
+  const [partyMachineState, partyMachineSend] = useMachine(partyMachine, {
+    log: true,
+  });
 
+  const [cameraMachineState, cameraMachineSend] = useMachine(
+    cameraMachine.withConfig(
+      {},
+      {
+        selected: window.localStorage.getItem('selectedCameraId'),
+      },
+    ),
+    {
+      log: false,
+    },
+  );
+
+  // this.state = {
+  //   localStream: null,
+  //   remoteStreams: [],
+  //   party: { members: [] },
+  // };
+  // }
+
+  /*
   async componentDidMount() {
-    /* Start 👁looking👁 for cameras as soon as component mounts */
     this.props.enumerateCameras();
     this.props.connectToSignalServer();
 
     // start up rtc stuff
     this.props.fetchIceServers();
   }
+ */
 
+  /*
   componentWillReceiveProps(nextProps) {
-    if (nextProps.phase === 'game' && this.props.phase !== 'game') {
-      this.props.initiateRTC();
-    }
-
     if (nextProps.streamChange.flag !== this.props.streamChange.flag) {
       console.log('/** 🔮 handle stream change here', this.props.streamChange);
 
@@ -55,63 +78,95 @@ class Application extends Component {
       }
     }
   }
-
+*/
+  /*
   changeStream(stream, localOrRemote) {
     this.setState({ [`${localOrRemote}Stream`]: stream });
   }
+*/
+  const seriousProblems = Object.entries(props.seriousProblems).filter(
+    ([_key, value]) => value === true,
+  );
 
-  render() {
-    const Other = props => console.log('🔥 other appolication', props) || <div>other</div>;
-
-    return (
-      <>
-        <div className="application">
-          <Router>
-            <Home path="*" phase={this.props.phase} />
-            <Game
-              path="/game/:roomName"
-              initiateRTC={this.props.initiateRTC}
-              localStream={this.state.localStream}
-              remoteStreams={this.state.remoteStreams}
-              fxMode={this.props.fxMode}
-              constraints={this.props.constraints}
-              character={this.props.character}
-              gameroom={this.props.gameroom}
-              realTimeConnection={this.props.realTimeConnection}
-              messageFromPeer={this.props.messageFromPeer}
-            />
-          </Router>
-          <div id="background-title">
-            <p id="title">BOX MAN</p>
-            <p id="subtitle">OUT OF BODY</p>
-          </div>
+  return (
+    <>
+      {seriousProblems.length > 0 && (
+        <div
+          css="
+              padding: 1em;
+              background: palevioletred;
+            "
+        >
+          THERE ARE SERIOUS PROBLEMS:
+          <ul>
+            {seriousProblems.map(([k, _v]) => (
+              <li key={k}>{k}</li>
+            ))}
+          </ul>
         </div>
-        <video />
-        {false && (
-          <Debug
-            localStream={this.state.localStream}
-            remoteStreams={this.state.remoteStreams}
-            character={this.props.character}
-            channelName={this.props.channelName}
-            clear={this.props.clear}
-            reset={this.props.reset}
+      )}
+      <div className="application">
+        <Nav partyName={props.partyName} />
+        <Router>
+          <Config
+            path="/"
+            availableCameras={cameraMachineState.context.available}
+            selectCamera={deviceId => cameraMachineSend({ type: 'SELECT', payload: deviceId })
+            }
+            onSelect={() => partyMachineSend({
+              type: 'REQUEST_TO_ENTER_PARTY',
+              payload: {
+                partyName: props.partyName,
+                username: props.currentUser,
+                role: props.role,
+              },
+            })
+            }
           />
-        )}
-      </>
-    );
-  }
-}
+          <Game
+            path="/game/:partyName"
+            initiateRTC={props.initiateRTC}
+            localStream={window.localStream}
+            remoteStreams={remoteStreams}
+            fxMode={props.fxMode}
+            constraints={props.constraints}
+            role={props.role}
+            partyName={props.partyName}
+            realTimeConnection={props.realTimeConnection}
+            messageFromPeer={props.messageFromPeer}
+          />
+          <Party path="/party/:partyName" remoteStreams={remoteStreams} />
+          {/* ⚠️ I'd like to do this nested, but couldn't figure it out... */}
+          <Users path="/users" />
+          <UserForm path="/users/:username" submitUserForm={props.addUser} />
+        </Router>
+        <Background />
+      </div>
+      <video />
+      {false && (
+        <Debug
+          localStream={window.localStream}
+          remoteStreams={remoteStreams}
+          role={props.role}
+          partyName={props.partyName}
+          clear={props.clear}
+          reset={props.reset}
+        />
+      )}
+      {false && <SpeechRecognizer />}
+    </>
+  );
+};
 
 const mapStateToProps = (state, ownProps) => ({
-  phase: state.phase,
-  character: state.character,
-  gameroom: state.gameroom,
-  availableCameras: state.camera.availableCameras,
+  seriousProblems: state.seriousProblems,
+  currentUser: state.currentUser,
+  role: state.role,
+  partyName: state.partyName,
   constraints: state.constraints,
   remoteStreamsCount: state.remoteStreamsCount,
   realTimeConnection: state.realTimeConnection,
   fxMode: state.fxMode,
-  channelName: state.channelName,
 
   streamChange: state.streamChange,
   messageFromPeer: state.messageFromPeer,
@@ -120,14 +175,11 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  push: path => dispatch(push(path)),
-  selectCharacter: character => dispatch(selectCharacter(character)),
+  selectRole: role => dispatch(selectRole(role)),
 
   toggleFX: checked => dispatch(toggleFX(checked)),
 
-  changePhase: newPhase => dispatch(changePhase(newPhase)),
-  changeGameroom: newGameroom => dispatch(changeGameroom(newGameroom)),
-  changeCamera: selectedCamera => dispatch(changeCamera(selectedCamera)),
+  changePartyName: newPartyName => dispatch(changePartyName(newPartyName)),
   changeConstraints: constraints => dispatch(changeConstraints(constraints)),
 
   connectToSignalServer: () => dispatch(connectToSignalServer()),
@@ -141,6 +193,7 @@ const mapDispatchToProps = dispatch => ({
 
   clear: () => dispatch(clear()),
   reset: () => dispatch({ type: 'RESET' }),
+  addUser: user => dispatch(addUserAction(user)),
 });
 
 export default connect(

@@ -24,53 +24,46 @@ const TextInput = styled.input`
   }
 `;
 
-class CharacterSelect extends React.Component {
+class RoleSelect extends React.Component {
   static propTypes = {
-    selectCharacter: PropTypes.func.isRequired,
+    selectRole: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    this.channelNameInput = React.createRef();
+    this.partyNameInput = React.createRef();
 
     this.state = {
       inputAngry: false,
       controlInput: true,
-      textInput: props.channelName || '',
+      textInput: props.partyName || '',
     };
   }
 
   componentDidMount() {
-    this.channelNameInput.current.focus();
+    this.partyNameInput.current.focus();
   }
 
-  selectCharacter(evt) {
-    if (this.channelNameInput.current.value.length <= 0) {
-      this.channelNameInput.current.placeholder = 'enter a game name';
+  selectRole(evt) {
+    if (this.partyNameInput.current.value.length <= 0) {
+      this.partyNameInput.current.placeholder = 'enter a game name';
       this.setState({ inputAngry: true });
-      this.channelNameInput.current.focus();
+      this.partyNameInput.current.focus();
     } else {
       switch (evt.target.id) {
         case 'bm':
-          this.props.selectCharacter(
-            'boxman',
-            this.channelNameInput.current.value,
-          );
+          this.props.selectRole('boxman');
           break;
 
         case 'cg':
-          this.props.selectCharacter(
-            'cameraguy',
-            this.channelNameInput.current.value,
-          );
+          this.props.selectRole('cameraguy');
           break;
 
         default:
           break;
       }
-      this.props.changePhase('cameraSelect');
-      this.props.changeGameroom(this.channelNameInput.current.value);
-      // navigate('/camera-select');
+      this.props.changePartyName(this.partyNameInput.current.value);
+      this.props.changePhase();
     }
   }
 
@@ -97,11 +90,10 @@ class CharacterSelect extends React.Component {
             }}
           >
             {!portrait && <GridItem column={!portrait && '1 / span 3'} />}
-            <GridItem row={portrait && 2} className="character" id="box">
-              <Link
-                to={this.state.textInput.length > 0 ? 'camera-select' : ''}
+            <GridItem row={portrait && 2} className="role" id="box">
+              <div
                 onClick={evt => {
-                  this.selectCharacter(evt);
+                  this.selectRole(evt);
                 }}
               >
                 <input
@@ -112,25 +104,25 @@ class CharacterSelect extends React.Component {
                   alt="Box Man"
                   width="135%"
                 />
-              </Link>
+              </div>
             </GridItem>
             <GridItem
               id="center-flex"
               column={portrait && '1 / span 2'}
               style={{ textAlign: 'center' }}
             >
-              <h1>enter a unique name for your person</h1>
+              <h1 className="bangers">enter a unique name for your party</h1>
               <TextInput
                 tabIndex={1}
                 type="text"
                 placeholder="unique name"
                 className={this.state.inputAngry ? 'angry' : ''}
-                ref={this.channelNameInput}
+                ref={this.partyNameInput}
                 autoCapitalize="off"
                 value={this.state.textInput}
                 onChange={this.handleTextChange}
               />
-              <h1>then choose your character</h1>
+              <h1 className="bangers">then choose your role</h1>
               <label>
                 <input
                   tabIndex={2}
@@ -140,19 +132,19 @@ class CharacterSelect extends React.Component {
                     this.props.toggleFX(evt.target.checked);
                   }}
                 />
+
                 FX Mode
               </label>
             </GridItem>
             <GridItem
               row={portrait && 2}
               style={!portrait ? { justifySelf: 'end' } : {}}
-              className="character"
+              className="role"
               id="guy"
             >
-              <Link
-                to={this.state.textInput.length > 0 ? 'camera-select' : ''}
+              <div
                 onClick={evt => {
-                  this.selectCharacter(evt);
+                  this.selectRole(evt);
                 }}
               >
                 <input
@@ -163,7 +155,7 @@ class CharacterSelect extends React.Component {
                   id="cg"
                   width="100%"
                 />
-              </Link>
+              </div>
             </GridItem>
           </Grid>
         )}
@@ -172,4 +164,4 @@ class CharacterSelect extends React.Component {
   }
 }
 
-export default CharacterSelect;
+export default RoleSelect;

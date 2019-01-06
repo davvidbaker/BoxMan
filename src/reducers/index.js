@@ -1,12 +1,13 @@
 import { combineReducers } from 'redux';
-// import { routerReducer } from 'react-router-redux';
+import uniqBy from 'lodash/fp/uniqBy';
 
+import users from './users';
 import * as ActionTypes from '../actions';
 
-const character = (state = null, action) => {
+const role = (state = null, action) => {
   switch (action.type) {
-    case ActionTypes.CHARACTER_SELECT:
-      return action.character;
+    case ActionTypes.ROLE_SELECT:
+      return action.payload.role;
     case 'CLEAR':
       return null;
     default:
@@ -23,20 +24,20 @@ const fxMode = (state = false, action) => {
   }
 };
 
-const phase = (state = 'characterSelect', action) => {
+const phase = (state = 'roleSelect', action) => {
   switch (action.type) {
     case ActionTypes.CHANGE_PHASE:
       return action.phase;
     case 'CLEAR':
-      return 'characterSelect';
+      return 'roleSelect';
     default:
       return state;
   }
 };
 
-const channelName = (state = null, action) => {
+const partyName = (state = null, action) => {
   switch (action.type) {
-    case ActionTypes.CHANNEL_NAME_CHANGE:
+    case ActionTypes.PARTY_NAME_CHANGE:
       return `${action.room}`;
     case 'CLEAR':
       return null;
@@ -59,7 +60,8 @@ const selectedCamera = (state = null, action) => {
 const availableCameras = (state = [], action) => {
   switch (action.type) {
     case ActionTypes.CAMERA_FOUND:
-      return [...state, action.cameraInfo];
+      return uniqBy(({ deviceId }) => deviceId)([...state, action.cameraInfo]);
+
     case 'CLEAR':
       return [];
     default:
@@ -127,14 +129,14 @@ const messageFromPeer = (state = { message: null }, action) => {
 /** 💁 this is basically just a flag that Application uses to check if window.stream has changed */
 const streamChange = (
   state = { flag: false, localOrRemote: 'local' },
-  action
+  action,
 ) => {
   switch (action.type) {
     case ActionTypes.STREAM_CHANGE:
       return {
         ...state,
         flag: !state.flag,
-        localOrRemote: action.localOrRemote
+        localOrRemote: action.localOrRemote,
       };
     case 'CLEAR':
       return { flag: false, localOrRemote: 'local' };
@@ -143,21 +145,49 @@ const streamChange = (
   }
 };
 
+function currentUser(state = null, action) {
+  switch (action.type) {
+    case ActionTypes.USER_ADD:
+      return action.payload.username;
+    /* ⚠️ todo a way to select a user lol */
+    default:
+      return state;
+  }
+}
+
+const iState = { 'no cameras available': false };
+function seriousProblems(state = iState, action) {
+  switch (action.type) {
+    case 'NO_CAMERAS_AVAILABLE':
+      return { ...state, 'no cameras available': true };
+
+    case ActionTypes.CAMERA_FOUND:
+      return { ...state, 'no cameras available': false };
+
+    case 'CLEAR':
+      return iState;
+    default:
+      return state;
+  }
+}
+
 const appReducer = combineReducers({
   phase,
-  character,
+  role,
   fxMode,
-  channelName,
+  partyName,
   camera,
   constraints,
   iceServers,
   realTimeConnection,
   messageFromPeer,
   streamChange,
+  users,
+  currentUser,
+  seriousProblems,
   // router: routerReducer
 });
 
-const rootReducer = (state, action) =>
-  appReducer(action.type === ActionTypes.RESET ? undefined : state, action);
+const rootReducer = (state, action) => appReducer(action.type === ActionTypes.RESET ? undefined : state, action);
 
 export default rootReducer;

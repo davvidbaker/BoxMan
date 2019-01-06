@@ -1,13 +1,4 @@
-// @flow
 import SimplePeer from 'simple-peer';
-import {
-  put,
-  call,
-  takeEvery,
-  takeLatest,
-  select,
-  take,
-} from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 
 import {
@@ -20,9 +11,24 @@ import {
 import getIceServers from './iceServers';
 import { getStream, getCameras } from './cameras';
 
-function createPeerEventChannel(peer) {
+// weird that eslint wants this stuff down here
+import {
+  put,
+  call,
+  takeEvery,
+  takeLatest,
+  select,
+  take,
+} from 'redux-saga/effects';
+
+window.peers = [];
+
+function createP2PEventChannel(peer, currentUser) {
   return eventChannel(emit => {
     peer.on('signal', data => {
+      console.log('🔥  on signal', data);
+      peer.signal(data);
+
       emit({
         type: `PEER_SIGNAL_${
           data.type
@@ -42,7 +48,7 @@ function createPeerEventChannel(peer) {
     peer.on('connect', () => {
       console.log('CONNECT');
       emit({ type: 'PEER_CONNECT' });
-      peer.send(`whatever${Math.random()}`);
+      peer.send(`you successfully connected to me, ${currentUser}`);
     });
 
     peer.on('data', data => {
@@ -84,7 +90,6 @@ function* initiateRTC(sagaChannel, { cameraInfo }) {
   } catch (e) {
     console.error('NO CAMERAINFO', e);
   }
-  console.log('initiating RTC with cameraInfo', cameraInfo);
 
   const stream = yield call(getStream, cameraInfo);
   window.localStream = window.localStream || stream;
@@ -92,24 +97,50 @@ function* initiateRTC(sagaChannel, { cameraInfo }) {
 
   yield put({ type: STREAM_CHANGE, localOrRemote: 'local' });
 
-  const peers = select(state => state.peers);
-
-  const { channelName, character } = yield select(state => state);
-
-  const peer = yield call(createPeer, {
-    stream,
-    character,
-    channelName: `${channelName}-boxman`, // appending boxman for uniquer name
-  });
-  console.log('peer', peer);
-
-  const peerEventChannel = yield call(createPeerEventChannel, peer);
+  const { currentUser = 'no user selected' } = yield select(state => state);
 
   yield takeEvery('SOCKET_MESSAGE_RECEIVED', ({ data }) => {
-    if (data.type === 'offer' || data.type === 'answer' || data.candidate) {
+    console.log('SOCKET_MESSAGE_RECEIVED:  data', data);
+    if (data.type === 'offer') {
+      console.log('🔥  data.type', data.type);
+      const peer = new SimplePeer({
+        initiator: false,
+        // trickle: false,
+        stream,
+      });
+
+      const peerEventChannel = call(createP2PEventChannel, peer, currentUser);
+
+      window.peers = [...window.peers, peer];
+
       peer.signal(data);
+
+      // while (true) {
+      //   const action = yield take(peerEventChannel);
+      //   yield put(sagaChannel, action);
+      // }
+    } else if (data.type === 'answer' || data.candidate) {
+      window.peers.forEach(peer => {
+        peer.signal(data);
+      });
     } else if (data.type === 'rebound') {
       /** 🔮 Do something like set a websocket server validated flag to true or timestamp of last validation or something,, since this means we know the wss is responsding to us */
+    } else if (data.type === 'peer lost') {
+      console.log(
+        ' a peer has been lost, and we need to do something about it',
+        data,
+      );
+    } else if (data.type === 'new member') {
+      const peer = new SimplePeer({
+        initiator: true,
+        // trickle: false,
+        stream,
+      });
+
+      console.log('🔥  I am initiating an offer');
+
+      const peerEventChannel = createP2PEventChannel(peer, currentUser);
+      window.peers = [...window.peers, peer];
     } else {
       console.warn(
         'unexpected data in received socket message',
@@ -118,22 +149,6 @@ function* initiateRTC(sagaChannel, { cameraInfo }) {
       );
     }
   });
-
-  while (true) {
-    const myAction = yield take(peerEventChannel);
-    console.log('taken myAction', myAction);
-    yield put(sagaChannel, myAction);
-  }
-}
-
-function createPeer({ stream, character, channelName }) {
-  const p = new SimplePeer({
-    initiator: character === 'cameraguy',
-    // trickle: false,
-    channelName,
-    stream,
-  });
-  return p;
 }
 
 function* webrtc(sagaChannel) {

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 import Messenger from './messenger.js';
 import Viewfinder from './viewfinder.js';
@@ -8,12 +7,6 @@ import Viewfinder from './viewfinder.js';
   Camera Guy Component
 ======================================================= */
 class CameraGuy extends Component {
-  static propTypes = {
-    realTimeConnection: PropTypes.object,
-    localStream: PropTypes.object.isRequired,
-    constraints: PropTypes.object.isRequired,
-  };
-
   constructor() {
     super();
 
@@ -25,9 +18,8 @@ class CameraGuy extends Component {
   }
 
   componentDidMount() {
-    const videoEl =
-      document.getElementById('viewfinder-video') ||
-      document.createElement('new-video');
+    const videoEl = document.getElementById('viewfinder-video')
+      || document.createElement('new-video');
     console.log('this.props.localStream', this.props.localStream);
     if (this.props.localStream) {
       videoEl.srcObject = this.props.localStream;
@@ -35,9 +27,8 @@ class CameraGuy extends Component {
   }
 
   componentWillReceiveProps(newProps, props) {
-    const videoEl =
-      document.getElementById('viewfinder-video') ||
-      document.createElement('new-video');
+    const videoEl = document.getElementById('viewfinder-video')
+      || document.createElement('new-video');
     console.log('newProps, props', newProps, props);
     if (newProps.localStream && !props.localStream) {
       videoEl.srcObject = newProps.localStream;
@@ -66,7 +57,7 @@ class CameraGuy extends Component {
       'chat',
       {
         message: msg,
-      }
+      },
     );
   }
 

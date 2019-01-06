@@ -1,15 +1,13 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-// import createHistory from 'history/createBrowserHistory';
-// import { routerMiddleware, push } from 'react-router-redux';
 
-import { saveState, loadState } from './utilities/localStorage';
 import rootReducer from './reducers';
 import rootSaga from './sagas';
 import * as actionCreators from './actions';
 
 export const sagaMiddleware = createSagaMiddleware();
 
+/* eslint-disable no-underscore-dangle */
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ actionCreators })
   : compose;
@@ -22,28 +20,22 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
 // Now you can dispatch navigation actions from anywhere!
 // store.dispatch(push('/foo'))
 
-const configureStore = preloadedState =>
-  createStore(
-    rootReducer,
-    preloadedState,
-    composeEnhancers(applyMiddleware(/* middleware,  */ sagaMiddleware)),
-  );
+const configureStore = preloadedState => createStore(
+  rootReducer,
+  preloadedState,
+  composeEnhancers(applyMiddleware(sagaMiddleware)),
+);
 
-// let store;
+function initializeStore(initialState) {
+  // if (process.env.NODE_ENV === 'development') {
+  const store = configureStore(initialState);
+  // } else {
+  //   store = configureStore(persistedState);
+  // }
 
-const persistedState = loadState();
+  // sagaMiddleware.run(rootSaga);
 
-// if (process.env.NODE_ENV === 'development') {
-const store = configureStore(persistedState);
-// } else {
-//   store = configureStore(persistedState);
-// }
+  return store;
+}
 
-sagaMiddleware.run(rootSaga);
-
-/** 🔮 Maybe don't save the entire state and maybe don't do it on every action */
-store.subscribe(() => {
-  saveState(store.getState());
-});
-
-export default store;
+export default initializeStore;

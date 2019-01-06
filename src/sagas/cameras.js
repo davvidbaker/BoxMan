@@ -1,9 +1,12 @@
-import { put, call, takeEvery, takeLatest, select } from 'redux-saga/effects';
-
 import { foundCamera } from '../actions';
+
+import {
+  put, call, takeEvery, takeLatest, select
+} from 'redux-saga/effects';
 
 function* getCameras() {
   const deviceInformations = yield call(async () => {
+    console.log('here');
     try {
       const deviceInformations = await navigator.mediaDevices.enumerateDevices();
       return deviceInformations;
@@ -12,9 +15,20 @@ function* getCameras() {
     }
   });
 
-  for (let i = 0; i < deviceInformations.length; i++) {
-    if (deviceInformations[i].kind === 'videoinput') {
-      yield put(foundCamera(deviceInformations[i]));
+  console.log('📷  deviceInformations', deviceInformations);
+
+  const videoInformations = deviceInformations.filter(
+    di => di.kind === 'videoinput',
+  );
+
+  if (videoInformations.length === 0) {
+    yield put({ type: 'NO_CAMERAS_AVAILABLE' });
+  } else {
+    for (let i = 0; i < videoInformations.length; i++) {
+      if (videoInformations[i].kind === 'videoinput') {
+        console.log('🔥  putting found camera');
+        yield put(foundCamera(videoInformations[i]));
+      }
     }
   }
 }
@@ -32,24 +46,6 @@ async function getStream(cameraInfo) {
     console.error(e.message);
     return e;
   }
-
-  // .then(stream => {
-  //   console.log('stream', stream);
-  //   window.stream = stream;
-  //   const videoEl =
-  //     document.getElementById('viewfinder-video') ||
-  //     document.createElement('new-video');
-  //   // this.props.localStream = stream;
-  //   videoEl.srcObject = stream;
-
-  //   // changing cameraSelected triggers the next phase, which is the game
-  //   window.stream = stream;
-  //   this.props.changeStream(stream, 'local');
-  //   this.props.changePhase('game');
-  // })
-  // .catch(err => {
-  //   console.error(err);
-  // });
 }
 
 export { getStream, getCameras };

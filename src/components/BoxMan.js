@@ -169,7 +169,7 @@ class BoxMan extends Component {
   cycleStreams() {
     const streams = [...this.props.remoteStreams, this.props.localStream];
 
-    if (streams.length > 0) {
+    if (streams.length > 1) {
       for (let i = 0; i < streams.length; i++) {
         if (streams[i].id === this.state.currentStream.id) {
           this.setState({ currentStream: streams[(i + 1) % streams.length] });

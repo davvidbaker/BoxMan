@@ -1,28 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import { Link } from '@reach/router';
 
 import BoxMan from './BoxMan.js';
 import CameraGuy from './CameraGuy.js';
-
-// TODO change this
-const roomName = 'testing';
 
 const Game = ({
   localStream,
   remoteStreams,
   fxMode,
   constraints,
-  character,
+  role,
   realTimeConnection,
   messageFromPeer,
   initiateRTC,
+  partyName,
 }) => {
   if (!localStream) {
+    console.log('🔥  localStream', localStream);
     initiateRTC();
   }
   return (
     <div>
-      {character === 'boxman' ? (
+      <Link to="../../">Back</Link>
+      <Link to={`../../party/${partyName}`}>Party</Link>
+      {role === 'boxman' ? (
         <BoxMan
           fxMode={fxMode}
           localStream={localStream}
@@ -38,15 +39,6 @@ const Game = ({
       )}
     </div>
   );
-};
-Game.propTypes = {
-  character: PropTypes.string.isRequired,
-  fxMode: PropTypes.bool.isRequired,
-  constraints: PropTypes.object,
-  realTimeConnection: PropTypes.object,
-  localStream: PropTypes.object,
-  remoteStreams: PropTypes.array,
-  messageFromPeer: PropTypes.object,
 };
 
 export default Game;

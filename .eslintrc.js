@@ -42,7 +42,7 @@ module.exports = {
     'no-debugger': 'off',
     'no-nested-ternary': 'off',
     'no-plusplus': 'off',
-    'no-unused-vars': 'error',
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     indent: [
       'error',
       2,
@@ -54,6 +54,13 @@ module.exports = {
     'import/extensions': 'off',
     'import/prefer-default-export': 'off',
     'import/no-unresolved': 'off',
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', ['sibling', 'parent'], 'index'],
+        'newlines-between': 'always',
+      },
+    ],
     'jsx-a11y/accessible-emoji': 'off',
     'jsx-a11y/media-has-caption': 'off',
     'jsx-a11y/href-no-hash': 'off',
@@ -64,12 +71,5 @@ module.exports = {
     'react/no-multi-comp': 'off',
     'react/prop-types': 'off',
     'react/sort-comp': 'off',
-  },
-  settings: {
-    // 'import/resolver': {
-    //   webpack: {
-    //     config: './webpack.common.js',
-    //   },
-    // },
   },
 };
