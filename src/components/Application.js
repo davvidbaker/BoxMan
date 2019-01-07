@@ -30,7 +30,6 @@ import {
 } from '../actions';
 
 const Application = props => {
-  const [remoteStreams, setRemoteStreams] = React.useState([]);
   // const [party, setParty] = React.useState({ members: [] });
 
   const [partyMachineState, partyMachineSend] = useMachine(partyMachine, {
@@ -49,41 +48,6 @@ const Application = props => {
     },
   );
 
-  // this.state = {
-  //   localStream: null,
-  //   remoteStreams: [],
-  //   party: { members: [] },
-  // };
-  // }
-
-  /*
-  async componentDidMount() {
-    this.props.enumerateCameras();
-    this.props.connectToSignalServer();
-
-    // start up rtc stuff
-    this.props.fetchIceServers();
-  }
- */
-
-  /*
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.streamChange.flag !== this.props.streamChange.flag) {
-      console.log('/** 🔮 handle stream change here', this.props.streamChange);
-
-      if (this.props.streamChange.localOrRemote === 'local') {
-        this.setState({ localStream: window.localStream });
-      } else if (this.props.streamChange.localOrRemote === 'remote') {
-        this.setState({ remoteStreams: window.remoteStreams });
-      }
-    }
-  }
-*/
-  /*
-  changeStream(stream, localOrRemote) {
-    this.setState({ [`${localOrRemote}Stream`]: stream });
-  }
-*/
   const seriousProblems = Object.entries(props.seriousProblems).filter(
     ([_key, value]) => value === true,
   );
@@ -106,14 +70,17 @@ const Application = props => {
         </div>
       )}
       <div className="application">
-        <Nav partyName={props.partyName} />
+        <Nav partyName={props.partyName} currentUser={props.currentUser} />
         <Router>
           <Config
             path="/"
             availableCameras={cameraMachineState.context.available}
             selectCamera={deviceId => cameraMachineSend({ type: 'SELECT', payload: deviceId })
             }
-            onSelect={() => partyMachineSend({
+          />
+          <Game
+            path="/game/:partyName"
+            joinParty={() => partyMachineSend({
               type: 'REQUEST_TO_ENTER_PARTY',
               payload: {
                 partyName: props.partyName,
@@ -122,12 +89,8 @@ const Application = props => {
               },
             })
             }
-          />
-          <Game
-            path="/game/:partyName"
-            initiateRTC={props.initiateRTC}
             localStream={window.localStream}
-            remoteStreams={remoteStreams}
+            remoteStreams={window.remoteStreams}
             fxMode={props.fxMode}
             constraints={props.constraints}
             role={props.role}
@@ -135,18 +98,22 @@ const Application = props => {
             realTimeConnection={props.realTimeConnection}
             messageFromPeer={props.messageFromPeer}
           />
-          <Party path="/party/:partyName" remoteStreams={remoteStreams} />
+          <Party
+            path="/party/:partyName"
+            peers={window.peers}
+            remoteStreams={window.remoteStreams}
+            yourself={{ username: props.currentUser, role: props.role }}
+          />
           {/* ⚠️ I'd like to do this nested, but couldn't figure it out... */}
           <Users path="/users" />
           <UserForm path="/users/:username" submitUserForm={props.addUser} />
         </Router>
         <Background />
       </div>
-      <video />
       {false && (
         <Debug
           localStream={window.localStream}
-          remoteStreams={remoteStreams}
+          remoteStreams={window.remoteStreams}
           role={props.role}
           partyName={props.partyName}
           clear={props.clear}

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Link } from '@reach/router';
 
-import BoxMan from './BoxMan.js';
-import CameraGuy from './CameraGuy.js';
+import BoxMan from './BoxMan';
+import CameraGuy from './CameraGuy';
+import Controller from './Controller';
 
 const Game = ({
   localStream,
@@ -12,17 +13,18 @@ const Game = ({
   role,
   realTimeConnection,
   messageFromPeer,
-  initiateRTC,
+  joinParty,
   partyName,
 }) => {
-  if (!localStream) {
-    console.log('🔥  localStream', localStream);
-    initiateRTC();
+  const initialized = React.useRef(false);
+  if (!initialized.current && window.localStream) {
+    joinParty();
+    initialized.current = true;
   }
+
   return (
     <div>
-      <Link to="../../">Back</Link>
-      <Link to={`../../party/${partyName}`}>Party</Link>
+      <Controller />
       {role === 'boxman' ? (
         <BoxMan
           fxMode={fxMode}

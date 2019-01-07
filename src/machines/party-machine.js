@@ -8,30 +8,48 @@ const { Machine } = XState;
 
 const { assign, send, sendParent } = XState.actions;
 
+window.peers = [];
+window.remoteStreams = [];
+
 const emit = emitting => console.log('emitting', emitting);
 
-function addPeer(isInitiator, socket, myUsername, iceServers) {
+function addPeer(
+  isInitiator,
+  socket,
+  myUsername,
+  iceServers,
+  peerUsername,
+  partyMachineCallback,
+) {
   const peer = new Peer({
     initiator: isInitiator,
     channelName: 'whatever-boxman',
     config: { iceServers },
     trickle: false,
-    // streams: [window.localStream],
+    streams: window.localStream ? [window.localStream] : [],
   });
 
+  peer.username = peerUsername;
   // if (initiator === false) {
   //   peer.signal(data);
   // }
 
   peer.on('signal', d => {
     console.log('🛑 sending to socket', JSON.stringify(d));
-    socket.send(JSON.stringify(d));
-    if (!peer.destroyed) peer.signal(d);
+    socket.send(
+      JSON.stringify({
+        from: myUsername,
+        to: peerUsername,
+        type: 'signal',
+        payload: d,
+      }),
+    );
+    // if (!peer.destroyed) peer.signal(d);
   });
 
   peer.on('connect', () => {
-    peer.send(`you successfully connected to me, ${myUsername}`);
-    // partyService.send({ type: 'PEER_CONNECT', peer });
+    peer.send(`🤑🤑🤑🤑🤑you successfully connected to me, ${myUsername}`);
+    partyMachineCallback({ type: 'PEER_CONNECT', peer });
   });
 
   peer.on('data', data => {
@@ -70,7 +88,6 @@ const fetchIceServers = () => fetch('https://global.xirsys.net/_turn/FourthPerso
     throw new Error(data.s);
   });
 
-window.peers = [];
 // const socketMachine = Machine(
 //   {
 //     id: 'socketMachine',
@@ -177,55 +194,87 @@ const partyMachine = Machine({
                   if (messageData.count === 0) {
                     callback({ type: 'NO_ONE_ELSE_IS_IN_YOUR_PARTY' });
                   } else {
-                    console.log('🔥  messageData.count', messageData.count);
-                    for (let i = 0; i < messageData.count; i++) {
+                    console.log('🔥  messageData.payload', messageData.payload);
+                    messageData.payload.forEach(otherUsername => {
                       window.peers = [
                         ...(window.peers || []),
-                        addPeer(false, socket, ctx.username, ctx.iceServers),
+                        addPeer(
+                          false,
+                          socket,
+                          ctx.username,
+                          ctx.iceServers,
+                          otherUsername,
+                          callback,
+                        ),
                       ];
-                    }
+                    });
                   }
-                  break;
-
-                case 'offer':
-                  // very side-effectful
-                  console.log('🔥  received peer offer from websocket');
-                  window.peers.forEach(peer => {
-                    if (!peer.destroyed) peer.signal(event.data);
-                  });
-                  // addPeer({ initiator: false, data: messageData });
-                  break;
-
-                case 'answer':
-                  // socketService.send('ANSWER', { payload: messageData });
-                  console.log('🔥  received peer answer from websocket');
-
-                  window.peers.forEach(peer => {
-                    console.log('🔥  window.peers.length', window.peers.length);
-                    console.log('🔥  peer.destroyed', peer.destroyed);
-                    if (!peer.destroyed) peer.signal(event.data);
-                  });
-                  break;
-
-                case 'candidate':
-                  console.log('🔥  received peer candidate from websocket');
-
-                  // socketService.send('CANDIDATE', { payload: messageData });
-
-                  // very side-effectful
-                  window.peers.forEach(peer => {
-                    if (!peer.destroyed) peer.signal(event.data);
-                  });
                   break;
 
                 case 'new member':
                   console.log('🔥  adding peer as initiator');
                   window.peers = [
                     ...(window.peers || []),
-                    addPeer(true, socket, ctx.username, ctx.iceServers),
+                    addPeer(
+                      true,
+                      socket,
+                      ctx.username,
+                      ctx.iceServers,
+                      messageData.username,
+                      callback,
+                    ),
                   ];
                   break;
 
+                case 'signal':
+                  const signal = JSON.stringify(messageData.payload);
+
+                  switch (messageData.payload.type) {
+                    case 'offer':
+                      // very side-effectful
+                      console.log('🔥  received peer offer from websocket');
+                      window.peers.forEach(peer => {
+                        if (
+                          !peer.destroyed
+                          && peer.username === messageData.from
+                        ) peer.signal(signal);
+                      });
+                      break;
+
+                    case 'answer':
+                      // socketService.send('ANSWER', { payload: messageData });
+                      console.log('🔥  received peer answer from websocket');
+
+                      window.peers.forEach(peer => {
+                        console.log(
+                          '🔥  window.peers.length',
+                          window.peers.length,
+                        );
+                        if (
+                          !peer.destroyed
+                          && peer.username === messageData.from
+                        ) peer.signal(signal);
+                      });
+                      break;
+
+                    case 'candidate':
+                      console.log('🔥  received peer candidate from websocket');
+
+                      // socketService.send('CANDIDATE', { payload: messageData });
+
+                      // very side-effectful
+                      window.peers.forEach(peer => {
+                        if (
+                          !peer.destroyed
+                          && peer.username === messageData.from
+                        ) peer.signal(signal);
+                      });
+                      break;
+
+                    default:
+                      console.warn('other signal data', messageData);
+                  }
+                  break;
                 default:
                   console.warn('other message data', messageData);
               }

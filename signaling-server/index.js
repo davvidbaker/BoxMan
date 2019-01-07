@@ -28,11 +28,19 @@ function handleRequest(req, res) {
   }
 }
 
+function partyMembers(wss, partyName) {
+  let members = [];
+  wss.clients.forEach(ws => {
+    members = ws.partyName === partyName ? [...members, ws] : members;
+  });
+  return members;
+}
+
 function broadcastToOthers(clients, ws, data) {
   clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
       if (client.username !== ws.username) {
-        console.log(`sending data to ${ws.username}`, data);
+        console.log(`sending data to ${client.username}`, data);
         client.send(data);
       } else if (client === ws) {
         const x = `{"type": "rebound", "data": ${data}}`; // debugger;
@@ -81,23 +89,34 @@ server.listen(443, () => {
 
       try {
         const parsed = JSON.parse(data);
-        if (parsed.type === 'offer') {
-          /** 🔮 probably eventually only broadcast to your channel name */
-          const allPartyMembers = partyMembers(wss, ws.partyName);
-          console.log(
-            '🔥  allPartyMembers',
-            allPartyMembers.map(p => p.username),
-          );
 
-          broadcastToOthers(allPartyMembers, ws, data);
-        } else if (parsed.type === 'answer') {
-          const allPartyMembers = partyMembers(wss, ws.partyName);
-          console.log(
-            '🔥  allPartyMembers',
-            allPartyMembers.map(p => p.username),
-          );
+        if (parsed.type === 'signal') {
+          if (parsed.payload.type === 'offer') {
+            /** 🔮 probably eventually only broadcast to your channel name */
+            const allPartyMembers = partyMembers(wss, ws.partyName);
+            console.log(
+              '🔥  allPartyMembers',
+              allPartyMembers.map(p => p.username),
+            );
 
-          broadcastToOthers(allPartyMembers, ws, data);
+            broadcastToOthers(
+              allPartyMembers.filter(p => p.username === parsed.to),
+              ws,
+              data,
+            );
+          } else if (parsed.payload.type === 'answer') {
+            const allPartyMembers = partyMembers(wss, ws.partyName);
+            console.log(
+              '🔥  allPartyMembers',
+              allPartyMembers.map(p => p.username),
+            );
+
+            broadcastToOthers(
+              allPartyMembers.filter(p => p.username === parsed.to),
+              ws,
+              data,
+            );
+          }
         } else if (parsed.type === 'new member') {
           // eslint-disable-next-line
           ws.username = parsed.username;
@@ -110,7 +129,7 @@ server.listen(443, () => {
           ws.send(
             JSON.stringify({
               type: 'others',
-              count: existingPartyMembers.length,
+              payload: existingPartyMembers.map(p => p.username),
             }),
           );
 
@@ -149,12 +168,3 @@ server.listen(443, () => {
     });
   }); // clients is a Set
 });
-
-function partyMembers(wss, partyName) {
-  let members = [];
-  wss.clients.forEach(ws => {
-    console.log('🔥  ws.partyName', ws.partyName);
-    members = ws.partyName === partyName ? [...members, ws] : members;
-  });
-  return members;
-}

@@ -149,12 +149,9 @@ h2 {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  left: 0;
-  top: 0;
   background: black;
   height: 100vh;
   width: 100vw;
-  position: fixed;
 }
 
 #viewports-container {

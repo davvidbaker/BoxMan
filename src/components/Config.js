@@ -12,7 +12,6 @@ const Config = ({
   changePartyName,
   partyName,
   selectCamera,
-  onSelect,
   availableCameras,
   currentUser,
   changeConstraints,
@@ -21,11 +20,6 @@ const Config = ({
 
   return (
     <div css="margin: 1em;">
-      <div>
-        <Link to={`/users/${currentUser || 'create'}`}>
-          {currentUser || 'Create a User'}
-        </Link>
-      </div>
       {phase === 'party' ? (
         <RoleAndParty
           selectRole={role => {
@@ -44,7 +38,6 @@ const Config = ({
           availableCameras={availableCameras}
           partyName={partyName}
           onSelect={() => {
-            onSelect();
             navigate(`/game/${partyName}`);
           }}
           changeConstraints={changeConstraints}

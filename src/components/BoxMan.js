@@ -334,16 +334,7 @@ class BoxMan extends Component {
               <Viewport id="left" displayMsg={this.state.displayMsg} />
               <Viewport id="right" displayMsg={this.state.displayMsg} />
             </div>
-          )
-
-            // <div id="viewports-container">
-
-            //   <Viewport id="left" displayMsg={this.state.displayMsg} />
-
-            //   <Viewport id="right" displayMsg={this.state.displayMsg} />
-
-          // </div>
-          }
+          )}
         </div>
       </div>
     );
