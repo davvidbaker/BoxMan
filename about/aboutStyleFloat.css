@@ -1,7 +1,11 @@
 /*copy and paste from sassmeister (Codepen currently down!!!)*/
+:root {
+  --background-color: #646646;
+}
+
 body {
+  background: var(--background-color);
   margin: auto 0;
-  background: #646464;
   font-family: 'Ropa Sans';
   overflow-x: hidden;
 }

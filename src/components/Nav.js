@@ -4,7 +4,7 @@ import { Link } from '@reach/router';
 const Nav = ({ partyName, currentUser }) => (
   <nav
     css="padding: 1em;
-         background: black;
+         background: var(--light-gray-purple);
 "
   >
     <div

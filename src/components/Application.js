@@ -33,7 +33,7 @@ const Application = props => {
   // const [party, setParty] = React.useState({ members: [] });
 
   const [partyMachineState, partyMachineSend] = useMachine(partyMachine, {
-    log: true,
+    log: false,
   });
 
   const [cameraMachineState, cameraMachineSend] = useMachine(
@@ -44,7 +44,7 @@ const Application = props => {
       },
     ),
     {
-      log: false,
+      log: true,
     },
   );
 

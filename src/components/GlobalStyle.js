@@ -5,6 +5,8 @@ const GlobalStyle = createGlobalStyle`
 :root {
   --yellow: #fcbe1f;
   --red: #de4536;
+  --background-color: #fafafa;
+  --light-gray-purple: #ebe9ec;
 }
 
 html,
@@ -15,13 +17,13 @@ body,
 }
 
 body {
-  background: #646464;
+  background: var(--background-color);
   font-family: 'Ropa Sans', sans-serif;
   margin: 0;
 }
 
 a, a:visited {
-  color: white;
+  color: #313040;
 }
 
 #left,
@@ -39,7 +41,7 @@ a, a:visited {
   top: 0;
   transition: 0.5s;
   z-index: 4;
-  color: var(--yellow);
+  color: var(--black);
   font-family: 'Ropa Sans';
   font-size: 28px;
   text-shadow: 1px 1px 1px #000;
@@ -80,7 +82,7 @@ a, a:visited {
 h1,
 h2 {
   font-weight: 400;
-  color: var(--yellow);
+  color: var(--black);
   font-size: 1.8em;
 }
 
@@ -98,7 +100,7 @@ h2 {
   text-align: center;
   width: 96vw;
   font-family: Bangers;
-  color: #606060;
+  color: var(--light-gray-purple);
   z-index: -10;
   display: flex;
   flex-direction: column;

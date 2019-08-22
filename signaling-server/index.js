@@ -1,5 +1,3 @@
-/* 🤔 I think I want the signalling server to be totally stateless, buuuut do I need it for discovery...
-All information about parties should come from party members directly. */
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
@@ -50,17 +48,27 @@ function broadcastToOthers(clients, ws, data) {
   });
 }
 
-const server = https.createServer(
-  {
-    cert: fs.readFileSync(path.resolve(__dirname, './cert.secret.pem')),
-    key: fs.readFileSync(path.resolve(__dirname, './key.secret.pem')),
-  },
-  handleRequest,
-);
-server.listen(443, () => {
-  const wss = new WebSocket.Server({
-    server,
+console.log('🔥  process.env.DEV', process.env.DEV);
+
+if (process.env.DEV) {
+  const server = https.createServer(
+    {
+      cert: fs.readFileSync(path.resolve(__dirname, './cert.secret.pem')),
+      key: fs.readFileSync(path.resolve(__dirname, './key.secret.pem')),
+    },
+    handleRequest,
+  );
+  server.listen(443, () => {
+    // eslint-disable-next-line
+    startWebsocketServer({ server });
   });
+} else {
+  // eslint-disable-next-line
+  startWebsocketServer({ port: 3000 });
+}
+
+function startWebsocketServer(serverConfig) {
+  const wss = new WebSocket.Server(serverConfig);
   console.log('wss', Boolean(wss));
 
   // Broadcast to all.
@@ -74,6 +82,7 @@ server.listen(443, () => {
   };
 
   wss.on('connection', ws => {
+    console.log(`🔥  ws`, ws);
     ws.username = 'no username given';
 
     console.log(
@@ -121,6 +130,8 @@ server.listen(443, () => {
           // eslint-disable-next-line
           ws.username = parsed.username;
 
+          console.log(`🔥  parsed.username`, parsed.username);
+
           const existingPartyMembers = partyMembers(wss, parsed.partyName);
           console.log(
             '🔥  existingPartyMembers.map(ws => ws.username)',
@@ -167,4 +178,4 @@ server.listen(443, () => {
       console.log('error', err);
     });
   }); // clients is a Set
-});
+}

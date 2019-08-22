@@ -166,6 +166,7 @@ const partyMachine = Machine({
         id: 'socket',
         src: (ctx, event) => callback => {
           const socket = new WebSocket(
+            // 'wss://boxman-signaling-server.now.sh'
             `wss://${config.SOCKET_SERVER_ADDRESS}:443`,
           );
 

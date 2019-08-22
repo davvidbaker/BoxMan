@@ -4,22 +4,23 @@
   "description": "Box Man out of Body",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently \"npm run client:start\" \"npm run server:watch\"",
+    "start": "node signaling-server/index.js",
+    "dev": "concurrently \"npm run client:start\" \"npm run server:watch\"",
     "client:build": "webpack --config webpack.prod.js",
     "client:start": "webpack-dev-server --config webpack.dev.js",
-    "server:watch": "nodemon signaling-server/index --watch signaling-server ",
+    "server:watch": "DEV=\"true\" nodemon signaling-server/index --watch signaling-server ",
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DBaker2/BoxMan.git"
+    "url": "git+https://github.com/davvidbaker/BoxMan.git"
   },
   "author": "David Baker",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DBaker2/BoxMan/issues"
+    "url": "https://github.com/davvidbaker/BoxMan/issues"
   },
-  "homepage": "https://github.com/DBaker2/BoxMan#readme",
+  "homepage": "https://github.com/davvidbaker/BoxMan#readme",
   "dependencies": {
     "@babel/runtime": "^7.2.0",
     "@reach/router": "^1.2.1",

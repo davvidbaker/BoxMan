@@ -10,6 +10,7 @@ const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
   devtool: 'source-map',
+  mode: 'production',
 
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -23,9 +24,9 @@ module.exports = merge(common, {
         NODE_ENV: "'production'",
       },
     }),
-    new UglifyJSPlugin({
-      sourceMap: true,
-    }),
+    // new UglifyJSPlugin({
+    //   sourceMap: true,
+    // }),
     new HtmlWebpackPlugin({
       template: './index.prod.ejs',
       title: 'Fourth Person',

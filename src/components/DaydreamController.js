@@ -114,13 +114,14 @@ const Daydream = ({ onClick }) => {
   const [isClickDown, setClickDown] = React.useState(false);
 
   React.useEffect(() => {
-    controller.current = new DaydreamController({ onClick });
+    controller.current = new DaydreamController();
 
     let wasClickDown = false;
     controller.current.onStateChange(state => {
       setClickDown(state.isClickDown);
 
       if (wasClickDown && state.isClickDown === false) {
+        onClick();
         wasClickDown = false;
       }
 

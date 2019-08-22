@@ -3,7 +3,6 @@ import { Link } from '@reach/router';
 
 import BoxMan from './BoxMan';
 import CameraGuy from './CameraGuy';
-import Controller from './Controller';
 
 const Game = ({
   localStream,
@@ -24,7 +23,6 @@ const Game = ({
 
   return (
     <div>
-      <Controller />
       {role === 'boxman' ? (
         <BoxMan
           fxMode={fxMode}

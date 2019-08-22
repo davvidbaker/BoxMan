@@ -1,3 +1,4 @@
 {
-  "name": "box-man-signalling-server"
+  "version": 1,
+  "alias": "boxman-signaling-server"
 }

@@ -57,12 +57,7 @@ const cameraMachine = Machine(
         on: {
           SELECT: {
             target: 'gettingUserMedia',
-            actions: assign({
-              selected: (ctx, event) => {
-                window.localStorage.setItem('selectedCameraId', event.payload);
-                return event.payload;
-              },
-            }),
+            actions: 'assignCamera'
           },
         },
       },
@@ -89,10 +84,25 @@ const cameraMachine = Machine(
           onError: 'failure',
         },
       },
-      streaming: {},
+      streaming: {
+        on: {
+          SELECT: {
+            target: 'gettingUserMedia',
+            actions: 'assignCamera',
+          },
+        },
+      },
     },
   },
   {
+    actions: {
+      assignCamera: assign({
+        selected: (ctx, event) => {
+          window.localStorage.setItem('selectedCameraId', event.payload);
+          return event.payload;
+        },
+      }),
+    },
     guards: {
       noCamerasFound: ctx => ctx.available.length === 0,
       camerasFound: ctx => ctx.available.length > 0,

@@ -7,6 +7,7 @@ import ShakeEffect from './fx-shake.js';
 import ViewportFX from './viewportFX.js';
 import Graph from './graph';
 import CameraPreviews from './CameraPreviews';
+import Controller from './Controller';
 
 class BoxMan extends Component {
   static propTypes = {
@@ -294,49 +295,55 @@ class BoxMan extends Component {
   render() {
     console.log('🔥  render');
     return (
-      <div
-        ref={ref => {
-          this.bmContainer = ref;
-        }}
-        onClick={() => {
-          this.cycleStreams();
-        }}
-      >
-        <div id="vertical-flexbox">
-          {this.props.fxMode ? (
-            <div id="viewports-container">
-              <ViewportFX id="left" displayMsg={this.state.displayMsg} />
-              <ViewportFX id="right" displayMsg={this.state.displayMsg} />
-            </div>
-          ) : false ? (
-            /* ⚠️ do some work on the shake effect stuff */
-            <ShakeEffect
-              render={({ acc, rotRate, orientation }) => (
-                <Fragment>
-                  <div id="viewports-container">
-                    <CameraPreviews
-                      streams={[
-                        ...this.props.remoteStreams,
-                        this.props.localStream,
-                      ]}
-                    />
-                    <Viewport id="left" displayMsg={this.state.displayMsg} />
-                    <Viewport id="right" displayMsg={this.state.displayMsg} />
-                  </div>
-                </Fragment>
-              )}
-            />
-          ) : (
-            <div id="viewports-container">
-              <CameraPreviews
-                streams={[...this.props.remoteStreams, this.props.localStream]}
+      <>
+        <Controller onClick={() => this.cycleStreams()} />
+        <div
+          ref={ref => {
+            this.bmContainer = ref;
+          }}
+          onClick={() => {
+            this.cycleStreams();
+          }}
+        >
+          <div id="vertical-flexbox">
+            {this.props.fxMode ? (
+              <div id="viewports-container">
+                <ViewportFX id="left" displayMsg={this.state.displayMsg} />
+                <ViewportFX id="right" displayMsg={this.state.displayMsg} />
+              </div>
+            ) : false ? (
+              /* ⚠️ do some work on the shake effect stuff */
+              <ShakeEffect
+                render={({ acc, rotRate, orientation }) => (
+                  <Fragment>
+                    <div id="viewports-container">
+                      <CameraPreviews
+                        streams={[
+                          ...this.props.remoteStreams,
+                          this.props.localStream,
+                        ]}
+                      />
+                      <Viewport id="left" displayMsg={this.state.displayMsg} />
+                      <Viewport id="right" displayMsg={this.state.displayMsg} />
+                    </div>
+                  </Fragment>
+                )}
               />
-              <Viewport id="left" displayMsg={this.state.displayMsg} />
-              <Viewport id="right" displayMsg={this.state.displayMsg} />
-            </div>
-          )}
+            ) : (
+              <div id="viewports-container">
+                <CameraPreviews
+                  streams={[
+                    ...this.props.remoteStreams,
+                    this.props.localStream,
+                  ]}
+                />
+                <Viewport id="left" displayMsg={this.state.displayMsg} />
+                <Viewport id="right" displayMsg={this.state.displayMsg} />
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }
